@@ -770,7 +770,7 @@ const ID_PLANILHA_CONQUISTAS = '1fdqehi8cSjY4wHg9izoZgsMeamPEh9wbaRo3siRDRBc';
 const ABA_CONQUISTAS = 'Conquistas';
 
 const URL_CONQUISTAS =
-`https://script.google.com/macros/s/AKfycbyr_jCKmx6ij0fytIqNjK4evsorDQtxdp4bcvnJ4RQMvU6TTK9zwJZZXjm__p3uyKI/exec?planilha=${ID_PLANILHA_CONQUISTAS}&aba=${ABA_CONQUISTAS}`;
+`https://script.google.com/macros/s/AKfycbxiiDpGwGYiEauxy_1e8fH5ysQGi3IJijVZluOZQI_Ftndbyz6htgngfWQFkfeLwL3XWg/exec?planilha=${ID_PLANILHA_CONQUISTAS}&aba=${ABA_CONQUISTAS}`;
 
 function normalizarNivel(valor){
   if(!valor) return null;
@@ -811,7 +811,7 @@ function htmlConquistas(row) {
 // ═══════════════════════════════════════════════════════════════
 //  PONTOS EM DISPUTA — busca aba "Destaques" e anima a barra
 // ═══════════════════════════════════════════════════════════════
-const URL_DESTAQUES = 'https://script.google.com/macros/s/AKfycbyr_jCKmx6ij0fytIqNjK4evsorDQtxdp4bcvnJ4RQMvU6TTK9zwJZZXjm__p3uyKI/exec?aba=Destaques';
+const URL_DESTAQUES = 'https://script.google.com/macros/s/AKfycbxiiDpGwGYiEauxy_1e8fH5ysQGi3IJijVZluOZQI_Ftndbyz6htgngfWQFkfeLwL3XWg/exec?aba=Destaques';
 
 async function carregarPontosDisputa() {
   const elJa     = document.getElementById('disputa-ja');
@@ -864,7 +864,7 @@ async function iniciarTabela() {
   }
 
   dtTable = new DataTable('#data', {
-    ajax: 'https://script.google.com/macros/s/AKfycbztMaYq2BlP3RMu_3wplQ3E7aVbNTs00QnBK62D71Ft3MsQmfS_MUZK1g7RIBlSFEh8/exec',
+    ajax: 'https://script.google.com/macros/s/AKfycbxiiDpGwGYiEauxy_1e8fH5ysQGi3IJijVZluOZQI_Ftndbyz6htgngfWQFkfeLwL3XWg/exec',
     columns: [
       { data: 'Pos' },
       {
