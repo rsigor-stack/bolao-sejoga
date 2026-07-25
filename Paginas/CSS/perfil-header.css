@@ -1,0 +1,561 @@
+/* ═══════════════════════════════════════════════════
+   PERFIL HEADER — Bolão Se Joga Copa 2026
+   Versão 2.0
+   ═══════════════════════════════════════════════════ */
+
+.perfil-header{
+
+    background:rgba(255,255,255,.07);
+    border:1px solid rgba(0,212,255,.18);
+    border-radius:28px;
+
+    padding:1.75rem;
+
+    margin:1.5rem 0;
+
+    backdrop-filter:blur(20px);
+
+    box-shadow:
+        0 20px 50px rgba(0,0,0,.28),
+        inset 0 1px 0 rgba(255,255,255,.05);
+
+    position:relative;
+
+    overflow:hidden;
+
+}
+
+.perfil-header-inner{
+
+    display:flex;
+
+    align-items:stretch;
+
+    justify-content:space-between;
+
+    gap:18px;
+
+}
+
+/*═══════════════════════════════════════════════
+  Brilhos decorativos
+═══════════════════════════════════════════════*/
+
+.perfil-header::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:-90px;
+    left:-90px;
+
+    width:280px;
+    height:280px;
+
+    background:
+        radial-gradient(circle,
+        rgba(0,212,255,.10) 0%,
+        transparent 70%);
+
+    pointer-events:none;
+
+}
+
+.perfil-header::after{
+
+    content:"";
+
+    position:absolute;
+
+    bottom:-70px;
+    right:-70px;
+
+    width:220px;
+    height:220px;
+
+    background:
+        radial-gradient(circle,
+        rgba(8,247,161,.08) 0%,
+        transparent 70%);
+
+    pointer-events:none;
+
+}
+
+
+/*═══════════════════════════════════════════════
+  Colunas
+═══════════════════════════════════════════════*/
+
+.perfil-header-nome,
+.perfil-header-pontos,
+.perfil-header-ranking{
+
+    flex:1;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+
+    text-align:center;
+
+    min-height:145px;
+
+    padding:1.5rem;
+
+    border-radius:20px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,.06),
+            rgba(255,255,255,.03)
+        );
+
+    border:1px solid rgba(255,255,255,.08);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.04),
+        0 8px 20px rgba(0,0,0,.12);
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease,
+        border-color .25s ease,
+        background .25s ease;
+
+    position:relative;
+
+    overflow:hidden;
+
+}
+/*================================================
+Hovers
+================================================*/
+
+.perfil-header-nome:hover,
+.perfil-header-pontos:hover,
+.perfil-header-ranking:hover{
+
+    transform:translateY(-4px);
+
+    border-color:rgba(0,212,255,.28);
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,.08),
+            rgba(255,255,255,.05)
+        );
+
+    box-shadow:
+        0 12px 26px rgba(0,0,0,.22),
+        0 0 20px rgba(0,212,255,.08);
+
+}
+
+.perfil-header-nome::after,
+.perfil-header-pontos::after,
+.perfil-header-ranking::after{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+    left:0;
+    right:0;
+
+    height:2px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,.45),
+            transparent
+        );
+
+    opacity:.55;
+
+}
+
+
+/*═══════════════════════════════════════════════
+  Labels
+═══════════════════════════════════════════════*/
+
+.perfil-header-label{
+
+    margin-top:.35rem;
+    margin-bottom:.75rem;
+
+    font-family:'Montserrat',sans-serif;
+
+    font-size:.72rem;
+
+    font-weight:700;
+
+    letter-spacing:.22em;
+
+    text-transform:uppercase;
+
+    color:rgba(0,212,255,.78);
+
+    line-height:1;
+
+}
+/*═══════════════════════════════════════════════
+  Nome
+═══════════════════════════════════════════════*/
+
+.perfil-header-titulo{
+
+    font-family:'Montserrat',sans-serif;
+
+    font-size:1.9rem;
+
+    font-weight:800;
+
+    color:#ffffff;
+
+    line-height:1.15;
+
+    letter-spacing:-.02em;
+
+    max-width:100%;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
+
+    white-space:nowrap;
+
+}
+
+/*═══════════════════════════════════════════════
+  Pontuação
+═══════════════════════════════════════════════*/
+
+.perfil-header-pontos-valor{
+
+    font-family:'Montserrat',sans-serif;
+
+    font-size:2.6rem;
+
+    font-weight:800;
+
+    line-height:1;
+
+    color:#4ade80;
+
+    text-shadow:
+        0 0 20px rgba(74,222,128,.25);
+
+}
+
+.perfil-header-pontos-valor::after{
+
+    content:" pts";
+
+    margin-left:.15rem;
+
+    font-size:.38em;
+
+    font-weight:600;
+
+    color:rgba(255,255,255,.55);
+
+}
+/*═══════════════════════════════════════════════
+  Ranking
+═══════════════════════════════════════════════*/
+
+.perfil-header-posicao{
+
+    font-family:'Montserrat',sans-serif;
+
+    font-size:2.6rem;
+
+    font-weight:800;
+
+    line-height:1;
+
+    color:#FFD54A;
+
+    text-shadow:
+        0 0 18px rgba(255,213,74,.22);
+
+}
+
+/* remove o troféu antigo */
+
+.perfil-header-posicao::before{
+
+    content:none;
+
+}
+
+.perfil-header-posicao-sub{
+
+    margin-top:.4rem;
+
+    padding:.25rem .75rem;
+
+    border-radius:999px;
+
+    background:rgba(255,255,255,.06);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    font-size:.72rem;
+
+    color:rgba(255,255,255,.55);
+
+}
+
+
+/*═══════════════════════════════════════════════
+  Hover
+═══════════════════════════════════════════════*/
+
+.perfil-header:hover{
+
+    border-color:rgba(0,212,255,.30);
+
+    box-shadow:
+        0 24px 60px rgba(0,0,0,.32),
+        0 0 24px rgba(0,212,255,.10);
+
+}
+
+
+/*═══════════════════════════════════════════════
+  Ícones
+═══════════════════════════════════════════════*/
+
+.perfil-header-badge{
+
+    width:52px;
+    height:52px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:50%;
+
+    margin-bottom:1rem;
+
+    font-size:1.45rem;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(0,212,255,.22),
+            rgba(8,247,161,.12)
+        );
+
+    border:1px solid rgba(255,255,255,.08);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.08),
+        0 6px 16px rgba(0,0,0,.18);
+
+}
+
+.perfil-header-nome .perfil-header-badge{
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(0,212,255,.30),
+            rgba(0,212,255,.10)
+        );
+
+}
+
+.perfil-header-pontos .perfil-header-badge{
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(74,222,128,.30),
+            rgba(74,222,128,.10)
+        );
+
+}
+
+.perfil-header-ranking .perfil-header-badge{
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,213,74,.30),
+            rgba(255,213,74,.10)
+        );
+
+}
+
+/*═══════════════════════════════════════════════
+  Responsividade
+═══════════════════════════════════════════════*/
+
+@media (max-width:768px){
+
+    .perfil-header{
+
+        padding:1.5rem;
+
+        border-radius:22px;
+
+    }
+
+    /* o bug original tentava usar grid-template-columns num
+       container que é flex; aqui empilhamos de verdade */
+    .perfil-header-inner{
+
+        flex-direction:column;
+
+        gap:1rem;
+
+    }
+
+    .perfil-header-nome,
+    .perfil-header-pontos,
+    .perfil-header-ranking{
+
+        width:100%;
+
+        min-height:auto;
+
+        padding:1.1rem 1rem;
+
+        border-right:none;
+        border-bottom:1px solid rgba(255,255,255,.08);
+
+    }
+
+    .perfil-header-ranking{
+
+        border-bottom:none;
+
+    }
+
+    .perfil-header-titulo{
+
+        font-size:1.6rem;
+
+        white-space:normal;
+        overflow-wrap:break-word;
+
+    }
+
+    .perfil-header-pontos-valor,
+    .perfil-header-posicao{
+
+        font-size:2.1rem;
+
+    }
+
+    .perfil-header-badge{
+
+        width:46px;
+        height:46px;
+        font-size:1.3rem;
+        margin-bottom:.75rem;
+
+    }
+
+    /* em telas de toque, hover fica "preso" após o tap;
+       trocamos por feedback em :active */
+    .perfil-header-nome:hover,
+    .perfil-header-pontos:hover,
+    .perfil-header-ranking:hover{
+
+        transform:none;
+
+    }
+
+    .perfil-header-nome:active,
+    .perfil-header-pontos:active,
+    .perfil-header-ranking:active{
+
+        transform:scale(.98);
+
+        border-color:rgba(0,212,255,.28);
+
+    }
+
+}
+
+@media (max-width:480px){
+
+    .perfil-header{
+
+        border-radius:18px;
+
+        padding:1.1rem;
+
+        margin:1rem 0;
+
+    }
+
+    .perfil-header-inner{
+
+        gap:.75rem;
+
+    }
+
+    .perfil-header-nome,
+    .perfil-header-pontos,
+    .perfil-header-ranking{
+
+        padding:.9rem .75rem;
+
+    }
+
+    .perfil-header-titulo{
+
+        font-size:1.3rem;
+
+    }
+
+    .perfil-header-pontos-valor,
+    .perfil-header-posicao{
+
+        font-size:1.8rem;
+
+    }
+
+    .perfil-header-label{
+
+        font-size:.65rem;
+
+        letter-spacing:.16em;
+
+    }
+
+    .perfil-header-posicao-sub{
+
+        font-size:.68rem;
+
+        padding:.2rem .6rem;
+
+    }
+
+}
+
+/* leve ganho de performance em mobile: blur pesado custa caro
+   em GPUs fracas e em listas longas (vários cards de perfil) */
+@media (max-width:480px) and (pointer:coarse){
+
+    .perfil-header{
+
+        backdrop-filter:blur(10px);
+
+    }
+
+}

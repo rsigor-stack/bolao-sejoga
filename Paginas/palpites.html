@@ -1,0 +1,1383 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bolão Se Joga Copa do Mundo 2026x — Palpites</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg-dark:  #04142d;
+      --accent:   #00d4ff;
+      --accent-2: #08f7a1;
+      --gold:     #ffd700;
+      --silver:   #c0c0c0;
+      --bronze:   #cd7f32;
+      --text:     #ffffff;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left,  rgba(0,212,255,.18), transparent 25%),
+        radial-gradient(circle at bottom right, rgba(8,247,161,.12), transparent 25%),
+        linear-gradient(135deg, #03101f 0%, #072654 55%, #04142d 100%);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none; z-index: 0;
+    }
+
+    /* ── HEADER ── */
+    header { position: relative; z-index: 2; padding: 32px 24px 16px; }
+    .topbar {
+      display: flex; justify-content: space-between;
+      align-items: center; gap: 16px; flex-wrap: wrap;
+      max-width: 1400px; margin: auto;
+    }
+    .logo { display: flex; align-items: center; gap: 14px; }
+    .logo-icon {
+      width: 58px; height: 58px; border-radius: 18px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem; box-shadow: 0 10px 25px rgba(0,212,255,.35);
+    }
+    .logo h1 { font-size: 2rem; font-weight: 800; letter-spacing: 1px; }
+    .logo p  { opacity: .75; font-size: .95rem; margin-top: 4px; }
+
+    nav {
+      position: relative; z-index: 2;
+      max-width: 1400px; margin: 24px auto 0;
+      display: flex; gap: 12px; flex-wrap: wrap;
+    }
+    nav a {
+      text-decoration: none; color: white;
+      padding: 12px 18px; border-radius: 999px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.08);
+      transition: .25s ease; font-weight: 600; font-size: .95rem;
+      backdrop-filter: blur(10px);
+    }
+    nav a:hover, nav a.active {
+      transform: translateY(-2px);
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #04142d;
+    }
+
+    /* ── PAGE WRAPPER ── */
+    .page-wrapper {
+      position: relative; z-index: 2;
+      max-width: 1400px; margin: 36px auto 48px; padding: 0 24px;
+    }
+    .page-title { margin-bottom: 28px; }
+    .page-title h2 { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; }
+    .page-title p  { opacity: .75; font-size: .95rem; margin-top: 6px; }
+
+    /* ── LOADING / ERROR ── */
+    .loading-state, .error-state {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 12px; padding: 64px 24px;
+      opacity: .7; font-size: .95rem; text-align: center;
+    }
+    .spinner {
+      width: 36px; height: 36px;
+      border: 3px solid rgba(255,255,255,.15);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .error-state { color: #ff8a8a; }
+
+    /* ── SELETOR DE PARTICIPANTE ── */
+    .selector-card {
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 28px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 20px 50px rgba(0,0,0,.30);
+      padding: 28px 32px;
+      margin-bottom: 28px;
+    }
+    .selector-label {
+      font-size: .8rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1px;
+      opacity: .6; margin-bottom: 14px;
+    }
+
+    /* Campo de busca */
+    .busca-wrap {
+      position: relative;
+      max-width: 480px;
+    }
+    .busca-icon {
+      position: absolute; left: 16px; top: 50%;
+      transform: translateY(-50%);
+      font-size: 1rem; opacity: .5; pointer-events: none;
+    }
+    .busca-input {
+      width: 100%;
+      padding: 14px 16px 14px 44px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.15);
+      background: rgba(255,255,255,.07);
+      color: white;
+      font-family: 'Montserrat', sans-serif;
+      font-size: .95rem; font-weight: 500;
+      outline: none; transition: .2s ease;
+    }
+    .busca-input::placeholder { color: rgba(255,255,255,.35); }
+    .busca-input:focus {
+      border-color: rgba(0,212,255,.5);
+      background: rgba(255,255,255,.10);
+      box-shadow: 0 0 0 3px rgba(0,212,255,.1);
+    }
+    .busca-clear {
+      position: absolute; right: 14px; top: 50%;
+      transform: translateY(-50%);
+      background: none; border: none; color: rgba(255,255,255,.4);
+      font-size: 1.1rem; cursor: pointer; padding: 4px;
+      display: none; line-height: 1;
+    }
+    .busca-clear.visivel { display: block; }
+    .busca-clear:hover { color: white; }
+
+    /* Lista de resultados */
+    .lista-participantes {
+      margin-top: 10px;
+      max-width: 480px;
+      background: rgba(10,25,60,.95);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 16px;
+      overflow: hidden;
+      display: none;
+      box-shadow: 0 16px 40px rgba(0,0,0,.5);
+    }
+    .lista-participantes.visivel { display: block; }
+    .lista-scroll { max-height: 280px; overflow-y: auto; }
+    .lista-scroll::-webkit-scrollbar { width: 5px; }
+    .lista-scroll::-webkit-scrollbar-track { background: transparent; }
+    .lista-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,.15); border-radius: 99px; }
+
+    .lista-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 13px 18px;
+      cursor: pointer;
+      transition: background .15s;
+      border-bottom: 1px solid rgba(255,255,255,.05);
+      font-size: .92rem; font-weight: 500;
+    }
+    .lista-item:last-child { border-bottom: none; }
+    .lista-item:hover, .lista-item.ativo {
+      background: rgba(0,212,255,.12);
+    }
+    .lista-item.ativo { color: var(--accent); font-weight: 700; }
+    .lista-item .pos-badge {
+      width: 26px; height: 26px; border-radius: 50%;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
+      font-size: .72rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; opacity: .6;
+    }
+    .lista-item .item-nome { flex: 1; }
+    .lista-item .item-seta { opacity: .3; font-size: .8rem; }
+    .lista-item:hover .item-seta, .lista-item.ativo .item-seta { opacity: .8; }
+
+    .lista-vazia {
+      padding: 24px; text-align: center;
+      opacity: .5; font-size: .88rem;
+    }
+
+    /* Participante selecionado (chip) */
+    .selecionado-chip {
+      display: none;
+      align-items: center; gap: 10px;
+      margin-top: 14px;
+      padding: 10px 16px;
+      background: linear-gradient(135deg, rgba(0,212,255,.15), rgba(8,247,161,.10));
+      border: 1px solid rgba(0,212,255,.25);
+      border-radius: 999px;
+      max-width: fit-content;
+      font-size: .9rem; font-weight: 700;
+      color: var(--accent);
+    }
+    .selecionado-chip.visivel { display: flex; }
+    .selecionado-chip button {
+      background: none; border: none; color: var(--accent);
+      cursor: pointer; font-size: 1rem; padding: 0; line-height: 1;
+      opacity: .6;
+    }
+    .selecionado-chip button:hover { opacity: 1; }
+
+    /* ── RESUMO DO PARTICIPANTE ── */
+    .resumo-participante {
+      display: none;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(0,212,255,.2);
+      border-radius: 20px;
+      padding: 20px 28px;
+      margin-bottom: 24px;
+      display: none;
+      align-items: center;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+    .resumo-participante.visivel { display: flex; }
+    .resumo-nome {
+      font-size: 1.3rem; font-weight: 800;
+      color: var(--accent);
+      flex: 1; min-width: 160px;
+    }
+    .resumo-stat { text-align: center; }
+    .resumo-stat-valor {
+      font-size: 1.5rem; font-weight: 800;
+      line-height: 1;
+    }
+    .resumo-stat-label {
+      font-size: .72rem; opacity: .6;
+      margin-top: 4px; text-transform: uppercase; letter-spacing: .5px;
+    }
+
+    /* ── TABELA DE PALPITES ── */
+    .tabela-card {
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 28px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 20px 50px rgba(0,0,0,.30);
+      overflow: hidden;
+      display: none;
+    }
+    .tabela-card.visivel { display: block; }
+
+    .tabela-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 24px 28px 20px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .tabela-header .icon { font-size: 1.4rem; }
+    .tabela-header h3 { font-size: 1.1rem; font-weight: 700; }
+    .tabela-header .badge {
+      margin-left: auto; font-size: .75rem; font-weight: 700;
+      padding: 4px 10px; border-radius: 999px;
+      background: rgba(0,212,255,.15);
+      border: 1px solid rgba(0,212,255,.3);
+      color: var(--accent); letter-spacing: .5px; text-transform: uppercase;
+    }
+
+    /* Wrapper com scroll horizontal em mobile */
+    .tabela-scroll { overflow-x: auto; }
+
+    table {
+      width: 100%; border-collapse: collapse;
+      font-size: .82rem; min-width: 0;
+    }
+    thead tr {
+      background: rgba(255,255,255,.05);
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+    thead th {
+      padding: 10px 6px; text-align: center;
+      font-size: .65rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .5px; opacity: .7;
+      white-space: nowrap;
+    }
+    thead th.col-jogo { text-align: left; width: 90px; min-width: 90px; }
+
+    tbody tr {
+      border-bottom: 1px solid rgba(255,255,255,.05);
+      transition: background .15s;
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(255,255,255,.04); }
+
+    td { padding: 10px 6px; text-align: center; vertical-align: middle; }
+    td.col-jogo { text-align: left; width: 90px; min-width: 90px; padding-left: 12px; }
+
+    /* Jogo (bandeira grande + trigrama abaixo) */
+    .jogo-cell {
+      display: flex; align-items: center;
+      gap: 4px; flex-wrap: nowrap; justify-content: flex-start;
+    }
+    .jogo-time-cell {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 2px; width: 32px;
+    }
+    .jogo-tri {
+      font-size: .6rem; font-weight: 700;
+      letter-spacing: .3px; opacity: .85;
+      white-space: nowrap;
+    }
+    .jogo-cell-sep { opacity: .4; font-size: .75rem; font-weight: 700; padding: 0 1px; }
+
+    /* Data e grupo */
+    .jogo-meta-cell { font-size: .75rem; opacity: .55; }
+
+    /* Resultado real */
+    .resultado-real {
+      font-weight: 800; font-size: 1rem;
+      color: var(--gold); letter-spacing: 2px;
+    }
+    .resultado-pendente { opacity: .3; font-size: .85rem; }
+
+    /* Palpite */
+    .palpite-val {
+      font-weight: 700; font-size: .95rem; letter-spacing: 1px;
+    }
+    .palpite-pendente { opacity: .3; font-size: .8rem; }
+
+    /* Pontuação */
+    .pts-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px; border-radius: 50%;
+      font-weight: 800; font-size: .8rem;
+    }
+    .pts-0    { background: rgba(255,255,255,.06); color: rgba(255,255,255,.35); }
+    .pts-low  { background: rgba(0,212,255,.12);  color: var(--accent); border: 1px solid rgba(0,212,255,.25); }
+    .pts-mid  { background: rgba(8,247,161,.12);  color: var(--accent-2); border: 1px solid rgba(8,247,161,.25); }
+    .pts-high { background: rgba(255,215,0,.18);  color: var(--gold); border: 1px solid rgba(255,215,0,.3); }
+    .pts-vazio { opacity: .25; font-size: .75rem; }
+
+    /* Tag de grupo */
+    .grupo-tag {
+      display: inline-block; font-size: .65rem; font-weight: 700;
+      padding: 2px 7px; border-radius: 999px; text-transform: uppercase;
+      letter-spacing: .5px; margin-bottom: 3px;
+      background: rgba(0,212,255,.12);
+      border: 1px solid rgba(0,212,255,.2);
+      color: var(--accent);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative; z-index: 2;
+      padding: 32px 24px 48px;
+      text-align: center; opacity: .65; font-size: .92rem;
+    }
+
+    /* ── BOTÃO TOPO ── */
+    .botao-topo {
+      position: fixed; bottom: 30px; right: 28px; z-index: 99;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #04142d; font-weight: 700; font-size: .85rem;
+      padding: 12px 18px; border-radius: 999px; text-decoration: none;
+      box-shadow: 0 8px 24px rgba(0,212,255,.35); transition: .25s ease;
+    }
+    .botao-topo:hover { transform: translateY(-3px); }
+
+    /* ── MOBILE ── */
+    @media (max-width: 700px) {
+      .logo h1 { font-size: 1.4rem; }
+      .selector-card { padding: 20px; }
+      .resumo-participante { gap: 18px; padding: 16px 20px; }
+      .resumo-nome { font-size: 1.1rem; }
+      .tabela-header { padding: 16px 14px; }
+      .tabela-header h3 { font-size: .95rem; }
+      .resultado-real { font-size: .88rem; letter-spacing: 1px; }
+      .palpite-val { font-size: .85rem; }
+    }
+
+.tabs{
+  display:flex;
+  gap:12px;
+  margin-bottom:24px;
+}
+
+.tab-btn{
+  cursor:pointer;
+  border:none;
+  color:white;
+  font-weight:700;
+  padding:12px 18px;
+  border-radius:999px;
+  background:rgba(255,255,255,.08);
+}
+
+.tab-btn.active{
+  background:linear-gradient(
+    135deg,
+    var(--accent),
+    var(--accent-2)
+  );
+  color:#04142d;
+}
+
+.eliminatorias-card{
+  display:none;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:28px;
+  overflow:hidden;
+}
+
+.eliminatorias-card.visivel{
+  display:block;
+}
+
+.elim-section{
+  padding:28px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.elim-section:last-child{
+  border-bottom:none;
+}
+
+.elim-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:18px;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.elim-title{
+  font-size:1.1rem;
+  font-weight:800;
+}
+
+.elim-score{
+  color:var(--gold);
+  font-weight:800;
+}
+
+.elim-grid{
+  display:grid;
+  grid-template-columns:
+      repeat(auto-fill,minmax(90px,1fr));
+  gap:12px;
+}
+
+.elim-team{
+  padding:12px;
+  border-radius:18px;
+  text-align:center;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.elim-team.hit{
+  border-color:#08f7a1;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(8,247,161,.18),
+      rgba(0,212,255,.12)
+    );
+}
+
+.elim-flag{
+  width:42px;
+  height:30px;
+  object-fit:cover;
+  border-radius:4px;
+}
+
+.elim-tri{
+  margin-top:6px;
+  font-weight:800;
+  letter-spacing:1px;
+}
+
+.elim-ok{
+  margin-top:6px;
+  color:#08f7a1;
+  font-size:.7rem;
+  font-weight:700;
+}
+
+.elim-special{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:18px;
+}
+
+.elim-special-card{
+  padding:24px;
+  border-radius:22px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);
+  text-align:center;
+}
+
+.elim-special-title{
+  font-size:.8rem;
+  text-transform:uppercase;
+  opacity:.6;
+  margin-bottom:12px;
+}
+
+.elim-special-name{
+  font-size:1.2rem;
+  font-weight:800;
+}
+
+.artilheiro-foto{
+    width:70px;
+    height:70px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+    border:3px solid rgba(255,255,255,.15);
+
+    margin-bottom:10px;
+}
+
+.elim-team.eliminada {
+  opacity: .55;
+  border-color: rgba(255,255,255,.05);
+  background: rgba(255,255,255,.02);
+}
+
+.artilheiro-nome{
+
+    font-size:.85rem;
+    font-weight:700;
+
+    line-height:1.2;
+}
+
+  </style>
+</head>
+<body id="topo">
+
+<! Monta o cabeçalho da página>
+<div id="header-placeholder"></div>
+<script>
+  fetch('header.html')
+    .then(r => r.text())
+    .then(html => document.getElementById('header-placeholder').innerHTML = html);
+</script>
+<! Fim do cabeçalho----------->  
+
+  <div class="page-wrapper">
+
+  <div class="page-title">
+    <h3>🎯 Palpites do Bolão</h3>
+    <p>Selecione um participante para ver os palpites e a pontuação obtida em cada jogo</p>
+  </div>
+
+  <!-- Carregando -->
+  <div id="loading-state">
+    <div class="loading-state"><div class="spinner"></div><span>Carregando participantes…</span></div>
+  </div>
+
+  <!-- Conteúdo principal (oculto até carregar) -->
+  <div id="conteudo" style="display:none;">
+
+    <!-- Seletor de participante -->
+    <div class="selector-card">
+      <div class="selector-label">👤 Selecione o participante</div>
+      <div class="busca-wrap">
+        <span class="busca-icon">🔍</span>
+        <input
+          type="text"
+          id="busca-input"
+          class="busca-input"
+          placeholder="Digite o nome para buscar…"
+          autocomplete="off"
+        >
+        <button class="busca-clear" id="busca-clear" title="Limpar">✕</button>
+      </div>
+      <div class="lista-participantes" id="lista-participantes">
+        <div class="lista-scroll" id="lista-scroll"></div>
+      </div>
+      <div class="selecionado-chip" id="selecionado-chip">
+        <span>✓</span>
+        <span id="chip-nome"></span>
+        <button id="chip-trocar" title="Trocar participante">✕</button>
+      </div>
+    </div>
+
+    <!-- Resumo do participante selecionado -->
+    <div class="resumo-participante" id="resumo-participante">
+      <div class="resumo-nome" id="resumo-nome"></div>
+      <div class="resumo-stat">
+        <div class="resumo-stat-valor" id="resumo-total" style="color:var(--accent);">—</div>
+        <div class="resumo-stat-label">Pontos totais</div>
+      </div>
+      <div class="resumo-stat">
+        <div class="resumo-stat-valor" id="resumo-exatos" style="color:var(--gold);">—</div>
+        <div class="resumo-stat-label">Placares exatos</div>
+      </div>
+      <div class="resumo-stat">
+        <div class="resumo-stat-valor" id="resumo-jogos" style="color:var(--accent-2);">—</div>
+        <div class="resumo-stat-label">Jogos pontuados</div>
+      </div>
+    </div>
+
+<div class="tabs">
+
+  <button
+    class="tab-btn active"
+    id="tab-jogos">
+    ⚽ Jogos
+  </button>
+
+  <button
+    class="tab-btn"
+    id="tab-elim">
+    🏆 Eliminatórias
+  </button>
+
+</div>
+
+<div
+  id="eliminatorias-card"
+  class="eliminatorias-card">
+</div>
+
+    <!-- Tabela de palpites -->
+    <div class="tabela-card" id="tabela-card">
+      <div class="tabela-header">
+        <span class="icon">📋</span>
+        <h3 id="tabela-titulo">Palpites</h3>
+        <span class="badge" id="tabela-badge">—</span>
+      </div>
+      <div class="tabela-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th class="col-jogo">Jogo</th>
+              <th>Data</th>
+              <th>Resultado</th>
+              <th>Palpite</th>
+              <th>Pontos</th>
+            </tr>
+          </thead>
+          <tbody id="tabela-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /conteudo -->
+
+</div><!-- /page-wrapper -->
+
+<a href="#topo" class="botao-topo">↑ Topo</a>
+
+<footer>
+  © 2026 • Bolão Se Joga Copa do Mundo • Atualizado automaticamente via Google Sheets
+</footer>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  CONFIGURAÇÃO — cole a URL do JSON da aba Palpites
+// ═══════════════════════════════════════════════════════════════
+const URL_PALPITES = 'https://script.google.com/macros/s/AKfycbw3S0FDdjMZbP0mnyQ4iMDHufuN6QTBtNXcWWpOmCkfqnPHQWiUv15Z0uxagpseoibe/exec?aba=Palpites';
+
+const URL_ELIM = 'https://script.google.com/macros/s/AKfycbzqa0SYv8nPTePgIz33hKwpqFMluqwaRyoKdsfHPPQYipEKdll692Z5fu-7-IiGPXnI/exec?aba=Palpites_Elim';
+
+const URL_ELIMINADAS = 'https://script.google.com/macros/s/AKfycbzqa0SYv8nPTePgIz33hKwpqFMluqwaRyoKdsfHPPQYipEKdll692Z5fu-7-IiGPXnI/exec?aba=Eliminadas';
+
+let participanteSelecionado = null;
+// ═══════════════════════════════════════════════════════════════
+//  DICIONÁRIOS — 48 países da Copa 2026
+// ═══════════════════════════════════════════════════════════════
+const BANDEIRAS = {
+  'Argentina':'ar','Brasil':'br','Colômbia':'co','Equador':'ec',
+  'Paraguai':'py','Uruguai':'uy','Canadá':'ca','Curaçao':'cw',
+  'Estados Unidos':'us','Haiti':'ht','México':'mx','Panamá':'pa',
+  'Alemanha':'de','Áustria':'at','Bélgica':'be',
+  'Bósnia e Herzegovina':'ba','Croácia':'hr','Escócia':'gb-sct',
+  'Espanha':'es','França':'fr','Holanda':'nl','Inglaterra':'gb-eng',
+  'Noruega':'no','Portugal':'pt','República Tcheca':'cz','Suécia':'se',
+  'Suíça':'ch','Turquia':'tr','África do Sul':'za','Argélia':'dz',
+  'Cabo Verde':'cv','RD Congo':'cd','Costa do Marfim':'ci','Egito':'eg',
+  'Gana':'gh','Marrocos':'ma','Senegal':'sn','Tunísia':'tn',
+  'Arábia Saudita':'sa','Austrália':'au','Coreia do Sul':'kr',
+  'Iraque':'iq','Irã':'ir','Japão':'jp','Jordânia':'jo',
+  'Catar':'qa','Uzbequistão':'uz','Nova Zelândia':'nz',
+};
+
+const TRIGRAMAS = {
+  // CONMEBOL
+  'Argentina':'ARG','Brasil':'BRA','Colômbia':'COL','Equador':'ECU',
+  'Paraguai':'PAR','Uruguai':'URU',
+  // CONCACAF
+  'Canadá':'CAN','Curaçao':'CUW','Estados Unidos':'USA',
+  'Haiti':'HAI','México':'MEX','Panamá':'PAN',
+  // UEFA
+  'Alemanha':'GER','Áustria':'AUT','Bélgica':'BEL',
+  'Bósnia e Herzegovina':'BIH','Croácia':'CRO','Escócia':'SCO',
+  'Espanha':'ESP','França':'FRA','Holanda':'NED','Inglaterra':'ENG',
+  'Noruega':'NOR','Portugal':'POR','República Tcheca':'CZE','Suécia':'SWE',
+  'Suíça':'SUI','Turquia':'TUR',
+  // CAF
+  'África do Sul':'RSA','Argélia':'ALG','Cabo Verde':'CPV',
+  'RD Congo':'COD','Costa do Marfim':'CIV','Egito':'EGY',
+  'Gana':'GHA','Marrocos':'MAR','Senegal':'SEN','Tunísia':'TUN',
+  // AFC
+  'Arábia Saudita':'KSA','Austrália':'AUS','Coreia do Sul':'KOR',
+  'Iraque':'IRQ','Irã':'IRN','Japão':'JPN','Jordânia':'JOR',
+  'Catar':'QAT','Uzbequistão':'UZB',
+  // OFC
+  'Nova Zelândia':'NZL',
+};
+
+
+const ARTILHEIROS = {
+  'C.Ronaldo (POR)': {
+    foto: 'CRonaldo.jpg',
+    nome: 'C. Ronaldo'
+  },
+  'Endrick (BRA)': {
+    foto: 'Endrick.jpg',
+    nome: 'Endrick'
+  },
+  'H. Kane (ENG)': {
+    foto: 'Kane.jpg',
+    nome: 'H. Kane'
+  },
+  'L. Henrique (BRA)': {
+    foto: 'LHenrique.jpg',
+    nome: 'L. Henrique'
+  },
+  'Mbappé (FRA)': {
+    foto: 'Mbappe.jpg',
+    nome: 'Mbappé'
+  },
+  'Neymar Jr. (BRA)': {
+    foto: 'Neymar.jpg',
+    nome: 'Neymar Jr.'
+  },
+  'Olise (FRA)': {
+    foto: 'Olise.jpg',
+    nome: 'Olise'
+  },
+  'Oyarzabal (ESP)': {
+    foto: 'Oyarzabal.jpg',
+    nome: 'Oyarzabal'
+  },
+  'Paquetá (BRA)': {
+    foto: 'Paqueta.jpg',
+    nome: 'Paquetá'
+  },
+  'Vini Jr. (BRA)': {
+    foto: 'ViniJr.jpg',
+    nome: 'Vini Jr.'
+  },
+  'L.Yamal (ESP)': {
+    foto: 'Yamine.jpg',
+    nome: 'L. Yamal'
+  }
+};
+
+const URL_IMAGENS =
+'https://sejoganacopa.vercel.app/imagens/';
+
+const PONTOS_ELIM = {
+  Segundas:3,
+  Oitavas:5,
+  Quartas:10,
+  Semis:15,
+  Final:20,
+  Campeao:30,
+  Artilheiro:30
+};
+
+// ═══════════════════════════════════════════════════════════════
+//  SELEÇÕES ELIMINADAS — carregadas dinamicamente da aba 'Eliminadas'
+// ═══════════════════════════════════════════════════════════════
+const ELIMINADAS = new Set();
+
+const FLAG_STYLE_SM = 'width:26px;height:19px;border-radius:2px;object-fit:cover;display:block;margin:0 auto 2px;';
+
+// Célula de time: bandeira grande + trigrama abaixo
+function timeCelula(pais) {
+  const cod = BANDEIRAS[pais];
+  const tri = TRIGRAMAS[pais] || pais.slice(0,3).toUpperCase();
+  const img = cod
+    ? `<img src="https://flagcdn.com/w40/${cod}.png" style="${FLAG_STYLE_SM}" alt="${pais}">`
+    : `<span style="display:block;height:24px;"></span>`;
+  return `<div class="jogo-time-cell">${img}<span class="jogo-tri">${tri}</span></div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  PARSER — lê o formato gerado pelo Apps Script:
+//  Chaves fixas: Data, Hora, Time1, Time2, Real1, Real2
+//  Chaves de participante: Nome_pal1, Nome_pal2, Nome_pts
+// ═══════════════════════════════════════════════════════════════
+function parsearDados(rows) {
+  if (!rows.length) return { participantes: [], jogos: [] };
+
+  // Detecta participantes pelas chaves que terminam em _pal1
+  const chaves = Object.keys(rows[0]);
+  const participantes = chaves
+    .filter(k => k.endsWith('_pal1'))
+    .map(k => k.replace('_pal1', ''));
+
+  if (!participantes.length) return { participantes: [], jogos: [] };
+
+  // Valor vazio → null
+  const val = v => (v === '' || v === null || v === undefined || v === '-') ? null : v;
+
+  const jogos = rows.map(r => {
+    const time1 = String(r.Time1 || '').trim();
+    const time2 = String(r.Time2 || '').trim();
+    if (!time1 && !time2) return null;
+
+    return {
+      data:      String(r.Data    || '').trim(),
+      horario:   String(r.Hora    || '').trim(),
+      time1,
+      time2,
+      gols1Real: val(r.Real1),
+      gols2Real: val(r.Real2),
+      palpites:  participantes.map(nome => ({
+        nome,
+        gols1:  val(r[`${nome}_pal1`]),
+        gols2:  val(r[`${nome}_pal2`]),
+        pontos: val(r[`${nome}_pts`]),
+      })),
+    };
+  }).filter(Boolean);
+
+  return { participantes: participantes.map(nome => ({ nome })), jogos };
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  CLASSE CSS DOS PONTOS
+// ═══════════════════════════════════════════════════════════════
+function ptsClasse(pts) {
+  if (pts === null || pts === '') return 'pts-vazio';
+  const n = Number(pts);
+  if (n === 0) return 'pts-0';
+  if (n <= 3)  return 'pts-low';
+  if (n <= 6)  return 'pts-mid';
+  return 'pts-high';
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  RENDERIZA A TABELA PARA O PARTICIPANTE SELECIONADO
+// ═══════════════════════════════════════════════════════════════
+function renderTabela(participante, jogos) {
+  const tbody = document.getElementById('tabela-body');
+
+  let totalPts   = 0;
+  let exatos     = 0;
+  let pontuados  = 0;
+  let jogosExib  = 0;
+
+  const linhas = jogos.map(jogo => {
+    const p = jogo.palpites.find(x => x.nome === participante);
+    if (!p) return '';
+    jogosExib++;
+
+    const temReal    = jogo.gols1Real !== null && jogo.gols2Real !== null;
+    const temPalpite = p.gols1 !== null && p.gols2 !== null;
+    const temPontos  = p.pontos !== null && p.pontos !== '';
+
+    if (temPontos) {
+      totalPts += Number(p.pontos);
+      pontuados = pontuados + (Number(p.pontos) == 0 ? 0 : 1 );
+      // Placar exato: palpite igual ao resultado
+      if (temReal && temPalpite &&
+          String(p.gols1) === String(jogo.gols1Real) &&
+          String(p.gols2) === String(jogo.gols2Real)) {
+        exatos++;
+      }
+    }
+
+    const resultadoHtml = temReal
+      ? `<span class="resultado-real">${jogo.gols1Real} × ${jogo.gols2Real}</span>`
+      : `<span class="resultado-pendente">—</span>`;
+
+    const palpiteHtml = temPalpite
+      ? `<span class="palpite-val">${p.gols1} × ${p.gols2}</span>`
+      : `<span class="palpite-pendente">—</span>`;
+
+    const ptsBadgeHtml = temPontos
+      ? `<span class="pts-badge ${ptsClasse(p.pontos)}">${p.pontos}</span>`
+      : `<span class="pts-badge pts-vazio">·</span>`;
+
+    return `
+      <tr>
+        <td class="col-jogo">
+          <div class="jogo-cell">
+            ${timeCelula(jogo.time1)}
+            <span class="jogo-cell-sep">×</span>
+            ${timeCelula(jogo.time2)}
+          </div>
+        </td>
+        <td class="jogo-meta-cell">${jogo.data}${jogo.horario ? '<br>' + jogo.horario : ''}</td>
+        <td>${resultadoHtml}</td>
+        <td>${palpiteHtml}</td>
+        <td>${ptsBadgeHtml}</td>
+      </tr>`;
+  }).join('');
+
+  tbody.innerHTML = linhas;
+
+  // Atualiza resumo
+  document.getElementById('resumo-nome').textContent    = participante;
+  document.getElementById('resumo-total').textContent   = '-' //totalPts;
+  document.getElementById('resumo-exatos').textContent  = exatos;
+  document.getElementById('resumo-jogos').textContent   = pontuados;
+
+  // Atualiza badge da tabela
+  document.getElementById('tabela-titulo').textContent = `Palpites — ${participante}`;
+  document.getElementById('tabela-badge').textContent  = `${jogosExib} jogos`;
+
+  // Mostra elementos
+  document.getElementById('resumo-participante').classList.add('visivel');
+  document.getElementById('tabela-card').classList.add('visivel');
+
+  // Scroll suave até a tabela
+  document.getElementById('tabela-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  RENDERIZA A TABELA ELIMINATORIAS PARA O PARTICIPANTE SELECIONADO
+// ═══════════════════════════════════════════════════════════════
+function renderEliminatorias(nome){
+
+    console.log('renderEliminatorias');
+
+    console.log(nome);
+
+    console.log(window.DADOS_ELIM);
+
+
+  const dados = window.DADOS_ELIM || [];
+
+  if(!dados.length) return;
+
+  const fases = [
+    'Segundas',
+    'Oitavas',
+    'Quartas',
+    'Semis',
+    'Final',
+    'Campeao',
+    'Artilheiro'
+  ];
+
+  let totalAcertos = 0;
+  let totalPontos  = 0;
+
+  let html = '';
+
+  fases.forEach(fase=>{
+
+    const linhas =
+      dados.filter(
+        x=>x.Fase===fase
+      );
+
+const reaisDaFase =
+  new Set(
+    linhas
+      .map(x =>
+        String(x.Real || '')
+          .trim()
+          .toLowerCase()
+      )
+      .filter(Boolean)
+  );
+
+
+    let acertos = 0;
+
+    const cards =
+      linhas.map(l=>{
+
+    const palpite =
+     String(l[nome] || '').trim();
+
+const acertou =
+  palpite &&
+  reaisDaFase.has(
+    palpite.toLowerCase()
+  );
+
+        if(acertou) acertos++;
+
+if(fase === 'Artilheiro'){
+
+    const jogador =
+      ARTILHEIROS[palpite];
+
+    const foto =
+      jogador
+        ? URL_IMAGENS + jogador.foto
+        : '';
+
+    const nomeExibicao =
+      jogador
+        ? jogador.nome
+        : palpite;
+
+    return `
+
+      <div class="elim-team ${acertou?'hit':''}">
+
+        ${
+          foto
+          ? `
+            <img
+              class="artilheiro-foto"
+              src="${foto}"
+              alt="${nomeExibicao}">
+          `
+          : ''
+        }
+
+        <div class="artilheiro-nome">
+          ${nomeExibicao}
+        </div>
+
+        ${
+          acertou
+          ? '<div class="elim-ok">✔ ACERTOU</div>'
+          : ''
+        }
+
+      </div>
+
+    `;
+}
+
+const flag =
+  BANDEIRAS[palpite];
+
+const eliminada = ELIMINADAS.has(palpite);
+const flagStyle = eliminada ? ' style="filter:grayscale(1) opacity(.4)"' : '';
+const triStyle  = eliminada ? ' style="opacity:.4"' : '';
+
+return `
+
+  <div class="elim-team ${acertou?'hit':''}${eliminada?' eliminada':''}">
+
+    ${
+      flag
+      ? `
+        <img
+          class="elim-flag"
+          src="https://flagcdn.com/w80/${flag}.png"
+          title="${eliminada ? palpite + ' — eliminada' : palpite}"
+          ${flagStyle}>
+      `
+      : ''
+    }
+
+    <div class="elim-tri"${triStyle}>
+      ${TRIGRAMAS[palpite] || ''}
+    </div>
+
+    ${
+      acertou
+      ? '<div class="elim-ok">✔ ACERTOU</div>'
+      : ''
+    }
+
+  </div>
+
+`;
+
+      }).join('');
+
+    const pontos =
+      acertos *
+      PONTOS_ELIM[fase];
+
+    totalAcertos += acertos;
+    totalPontos  += pontos;
+
+    html += `
+      <div class="elim-section">
+
+        <div class="elim-header">
+
+          <div class="elim-title">
+            🏆 ${fase} - ${PONTOS_ELIM[fase]} pts/acerto
+          </div>
+
+          <div class="elim-score">
+            ${acertos} acertos •
+            ${pontos} pts
+          </div>
+
+        </div>
+
+        <div class="elim-grid">
+          ${cards}
+        </div>
+
+      </div>
+    `;
+  });
+
+  document.getElementById(
+    'eliminatorias-card'
+  ).innerHTML = html;
+
+}
+
+
+// ═══════════════════════════════════════════════════════════════
+//  SELETOR COM BUSCA
+// ═══════════════════════════════════════════════════════════════
+function renderSeletor(participantes, jogos) {
+  const input       = document.getElementById('busca-input');
+  const clearBtn    = document.getElementById('busca-clear');
+  const lista       = document.getElementById('lista-participantes');
+  const scroll      = document.getElementById('lista-scroll');
+  const chip        = document.getElementById('selecionado-chip');
+  const chipNome    = document.getElementById('chip-nome');
+  const chipTrocar  = document.getElementById('chip-trocar');
+
+  let selecionado = null;
+
+  // Renderiza os itens filtrados na lista
+  function renderLista(filtro) {
+    const termo = (filtro || '').toLowerCase().trim();
+    const filtrados = participantes.filter(p =>
+      !termo || p.nome.toLowerCase().includes(termo)
+    );
+
+    if (!filtrados.length) {
+      scroll.innerHTML = `<div class="lista-vazia">Nenhum participante encontrado</div>`;
+    } else {
+      scroll.innerHTML = filtrados.map((p, i) => `
+        <div class="lista-item${selecionado === p.nome ? ' ativo' : ''}"
+             data-nome="${p.nome}" tabindex="0">
+          <span class="pos-badge">${participantes.indexOf(p) + 1}</span>
+          <span class="item-nome">${p.nome}</span>
+          <span class="item-seta">›</span>
+        </div>`).join('');
+
+      // Eventos dos itens
+      scroll.querySelectorAll('.lista-item').forEach(item => {
+        item.addEventListener('click', () => selecionar(item.dataset.nome));
+        item.addEventListener('keydown', e => {
+          if (e.key === 'Enter') selecionar(item.dataset.nome);
+        });
+      });
+    }
+  }
+
+  // Seleciona um participante
+  function selecionar(nome) {
+    selecionado = nome;
+    participanteSelecionado = nome;
+
+    // Atualiza chip
+    chipNome.textContent = nome;
+    chip.classList.add('visivel');
+
+    // Esconde lista e limpa busca
+    lista.classList.remove('visivel');
+    input.value = '';
+    clearBtn.classList.remove('visivel');
+    input.blur();
+
+    renderTabela(nome, jogos);
+    renderEliminatorias(nome);
+  }
+
+  // Abre a lista mostrando todos ao focar no campo
+  input.addEventListener('focus', () => {
+    renderLista(input.value);
+    lista.classList.add('visivel');
+  });
+
+  // Filtra conforme digita
+  input.addEventListener('input', () => {
+    clearBtn.classList.toggle('visivel', input.value.length > 0);
+    renderLista(input.value);
+    lista.classList.add('visivel');
+  });
+
+  // Limpa o campo
+  clearBtn.addEventListener('click', () => {
+    input.value = '';
+    clearBtn.classList.remove('visivel');
+    renderLista('');
+    input.focus();
+  });
+
+  // Trocar participante: reabre o campo de busca
+  chipTrocar.addEventListener('click', () => {
+    chip.classList.remove('visivel');
+    input.value = '';
+    clearBtn.classList.remove('visivel');
+    renderLista('');
+    lista.classList.add('visivel');
+    input.focus();
+  });
+
+  // Fecha a lista ao clicar fora
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.busca-wrap') && !e.target.closest('.lista-participantes')) {
+      lista.classList.remove('visivel');
+    }
+  });
+
+  // Navegação por teclado (↑ ↓ Esc)
+  input.addEventListener('keydown', e => {
+    const itens = scroll.querySelectorAll('.lista-item');
+    const ativo = scroll.querySelector('.lista-item:focus');
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      (ativo ? ativo.nextElementSibling : itens[0])?.focus();
+    } else if (e.key === 'Escape') {
+      lista.classList.remove('visivel');
+      input.blur();
+    }
+  });
+}
+
+function configurarAbas(){
+
+    const tabJogos =
+      document.getElementById('tab-jogos');
+
+    const tabElim =
+      document.getElementById('tab-elim');
+
+    if(!tabJogos || !tabElim){
+        console.error('Abas não encontradas');
+        return;
+    }
+
+    tabJogos.addEventListener('click', () => {
+
+        tabJogos.classList.add('active');
+        tabElim.classList.remove('active');
+
+        document.getElementById('tabela-card').style.display = 'block';
+        document.getElementById('eliminatorias-card').style.display = 'none';
+    });
+
+    tabElim.addEventListener('click', () => {
+
+        tabElim.classList.add('active');
+        tabJogos.classList.remove('active');
+
+        document.getElementById('tabela-card').style.display = 'none';
+        document.getElementById('eliminatorias-card').style.display = 'block';
+
+        if(participanteSelecionado){
+            renderEliminatorias(participanteSelecionado);
+        }
+    });
+
+    console.log('Abas configuradas');
+}
+
+
+// ═══════════════════════════════════════════════════════════════
+//  BOOTSTRAP
+// ═══════════════════════════════════════════════════════════════
+async function init() {
+  try {
+
+    const [resPalpites, resElim, resEliminadas] =
+      await Promise.all([
+        fetch(URL_PALPITES),
+        fetch(URL_ELIM),
+        fetch(URL_ELIMINADAS)
+      ]);
+
+    if (!resPalpites.ok)
+      throw new Error(`Palpites HTTP ${resPalpites.status}`);
+
+    if (!resElim.ok)
+      throw new Error(`Eliminatórias HTTP ${resElim.status}`);
+
+    const json =
+      await resPalpites.json();
+
+    const jsonElim =
+      await resElim.json();
+
+    console.log('JSON ELIM:', jsonElim);
+
+    // Popula o Set de eliminadas a partir da aba 'Eliminadas'
+    if (resEliminadas.ok) {
+      try {
+        const jsonEliminadas = await resEliminadas.json();
+        const rows = jsonEliminadas.data || jsonEliminadas || [];
+        rows.forEach(row => {
+          const nome = String(row.Eliminadas || '').trim();
+          if (nome) ELIMINADAS.add(nome);
+        });
+        console.log('ELIMINADAS:', [...ELIMINADAS]);
+      } catch(e) {
+        console.warn('Não foi possível carregar seleções eliminadas:', e);
+      }
+    }
+
+    if (!json.data || !Array.isArray(json.data))
+      throw new Error('Formato inesperado nos palpites.');
+
+    // Salva globalmente para renderEliminatorias()
+    window.DADOS_ELIM =
+      jsonElim.data || jsonElim || [];
+
+    console.log(
+      'DADOS_ELIM:',
+      window.DADOS_ELIM
+    );
+
+    const { participantes, jogos } =
+      parsearDados(json.data);
+
+    if (!participantes.length) throw new Error('Nenhum participante encontrado.');
+
+    document.getElementById('loading-state').style.display = 'none';
+    document.getElementById('conteudo').style.display      = 'block';
+
+    renderSeletor(participantes, jogos);
+    configurarAbas();
+
+    // Pré-seleciona participante se vier via ?participante=Nome na URL
+    const params = new URLSearchParams(window.location.search);
+    const nomeParam = params.get('participante');
+    if (nomeParam) {
+      // Busca correspondência exata ou case-insensitive
+      const encontrado = participantes.find(p =>
+        p.nome === nomeParam ||
+        p.nome.toLowerCase() === nomeParam.toLowerCase()
+      );
+      if (encontrado) {
+        // Simula seleção: atualiza chip e abre tabela
+        const chip      = document.getElementById('selecionado-chip');
+        const chipNome  = document.getElementById('chip-nome');
+        chipNome.textContent = encontrado.nome;
+        chip.classList.add('visivel');
+        renderTabela(encontrado.nome, jogos);
+      }
+    }
+
+  } catch (e) {
+    document.getElementById('loading-state').innerHTML =
+      `<div class="error-state">❌ Erro ao carregar palpites.<br><small>${e.message}</small></div>`;
+  }
+}
+
+init();
+</script>
+</body>
+</html>

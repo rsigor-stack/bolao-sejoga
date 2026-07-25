@@ -1,0 +1,220 @@
+/*
+ * conquistas-brilho.css
+ * Efeitos visuais de destaque para cards de conquista — Bolão Se Joga Copa 2026
+ *
+ * Uso: adicione a classe de nível no .conq-card conforme o badge:
+ *   .conq-card.nivel-ouro
+ *   .conq-card.nivel-prata
+ *   .conq-card.nivel-bronze
+ *   .conq-card.nivel-nenhum  (ou sem classe de nível — sem brilho)
+ *
+ * O atributo data-nivel também é suportado para aplicação via JS:
+ *   card.dataset.nivel = "ouro" | "prata" | "bronze" | "nenhum"
+ */
+
+/* ─── Keyframes de brilho ─────────────────────────────────────────────────── */
+
+@keyframes brilho-ouro {
+  0%   { box-shadow: 0 0 8px 2px rgba(255, 200, 40, 0.55),
+                     0 0 20px 4px rgba(255, 170, 0, 0.30),
+                     inset 0 1px 0 rgba(255, 230, 120, 0.50); }
+  50%  { box-shadow: 0 0 18px 6px rgba(255, 210, 60, 0.80),
+                     0 0 40px 10px rgba(255, 180, 0, 0.45),
+                     inset 0 1px 0 rgba(255, 240, 150, 0.70); }
+  100% { box-shadow: 0 0 8px 2px rgba(255, 200, 40, 0.55),
+                     0 0 20px 4px rgba(255, 170, 0, 0.30),
+                     inset 0 1px 0 rgba(255, 230, 120, 0.50); }
+}
+
+@keyframes brilho-prata {
+  0%   { box-shadow: 0 0 6px 2px rgba(180, 190, 210, 0.50),
+                     0 0 16px 4px rgba(150, 165, 190, 0.25),
+                     inset 0 1px 0 rgba(220, 230, 245, 0.45); }
+  50%  { box-shadow: 0 0 14px 5px rgba(190, 200, 220, 0.70),
+                     0 0 30px 8px rgba(160, 175, 200, 0.35),
+                     inset 0 1px 0 rgba(230, 240, 255, 0.65); }
+  100% { box-shadow: 0 0 6px 2px rgba(180, 190, 210, 0.50),
+                     0 0 16px 4px rgba(150, 165, 190, 0.25),
+                     inset 0 1px 0 rgba(220, 230, 245, 0.45); }
+}
+
+@keyframes brilho-bronze {
+  0%   { box-shadow: 0 0 5px 1px rgba(190, 120, 50, 0.45),
+                     0 0 12px 3px rgba(160, 90, 30, 0.20),
+                     inset 0 1px 0 rgba(220, 160, 90, 0.35); }
+  50%  { box-shadow: 0 0 10px 4px rgba(200, 130, 60, 0.60),
+                     0 0 22px 6px rgba(170, 100, 40, 0.30),
+                     inset 0 1px 0 rgba(230, 175, 110, 0.50); }
+  100% { box-shadow: 0 0 5px 1px rgba(190, 120, 50, 0.45),
+                     0 0 12px 3px rgba(160, 90, 30, 0.20),
+                     inset 0 1px 0 rgba(220, 160, 90, 0.35); }
+}
+
+@keyframes shimmer-ouro {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+/* ─── Base do card desbloqueado (sem nível específico) ───────────────────── */
+
+.conq-card:not(.bloqueado) {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* ─── OURO — brilho máximo ───────────────────────────────────────────────── */
+
+.conq-card.nivel-ouro,
+.conq-card[data-nivel="ouro"] {
+  border: 2px solid #e6a800;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 240, 160, 0.18) 0%,
+    rgba(255, 210, 60,  0.10) 40%,
+    rgba(255, 240, 160, 0.18) 100%
+  );
+  animation: brilho-ouro 2.8s ease-in-out infinite;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Reflexo deslizante no topo */
+.conq-card.nivel-ouro::before,
+.conq-card[data-nivel="ouro"]::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 230, 100, 0.00) 20%,
+    rgba(255, 230, 100, 0.90) 50%,
+    rgba(255, 230, 100, 0.00) 80%,
+    transparent 100%
+  );
+  background-size: 200% auto;
+  animation: shimmer-ouro 2.8s linear infinite;
+  border-radius: inherit;
+}
+
+/* Badge de nível — Ouro */
+.conq-card.nivel-ouro .conq-nivel-badge,
+.conq-card[data-nivel="ouro"] .conq-nivel-badge {
+  background: linear-gradient(135deg, #ffd700, #e6a800);
+  color: #5a3a00;
+  border: 1px solid #e6a800;
+  font-weight: 700;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+/* Hover */
+.conq-card.nivel-ouro:hover,
+.conq-card[data-nivel="ouro"]:hover {
+  transform: translateY(-3px) scale(1.02);
+}
+
+/* ─── PRATA — brilho médio ───────────────────────────────────────────────── */
+
+.conq-card.nivel-prata,
+.conq-card[data-nivel="prata"] {
+  border: 1.5px solid #9aafc5;
+  background: linear-gradient(
+    145deg,
+    rgba(210, 220, 235, 0.15) 0%,
+    rgba(180, 195, 215, 0.08) 50%,
+    rgba(210, 220, 235, 0.15) 100%
+  );
+  animation: brilho-prata 3.2s ease-in-out infinite;
+}
+
+/* Badge de nível — Prata */
+.conq-card.nivel-prata .conq-nivel-badge,
+.conq-card[data-nivel="prata"] .conq-nivel-badge {
+  background: linear-gradient(135deg, #d0dae8, #9aafc5);
+  color: #2c3e55;
+  border: 1px solid #8fa4be;
+  font-weight: 600;
+}
+
+/* Hover */
+.conq-card.nivel-prata:hover,
+.conq-card[data-nivel="prata"]:hover {
+  transform: translateY(-2px) scale(1.01);
+}
+
+/* ─── BRONZE — brilho leve ───────────────────────────────────────────────── */
+
+.conq-card.nivel-bronze,
+.conq-card[data-nivel="bronze"] {
+  border: 1.5px solid #b87040;
+  background: linear-gradient(
+    145deg,
+    rgba(210, 150, 90, 0.12) 0%,
+    rgba(180, 115, 60, 0.06) 50%,
+    rgba(210, 150, 90, 0.12) 100%
+  );
+  animation: brilho-bronze 3.6s ease-in-out infinite;
+}
+
+/* Badge de nível — Bronze */
+.conq-card.nivel-bronze .conq-nivel-badge,
+.conq-card[data-nivel="bronze"] .conq-nivel-badge {
+  background: linear-gradient(135deg, #d4925a, #b87040);
+  color: #3d1f08;
+  border: 1px solid #a86535;
+  font-weight: 600;
+}
+
+/* Hover */
+.conq-card.nivel-bronze:hover,
+.conq-card[data-nivel="bronze"]:hover {
+  transform: translateY(-1px) scale(1.005);
+}
+
+/* ─── NENHUM — sem brilho (bloqueado ou não conquistado) ─────────────────── */
+
+.conq-card.bloqueado,
+.conq-card.nivel-nenhum,
+.conq-card[data-nivel="nenhum"] {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  opacity: 0.55;
+  filter: grayscale(0.6);
+  animation: none;
+  box-shadow: none;
+}
+
+.conq-card.bloqueado .conq-nivel-badge,
+.conq-card.nivel-nenhum .conq-nivel-badge,
+.conq-card[data-nivel="nenhum"] .conq-nivel-badge {
+  background: rgba(150, 150, 150, 0.25);
+  color: #888;
+  border: 1px solid rgba(150, 150, 150, 0.30);
+}
+
+/* Garante que ao desbloquear a conquista, o estado .bloqueado seja sobrescrito */
+.conq-card.nivel-ouro.bloqueado,
+.conq-card.nivel-prata.bloqueado,
+.conq-card.nivel-bronze.bloqueado {
+  opacity: 1;
+  filter: none;
+}
+
+/* ─── Redução de movimento (acessibilidade) ──────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .conq-card.nivel-ouro,
+  .conq-card[data-nivel="ouro"],
+  .conq-card.nivel-prata,
+  .conq-card[data-nivel="prata"],
+  .conq-card.nivel-bronze,
+  .conq-card[data-nivel="bronze"] {
+    animation: none;
+  }
+
+  .conq-card.nivel-ouro::before,
+  .conq-card[data-nivel="ouro"]::before {
+    animation: none;
+  }
+}

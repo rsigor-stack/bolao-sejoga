@@ -1,0 +1,2878 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Perfil do Participante • Bolão Se Joga Copa 2026
+    </title>
+
+    <!--==================================================
+    FONTES
+    ===================================================-->
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <!--==================================================
+    CSS
+    ===================================================-->
+
+    <style>
+
+        /*==================================================
+        RESET
+        ==================================================*/
+
+        *{
+
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+
+        }
+
+        html{
+
+            scroll-behavior:smooth;
+
+        }
+
+        body{
+
+            font-family:'Montserrat',sans-serif;
+
+            color:#fff;
+
+            background:
+
+                radial-gradient(circle at top left,
+                    rgba(0,212,255,.15),
+                    transparent 28%),
+
+                radial-gradient(circle at bottom right,
+                    rgba(8,247,161,.10),
+                    transparent 28%),
+
+                linear-gradient(
+                    135deg,
+                    #03101f,
+                    #06264e,
+                    #04142d
+                );
+
+            min-height:100vh;
+
+            overflow-x:hidden;
+
+        }
+
+        body::before{
+
+            content:"";
+
+            position:fixed;
+
+            inset:0;
+
+            background-image:
+
+                linear-gradient(
+                    rgba(255,255,255,.02) 1px,
+                    transparent 1px
+                ),
+
+                linear-gradient(
+                    90deg,
+                    rgba(255,255,255,.02) 1px,
+                    transparent 1px
+                );
+
+            background-size:40px 40px;
+
+            pointer-events:none;
+
+            z-index:0;
+
+        }
+
+        /*==================================================
+        VARIÁVEIS
+        ==================================================*/
+
+        :root{
+
+            --bg-dark:#04142d;
+
+            --bg-card:rgba(255,255,255,.07);
+
+            --bg-card-hover:rgba(255,255,255,.10);
+
+            --border:rgba(255,255,255,.10);
+
+            --accent:#00d4ff;
+
+            --accent2:#08f7a1;
+
+            --gold:#ffd700;
+
+            --silver:#c0c0c0;
+
+            --bronze:#cd7f32;
+
+            --danger:#ff6961;
+
+            --text:#ffffff;
+
+            --text-soft:rgba(255,255,255,.70);
+
+            --shadow:
+
+                0 18px 40px
+
+                rgba(0,0,0,.30);
+
+            --radius:24px;
+
+            --transition:.25s ease;
+
+            --max-width:1450px;
+
+        }
+
+        /*==================================================
+        LAYOUT
+        ==================================================*/
+
+        .perfil-page{
+
+            position:relative;
+
+            z-index:2;
+
+            max-width:var(--max-width);
+
+            margin:auto;
+
+            padding:24px;
+
+        }
+
+        /*==================================================
+        HEADER
+        ==================================================*/
+
+        .perfil-header{
+
+            display:flex;
+
+            justify-content:space-between;
+
+            align-items:center;
+
+            gap:24px;
+
+            flex-wrap:wrap;
+
+            margin-bottom:32px;
+
+        }
+
+        .perfil-logo{
+
+            display:flex;
+
+            align-items:center;
+
+            gap:18px;
+
+        }
+
+        .perfil-logo__icon{
+
+            width:68px;
+
+            height:68px;
+
+            border-radius:20px;
+
+            background:
+
+                linear-gradient(
+
+                    135deg,
+
+                    var(--accent),
+
+                    var(--accent2)
+
+                );
+
+            display:flex;
+
+            align-items:center;
+
+            justify-content:center;
+
+            font-size:2rem;
+
+            box-shadow:
+
+                0 10px 25px
+
+                rgba(0,212,255,.35);
+
+        }
+
+        .perfil-logo h1{
+
+            font-size:2rem;
+
+            font-weight:800;
+
+        }
+
+        .perfil-logo p{
+
+            margin-top:4px;
+
+            color:var(--text-soft);
+
+            font-size:.92rem;
+
+        }
+
+        /*==================================================
+        MENU
+        ==================================================*/
+
+        .perfil-nav{
+
+            display:flex;
+
+            gap:10px;
+
+            flex-wrap:wrap;
+
+            margin-top:20px;
+
+        }
+
+        .perfil-nav a{
+
+            text-decoration:none;
+
+            color:#fff;
+
+            padding:
+
+                12px 18px;
+
+            border-radius:999px;
+
+            background:
+
+                rgba(255,255,255,.06);
+
+            border:
+
+                1px solid var(--border);
+
+            transition:
+
+                var(--transition);
+
+            font-size:.92rem;
+
+            font-weight:600;
+
+            backdrop-filter:blur(10px);
+
+        }
+
+        .perfil-nav a:hover{
+
+            transform:translateY(-2px);
+
+            background:
+
+                linear-gradient(
+
+                    135deg,
+
+                    var(--accent),
+
+                    var(--accent2)
+
+                );
+
+            color:#04142d;
+
+        }
+
+        /*==================================================
+        CONTAINER PRINCIPAL
+        ==================================================*/
+
+        .perfil-main{
+
+            display:flex;
+
+            flex-direction:column;
+
+            gap:24px;
+
+        }
+
+/*==================================================
+FOOTER
+==================================================*/
+
+.perfil-footer{
+
+    margin-top:40px;
+
+    padding:24px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:12px;
+
+    color:var(--text-soft);
+
+    font-size:.85rem;
+
+}
+
+/*==================================================
+OVERLAY
+==================================================*/
+
+.loading-overlay{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.45);
+
+    backdrop-filter:blur(6px);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    z-index:9999;
+
+}
+
+.loading-card{
+
+    background:#071a33;
+
+    border-radius:20px;
+
+    padding:32px;
+
+    min-width:260px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    gap:18px;
+
+    box-shadow:var(--shadow);
+
+}
+
+.loading-text{
+
+    font-weight:600;
+
+}
+
+/*==================================================
+TOAST
+==================================================*/
+
+.toast{
+
+    position:fixed;
+
+    bottom:24px;
+
+    right:24px;
+
+    background:#062c50;
+
+    border-left:5px solid var(--accent);
+
+    padding:18px 24px;
+
+    border-radius:16px;
+
+    box-shadow:var(--shadow);
+
+    z-index:9998;
+
+}
+
+/*==================================================
+MODAL
+==================================================*/
+
+.modal-backdrop{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.55);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    z-index:9999;
+
+}
+
+.modal{
+
+    width:min(720px,92vw);
+
+    background:#071b34;
+
+    border-radius:24px;
+
+    overflow:hidden;
+
+}
+
+.modal-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:20px 24px;
+
+    border-bottom:1px solid var(--border);
+
+}
+
+.modal-header button{
+
+    background:none;
+
+    border:none;
+
+    color:white;
+
+    font-size:1.2rem;
+
+    cursor:pointer;
+
+}
+
+.modal-body{
+
+    padding:24px;
+
+}
+
+/*==================================================
+EMPTY STATE
+==================================================*/
+
+.perfil-empty{
+
+    min-height:180px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:16px;
+
+}
+
+.perfil-empty__icon{
+
+    font-size:3rem;
+
+    opacity:.55;
+
+}
+
+.perfil-empty__title{
+
+    color:var(--text-soft);
+
+}
+
+/*==================================================
+UTILITÁRIOS
+==================================================*/
+
+.hidden{
+
+    display:none !important;
+
+}
+
+
+
+/*==================================================
+DESIGN SYSTEM
+==================================================*/
+
+/*------------------------------------------
+TIPOGRAFIA
+------------------------------------------*/
+
+.ds-title-xl{
+
+    font-size:2.2rem;
+
+    font-weight:800;
+
+    line-height:1.1;
+
+}
+
+.ds-title-lg{
+
+    font-size:1.6rem;
+
+    font-weight:700;
+
+}
+
+.ds-title-md{
+
+    font-size:1.2rem;
+
+    font-weight:700;
+
+}
+
+.ds-title-sm{
+
+    font-size:1rem;
+
+    font-weight:700;
+
+}
+
+.ds-text{
+
+    color:var(--text);
+
+    font-size:.95rem;
+
+}
+
+.ds-text-soft{
+
+    color:var(--text-soft);
+
+    font-size:.88rem;
+
+}
+
+.ds-number{
+
+    font-weight:800;
+
+    font-size:2rem;
+
+}
+
+/*------------------------------------------
+BOTÕES
+------------------------------------------*/
+
+.ds-btn{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:8px;
+
+    padding:12px 20px;
+
+    border:none;
+
+    border-radius:16px;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+    font-family:inherit;
+
+    font-weight:700;
+
+}
+
+.ds-btn:hover{
+
+    transform:translateY(-2px);
+
+}
+
+.ds-btn-primary{
+
+    background:
+
+        linear-gradient(
+            135deg,
+            var(--accent),
+            var(--accent2)
+        );
+
+    color:#06223d;
+
+}
+
+.ds-btn-secondary{
+
+    background:rgba(255,255,255,.08);
+
+    color:white;
+
+    border:1px solid var(--border);
+
+}
+
+.ds-btn-danger{
+
+    background:#ff6961;
+
+    color:white;
+
+}
+
+/*------------------------------------------
+BADGES
+------------------------------------------*/
+
+.ds-badge{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:6px;
+
+    padding:6px 12px;
+
+    border-radius:999px;
+
+    font-size:.78rem;
+
+    font-weight:700;
+
+}
+
+.ds-badge-gold{
+
+    background:rgba(255,215,0,.18);
+
+    color:var(--gold);
+
+}
+
+.ds-badge-silver{
+
+    background:rgba(192,192,192,.18);
+
+    color:var(--silver);
+
+}
+
+.ds-badge-bronze{
+
+    background:rgba(205,127,50,.20);
+
+    color:var(--bronze);
+
+}
+
+.ds-badge-success{
+
+    background:rgba(8,247,161,.15);
+
+    color:var(--accent2);
+
+}
+
+.ds-badge-info{
+
+    background:rgba(0,212,255,.15);
+
+    color:var(--accent);
+
+}
+
+.ds-badge-danger{
+
+    background:rgba(255,105,97,.18);
+
+    color:#ff9a92;
+
+}
+
+/*------------------------------------------
+CHIPS
+------------------------------------------*/
+
+.ds-chip{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:6px;
+
+    padding:8px 14px;
+
+    border-radius:999px;
+
+    background:rgba(255,255,255,.06);
+
+    border:1px solid var(--border);
+
+    font-size:.80rem;
+
+}
+
+/*------------------------------------------
+SEPARADOR
+------------------------------------------*/
+
+.ds-divider{
+
+    height:1px;
+
+    background:rgba(255,255,255,.08);
+
+    margin:22px 0;
+
+}
+
+/*------------------------------------------
+CARDS
+------------------------------------------*/
+
+.ds-card{
+
+    background:var(--bg-card);
+
+    border:1px solid var(--border);
+
+    border-radius:24px;
+
+    padding:22px;
+
+    backdrop-filter:blur(18px);
+
+    transition:.25s;
+
+}
+
+.ds-card:hover{
+
+    transform:translateY(-3px);
+
+}
+
+.ds-card-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:18px;
+
+}
+
+.ds-card-title{
+
+    font-size:1.05rem;
+
+    font-weight:700;
+
+}
+
+.ds-card-body{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+
+}
+
+/*------------------------------------------
+GRID
+------------------------------------------*/
+
+.ds-grid{
+
+    display:grid;
+
+    gap:20px;
+
+}
+
+.ds-grid-2{
+
+    grid-template-columns:
+
+        repeat(
+
+            auto-fit,
+
+            minmax(300px,1fr)
+
+        );
+
+}
+
+.ds-grid-3{
+
+    grid-template-columns:
+
+        repeat(
+
+            auto-fit,
+
+            minmax(240px,1fr)
+
+        );
+
+}
+
+.ds-grid-4{
+
+    grid-template-columns:
+
+        repeat(
+
+            auto-fit,
+
+            minmax(180px,1fr)
+
+        );
+
+}
+
+/*------------------------------------------
+MÉTRICAS
+------------------------------------------*/
+
+.ds-metric{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:8px;
+
+}
+
+.ds-metric-label{
+
+    color:var(--text-soft);
+
+    font-size:.82rem;
+
+}
+
+.ds-metric-value{
+
+    font-size:2rem;
+
+    font-weight:800;
+
+}
+
+.ds-metric-sub{
+
+    color:var(--text-soft);
+
+    font-size:.82rem;
+
+}
+
+/*------------------------------------------
+ÍCONES
+------------------------------------------*/
+
+.ds-icon-circle{
+
+    width:54px;
+
+    height:54px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:1.5rem;
+
+    background:
+
+        linear-gradient(
+
+            135deg,
+
+            var(--accent),
+
+            var(--accent2)
+
+        );
+
+    color:#03203b;
+
+}
+
+/*------------------------------------------
+SCROLL
+------------------------------------------*/
+
+::-webkit-scrollbar{
+
+    width:10px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:transparent;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:rgba(255,255,255,.18);
+
+    border-radius:999px;
+
+}
+
+::-webkit-scrollbar-thumb:hover{
+
+    background:rgba(255,255,255,.35);
+
+}
+
+
+
+
+
+/*==================================================
+LAYOUT SYSTEM
+==================================================*/
+
+/*--------------------------------------------------
+CONTAINERS
+--------------------------------------------------*/
+
+.layout{
+
+    display:grid;
+
+    gap:24px;
+
+}
+
+.layout-dashboard{
+
+    display:grid;
+
+    gap:24px;
+
+}
+
+.layout-full{
+
+    grid-template-columns:1fr;
+
+}
+
+.layout-half{
+
+    grid-template-columns:
+        repeat(2,1fr);
+
+}
+
+.layout-third{
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+}
+
+.layout-quarter{
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+}
+
+/*--------------------------------------------------
+AUTO GRID
+--------------------------------------------------*/
+
+.layout-auto-220{
+
+    display:grid;
+
+    gap:20px;
+
+    grid-template-columns:
+        repeat(auto-fit,minmax(220px,1fr));
+
+}
+
+.layout-auto-260{
+
+    display:grid;
+
+    gap:20px;
+
+    grid-template-columns:
+        repeat(auto-fit,minmax(260px,1fr));
+
+}
+
+.layout-auto-320{
+
+    display:grid;
+
+    gap:20px;
+
+    grid-template-columns:
+        repeat(auto-fit,minmax(320px,1fr));
+
+}
+
+/*--------------------------------------------------
+DASHBOARD
+--------------------------------------------------*/
+
+.layout-dashboard-main{
+
+    display:grid;
+
+    grid-template-columns:
+
+        2fr
+
+        1fr;
+
+    gap:24px;
+
+}
+
+.layout-dashboard-side{
+
+    display:grid;
+
+    gap:24px;
+
+}
+
+.layout-dashboard-content{
+
+    display:grid;
+
+    gap:24px;
+
+}
+
+/*--------------------------------------------------
+ESTATÍSTICAS
+--------------------------------------------------*/
+
+.layout-stats{
+
+    display:grid;
+
+    gap:18px;
+
+    grid-template-columns:
+
+        repeat(auto-fit,minmax(180px,1fr));
+
+}
+
+/*--------------------------------------------------
+GRÁFICOS
+--------------------------------------------------*/
+
+.layout-charts{
+
+    display:grid;
+
+    gap:24px;
+
+    grid-template-columns:
+
+        repeat(auto-fit,minmax(380px,1fr));
+
+}
+
+.layout-chart{
+
+    min-height:360px;
+
+}
+
+/*--------------------------------------------------
+MÓDULOS
+--------------------------------------------------*/
+
+.layout-module{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+
+}
+
+/*--------------------------------------------------
+FLEX
+--------------------------------------------------*/
+
+.flex{
+
+    display:flex;
+
+}
+
+.flex-column{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.flex-center{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+}
+
+.flex-between{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+.flex-around{
+
+    display:flex;
+
+    justify-content:space-around;
+
+    align-items:center;
+
+}
+
+.flex-wrap{
+
+    flex-wrap:wrap;
+
+}
+
+.flex-gap-sm{
+
+    gap:10px;
+
+}
+
+.flex-gap-md{
+
+    gap:18px;
+
+}
+
+.flex-gap-lg{
+
+    gap:30px;
+
+}
+
+/*--------------------------------------------------
+ESPACAMENTOS
+--------------------------------------------------*/
+
+.mt-sm{
+
+    margin-top:12px;
+
+}
+
+.mt-md{
+
+    margin-top:24px;
+
+}
+
+.mt-lg{
+
+    margin-top:40px;
+
+}
+
+.mb-sm{
+
+    margin-bottom:12px;
+
+}
+
+.mb-md{
+
+    margin-bottom:24px;
+
+}
+
+.mb-lg{
+
+    margin-bottom:40px;
+
+}
+
+.p-sm{
+
+    padding:12px;
+
+}
+
+.p-md{
+
+    padding:24px;
+
+}
+
+.p-lg{
+
+    padding:40px;
+
+}
+
+/*--------------------------------------------------
+ALINHAMENTOS
+--------------------------------------------------*/
+
+.text-center{
+
+    text-align:center;
+
+}
+
+.text-right{
+
+    text-align:right;
+
+}
+
+.text-left{
+
+    text-align:left;
+
+}
+
+/*--------------------------------------------------
+VISIBILIDADE
+--------------------------------------------------*/
+
+.hide{
+
+    display:none !important;
+
+}
+
+.show{
+
+    display:block !important;
+
+}
+
+.invisible{
+
+    visibility:hidden;
+
+}
+
+.visible{
+
+    visibility:visible;
+
+}
+
+/*--------------------------------------------------
+ANIMAÇÕES
+--------------------------------------------------*/
+
+.fade-in{
+
+    animation:fadeIn .35s ease;
+
+}
+
+.slide-up{
+
+    animation:slideUp .35s ease;
+
+}
+
+.zoom-in{
+
+    animation:zoomIn .30s ease;
+
+}
+
+@keyframes fadeIn{
+
+    from{
+
+        opacity:0;
+
+    }
+
+    to{
+
+        opacity:1;
+
+    }
+
+}
+
+@keyframes slideUp{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(20px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:none;
+
+    }
+
+}
+
+@keyframes zoomIn{
+
+    from{
+
+        opacity:0;
+
+        transform:scale(.92);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:scale(1);
+
+    }
+
+}
+        
+
+
+
+/*==================================================
+RESPONSIVIDADE
+==================================================*/
+
+/*--------------------------------------------------
+NOTEBOOK
+--------------------------------------------------*/
+
+@media (max-width:1400px){
+
+    :root{
+
+        --max-width:1280px;
+
+    }
+
+}
+
+/*--------------------------------------------------
+TABLET HORIZONTAL
+--------------------------------------------------*/
+
+@media (max-width:1200px){
+
+    .layout-dashboard-main{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .layout-half{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .layout-third{
+
+        grid-template-columns:repeat(2,1fr);
+
+    }
+
+    .layout-quarter{
+
+        grid-template-columns:repeat(2,1fr);
+
+    }
+
+    .layout-charts{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
+
+/*--------------------------------------------------
+TABLET
+--------------------------------------------------*/
+
+@media (max-width:992px){
+
+    .perfil-page{
+
+        padding:18px;
+
+    }
+
+    .perfil-header{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+    }
+
+    .perfil-nav{
+
+        width:100%;
+
+    }
+
+    .perfil-nav a{
+
+        flex:1;
+
+        text-align:center;
+
+    }
+
+    .layout-third{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .layout-quarter{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .layout-auto-320,
+
+    .layout-auto-260,
+
+    .layout-auto-220{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .layout-stats{
+
+        grid-template-columns:
+
+            repeat(2,1fr);
+
+    }
+
+}
+
+/*--------------------------------------------------
+CELULAR GRANDE
+--------------------------------------------------*/
+
+@media (max-width:768px){
+
+    html{
+
+        font-size:15px;
+
+    }
+
+    .perfil-logo{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+    }
+
+    .perfil-logo__icon{
+
+        width:56px;
+
+        height:56px;
+
+        font-size:1.6rem;
+
+    }
+
+    .perfil-logo h1{
+
+        font-size:1.6rem;
+
+    }
+
+    .perfil-tabs{
+
+        display:grid;
+
+        grid-template-columns:1fr;
+
+    }
+
+    .perfil-tab{
+
+        width:100%;
+
+    }
+
+    .ds-title-xl{
+
+        font-size:1.8rem;
+
+    }
+
+    .ds-title-lg{
+
+        font-size:1.35rem;
+
+    }
+
+    .ds-number{
+
+        font-size:1.7rem;
+
+    }
+
+    .layout-stats{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .perfil-footer{
+
+        flex-direction:column;
+
+        text-align:center;
+
+    }
+
+    .modal{
+
+        width:95vw;
+
+    }
+
+}
+
+/*--------------------------------------------------
+CELULAR
+--------------------------------------------------*/
+
+@media (max-width:576px){
+
+    body{
+
+        overflow-x:hidden;
+
+    }
+
+    .perfil-page{
+
+        padding:12px;
+
+    }
+
+    .perfil-card{
+
+        padding:18px;
+
+    }
+
+    .perfil-module{
+
+        padding:18px;
+
+    }
+
+    .perfil-search{
+
+        padding:10px 14px;
+
+    }
+
+    .perfil-search__input{
+
+        font-size:.92rem;
+
+    }
+
+    .ds-btn{
+
+        width:100%;
+
+    }
+
+    .ds-card{
+
+        padding:18px;
+
+    }
+
+    .loading-card{
+
+        width:90vw;
+
+    }
+
+    .toast{
+
+        right:12px;
+
+        left:12px;
+
+        bottom:12px;
+
+    }
+
+}
+
+/*--------------------------------------------------
+CELULARES MUITO PEQUENOS
+--------------------------------------------------*/
+
+@media (max-width:420px){
+
+    html{
+
+        font-size:14px;
+
+    }
+
+    .perfil-logo h1{
+
+        font-size:1.35rem;
+
+    }
+
+    .perfil-logo p{
+
+        font-size:.82rem;
+
+    }
+
+    .perfil-nav{
+
+        gap:8px;
+
+    }
+
+    .perfil-nav a{
+
+        padding:10px;
+
+        font-size:.82rem;
+
+    }
+
+    .perfil-tab{
+
+        padding:12px;
+
+        font-size:.88rem;
+
+    }
+
+    .ds-title-xl{
+
+        font-size:1.5rem;
+
+    }
+
+    .ds-number{
+
+        font-size:1.5rem;
+
+    }
+
+}
+
+/*--------------------------------------------------
+TELAS GRANDES
+--------------------------------------------------*/
+
+@media (min-width:1800px){
+
+    html{
+
+        font-size:18px;
+
+    }
+
+    .perfil-page{
+
+        max-width:1700px;
+
+    }
+
+}
+
+/*==================================================
+ESTADOS DA APLICAÇÃO
+==================================================*/
+
+.is-loading{
+
+    pointer-events:none;
+
+    opacity:.60;
+
+    transition:.25s;
+
+}
+
+.is-empty{
+
+    min-height:180px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+}
+
+.is-error{
+
+    border:1px solid rgba(255,80,80,.35);
+
+}
+
+.is-active{
+
+    display:block;
+
+}
+
+.is-hidden{
+
+    display:none !important;
+
+}
+
+/*==================================================
+FOCUS
+==================================================*/
+
+:focus-visible{
+
+    outline:3px solid var(--accent);
+
+    outline-offset:3px;
+
+    border-radius:10px;
+
+}
+
+/*==================================================
+SELEÇÃO
+==================================================*/
+
+::selection{
+
+    background:var(--accent);
+
+    color:#04142d;
+
+}
+
+/*==================================================
+IMAGENS
+==================================================*/
+
+img{
+
+    user-select:none;
+
+    -webkit-user-drag:none;
+
+}
+
+/*==================================================
+TRANSIÇÕES
+==================================================*/
+
+.perfil-module,
+.ds-card,
+.perfil-card,
+.perfil-tab{
+
+    transition:
+
+        background .25s,
+
+        color .25s,
+
+        border-color .25s,
+
+        transform .25s,
+
+        opacity .25s;
+
+}
+
+/*==================================================
+MÓDULOS
+==================================================*/
+
+[data-module]{
+
+    position:relative;
+
+}
+
+[data-module]::after{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    pointer-events:none;
+
+}
+
+/*==================================================
+ESTADO CARREGANDO
+==================================================*/
+
+[data-state="loading"]{
+
+    opacity:.65;
+
+}
+
+[data-state="loading"]::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    backdrop-filter:blur(2px);
+
+}
+
+/*==================================================
+ESTADO VAZIO
+==================================================*/
+
+[data-state="empty"]{
+
+    opacity:.75;
+
+}
+
+/*==================================================
+ESTADO ERRO
+==================================================*/
+
+[data-state="error"]{
+
+    border-color:#ff6961;
+
+}
+
+/*==================================================
+ANIMAÇÕES
+==================================================*/
+
+.animate-fade{
+
+    animation:fadeIn .35s;
+
+}
+
+.animate-slide{
+
+    animation:slideUp .35s;
+
+}
+
+.animate-zoom{
+
+    animation:zoomIn .30s;
+
+}
+        
+
+        
+</STYLE>
+
+<!--==================================================
+SELETOR DO PARTICIPANTE
+===================================================-->
+
+<section class="perfil-selector">
+
+    <div class="perfil-card">
+
+        <div class="perfil-card__title">
+
+            👤 Participante
+
+        </div>
+
+        <div class="perfil-search">
+
+            <span class="perfil-search__icon">
+
+                🔍
+
+            </span>
+
+            <input
+                id="busca-input"
+                class="perfil-search__input"
+                type="text"
+                autocomplete="off"
+                placeholder="Digite o nome do participante">
+
+            <button
+                id="busca-clear"
+                class="perfil-search__clear">
+
+                ✕
+
+            </button>
+
+        </div>
+
+        <div
+            id="lista-participantes"
+            class="perfil-search-list">
+
+            <div
+                id="lista-scroll"
+                class="perfil-search-scroll">
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!--==================================================
+HERO
+===================================================-->
+
+<section
+    id="perfil-hero"
+    class="perfil-hero">
+
+    <!--
+        Todo o conteúdo será criado
+        pelo hero.js
+    -->
+
+</section>
+
+<!--==================================================
+NAVEGAÇÃO
+===================================================-->
+
+<nav class="perfil-tabs">
+
+    <button
+        class="perfil-tab perfil-tab--active"
+        data-tab="grupo">
+
+        ⚽
+        Fase de Grupos
+
+    </button>
+
+    <button
+        class="perfil-tab"
+        data-tab="eliminatorias">
+
+        🏆
+        Eliminatórias
+
+    </button>
+
+    <button
+        class="perfil-tab"
+        data-tab="geral">
+
+        📈
+        Geral
+
+    </button>
+
+</nav>
+
+<!--==================================================
+ÁREA DAS ABAS
+===================================================-->
+
+<div class="perfil-content">
+
+    <!--==========================================
+    FASE DE GRUPOS
+    ===========================================-->
+
+    <section
+        id="perfil-grupo"
+        class="perfil-section perfil-section--active">
+
+<div
+    id="grupo-indicadores"
+    class="perfil-module"
+    data-module="indicadores"
+    data-state="empty">
+</div>
+
+        <div
+            id="grupo-conquistas"
+            class="perfil-module"
+            data-module="grupo-conquistas"
+            data-state="empty">
+        </div>
+
+        <div
+            id="grupo-graficos"
+            class="perfil-module"
+            data-module="grupo-graficos"
+            data-state="empty">
+        </div>
+
+    </section>
+
+    <!--==========================================
+    ELIMINATÓRIAS
+    ===========================================-->
+
+    <section
+        id="perfil-eliminatorias"
+        class="perfil-section">
+
+        <div
+            id="eliminatorias-graficos"
+            class="perfil-module"
+            data-module="eliminatorias-graficos"
+            data-state="empty">
+        </div>
+
+        <div
+            id="eliminatorias-palpites"
+            class="perfil-module"
+            data-module="eliminatorias-palpites"
+            data-state="empty">
+        </div>
+
+    </section>
+
+    <!--==========================================
+    GERAL
+    ===========================================-->
+
+    <section
+        id="perfil-geral"
+        class="perfil-section">
+
+        <div
+            id="geral-graficos"
+            class="perfil-module"
+            data-module="geral-graficos"
+            data-state="empty">
+
+        </div>
+
+        <div
+            id="geral-comparativo"
+            class="perfil-module"
+            data-module="geral-comparativo"
+            data-state="empty">
+
+        </div>
+
+    </section>
+
+</div>
+
+      
+    </style>
+
+</head>
+
+<body>
+
+<div class="perfil-page">
+
+    <!--==============================================
+    HEADER
+    ==============================================-->
+
+    <header class="perfil-header">
+
+        <div>
+
+            <div class="perfil-logo">
+
+                <div class="perfil-logo__icon">
+
+                    🏆
+
+                </div>
+
+                <div>
+
+                    <h1>
+
+                        Perfil do Participante
+
+                    </h1>
+
+                    <p>
+
+                        Bolão Se Joga Copa do Mundo 2026
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            <nav class="perfil-nav">
+
+                <a href="../index.html">
+
+                    🏠 Home
+
+                </a>
+
+                <a href="ranking.html">
+
+                    📊 Ranking
+
+                </a>
+
+                <a href="palpites.html">
+
+                    🎯 Palpites
+
+                </a>
+
+                <a href="estatisticas.html">
+
+                    📈 Estatísticas
+
+                </a>
+
+                <a href="perfil.html">
+
+                    👤 Perfil
+
+                </a>
+
+            </nav>
+
+        </div>
+
+    </header>
+
+    <!--==============================================
+    CONTEÚDO PRINCIPAL
+    ==============================================-->
+
+    <main class="perfil-main">
+
+      <!--==================================================
+SELETOR DO PARTICIPANTE
+===================================================-->
+
+<section class="perfil-selector">
+
+    <div class="perfil-card">
+
+        <div class="perfil-card__title">
+
+            👤 Participante
+
+        </div>
+
+        <div class="perfil-search">
+
+            <span class="perfil-search__icon">
+
+                🔍
+
+            </span>
+
+            <input
+                id="busca-input"
+                class="perfil-search__input"
+                type="text"
+                autocomplete="off"
+                placeholder="Digite o nome do participante">
+
+            <button
+                id="busca-clear"
+                class="perfil-search__clear">
+
+                ✕
+
+            </button>
+
+        </div>
+
+        <div
+            id="lista-participantes"
+            class="perfil-search-list">
+
+            <div
+                id="lista-scroll"
+                class="perfil-search-scroll">
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!--==================================================
+HERO
+===================================================-->
+
+<section
+    id="perfil-hero"
+    class="perfil-hero"
+    data-module="hero"
+    data-state="empty">
+
+    <!--
+        Todo o conteúdo será criado
+        pelo hero.js
+    -->
+
+</section>
+
+<!--==================================================
+NAVEGAÇÃO
+===================================================-->
+
+<nav class="perfil-tabs">
+
+    <button
+        class="perfil-tab perfil-tab--active"
+        data-tab="grupo">
+
+        ⚽
+        Fase de Grupos
+
+    </button>
+
+    <button
+        class="perfil-tab"
+        data-tab="eliminatorias">
+
+        🏆
+        Eliminatórias
+
+    </button>
+
+    <button
+        class="perfil-tab"
+        data-tab="geral">
+
+        📈
+        Geral
+
+    </button>
+
+</nav>
+
+<!--==================================================
+ÁREA DAS ABAS
+===================================================-->
+
+<div class="perfil-content">
+
+    <!--==========================================
+    FASE DE GRUPOS
+    ===========================================-->
+
+    <section
+        id="perfil-grupo"
+        class="perfil-section perfil-section--active">
+
+        <div
+            id="grupo-indicadores"
+            class="perfil-module">
+
+        </div>
+
+        <div
+            id="grupo-conquistas"
+            class="perfil-module">
+
+        </div>
+
+        <div
+            id="grupo-graficos"
+            class="perfil-module">
+
+        </div>
+
+    </section>
+
+    <!--==========================================
+    ELIMINATÓRIAS
+    ===========================================-->
+
+    <section
+        id="perfil-eliminatorias"
+        class="perfil-section">
+
+        <div
+            id="eliminatorias-graficos"
+            class="perfil-module">
+
+        </div>
+
+        <div
+            id="eliminatorias-palpites"
+            class="perfil-module">
+
+        </div>
+
+    </section>
+
+    <!--==========================================
+    GERAL
+    ===========================================-->
+
+    <section
+        id="perfil-geral"
+        class="perfil-section">
+
+        <div
+            id="geral-graficos"
+            class="perfil-module">
+
+        </div>
+
+        <div
+            id="geral-comparativo"
+            class="perfil-module">
+
+        </div>
+
+    </section>
+
+<!--==================================================
+BIBLIOTECAS
+===================================================-->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!--==================================================
+CORE
+===================================================-->
+
+<script src="js/common/core.js"></script>
+
+<script src="js/common/config.js"></script>
+
+<script src="js/common/flags.js"></script>
+
+<!--==================================================
+SERVICES
+===================================================-->
+
+<script src="js/services/googleSheets.js"></script>
+
+<script src="js/services/database.js"></script>
+
+<!--==================================================
+VIEW MODELS
+===================================================-->
+
+<script src="js/viewModels/perfilViewModel.js"></script>
+
+<!--==================================================
+MÓDULOS DO PERFIL
+===================================================-->
+
+<script src="js/perfil/main.js"></script>
+
+<script src="js/perfil/hero.js"></script>
+
+<script src="js/perfil/grupos.js"></script>
+
+<script src="js/perfil/conquistas.js"></script>
+
+<script src="js/perfil/graficos.js"></script>
+
+<script src="js/perfil/eliminatorias.js"></script>
+
+<script src="js/perfil/geral.js"></script>
+
+<!--==================================================
+BOOTSTRAP
+===================================================-->
+
+<script>
+
+(function(){
+
+    "use strict";
+
+    document.addEventListener(
+
+        "DOMContentLoaded",
+
+        async function(){
+
+            try{
+
+                console.group(
+
+                    "🏆 Perfil"
+
+                );
+
+                console.log(
+
+                    "Inicializando..."
+
+                );
+
+                if(
+
+                    !window.Bolao
+
+                ){
+
+                    throw new Error(
+
+                        "Core não carregado."
+
+                    );
+
+                }
+
+                if(
+
+                    !Bolao.perfil ||
+
+                    !Bolao.perfil.init
+
+                ){
+
+                    throw new Error(
+
+                        "main.js não encontrado."
+
+                    );
+
+                }
+
+                //--------------------------------------------------
+                // Loading
+                //--------------------------------------------------
+
+                document
+
+                    .getElementById(
+
+                        "loading-overlay"
+
+                    )
+
+                    ?.classList
+
+                    .remove(
+
+                        "hidden"
+
+                    );
+
+                //--------------------------------------------------
+                // Inicializa página
+                //--------------------------------------------------
+
+                await Bolao.perfil.init();
+
+                //--------------------------------------------------
+                // Remove loading
+                //--------------------------------------------------
+
+                document
+
+                    .getElementById(
+
+                        "loading-overlay"
+
+                    )
+
+                    ?.classList
+
+                    .add(
+
+                        "hidden"
+
+                    );
+
+                console.log(
+
+                    "Perfil carregado."
+
+                );
+
+                console.groupEnd();
+
+            }
+
+            catch(e){
+
+                console.error(e);
+
+                document
+
+                    .getElementById(
+
+                        "loading-overlay"
+
+                    )
+
+                    ?.classList
+
+                    .add(
+
+                        "hidden"
+
+                    );
+
+                const toast =
+
+                    document.getElementById(
+
+                        "toast"
+
+                    );
+
+                const msg =
+
+                    document.getElementById(
+
+                        "toast-message"
+
+                    );
+
+                if(
+
+                    toast && msg
+
+                ){
+
+                    msg.innerHTML =
+
+                        e.message;
+
+                    toast.classList.remove(
+
+                        "hidden"
+
+                    );
+
+                }
+
+            }
+
+        }
+
+    );
+
+})();
+
+</script>
+
+</body>
+
+</html>
+</body>
+      <!--==================================================
+    FOOTER
+    ===================================================-->
+
+    <footer class="perfil-footer">
+
+        <div class="perfil-footer__left">
+
+            <strong>
+
+                Bolão Se Joga Copa do Mundo 2026
+
+            </strong>
+
+            <span>
+
+                Dashboard do Participante
+
+            </span>
+
+        </div>
+
+        <div class="perfil-footer__right">
+
+            Desenvolvido com ❤️
+
+        </div>
+
+    </footer>
+
+</main>
+
+<!--==================================================
+LOADING GLOBAL
+===================================================-->
+
+<div
+    id="loading-overlay"
+    class="loading-overlay hidden">
+
+    <div class="loading-card">
+
+        <div class="loading-spinner"></div>
+
+        <div class="loading-text">
+
+            Carregando informações...
+
+        </div>
+
+    </div>
+
+</div>
+
+<!--==================================================
+TOAST
+===================================================-->
+
+<div
+    id="toast"
+    class="toast hidden">
+
+    <div
+        id="toast-message">
+
+    </div>
+
+</div>
+
+<!--==================================================
+MODAL
+===================================================-->
+
+<div
+    id="modal-backdrop"
+    class="modal-backdrop hidden">
+
+    <div
+        class="modal">
+
+        <div
+            class="modal-header">
+
+            <h3
+                id="modal-title">
+
+            </h3>
+
+            <button
+                id="modal-close">
+
+                ✕
+
+            </button>
+
+        </div>
+
+        <div
+            id="modal-body"
+            class="modal-body">
+
+        </div>
+
+    </div>
+
+</div>
+
+<!--==================================================
+TEMPLATES
+===================================================-->
+
+<template id="tpl-empty">
+
+    <div class="perfil-empty">
+
+        <div class="perfil-empty__icon">
+
+            📊
+
+        </div>
+
+        <div class="perfil-empty__title">
+
+            Nenhuma informação disponível
+
+        </div>
+
+    </div>
+
+</template>
+
+<template id="tpl-loading">
+
+    <div class="loading-box">
+
+        <div class="loading-spinner"></div>
+
+        <span>
+
+            Carregando...
+
+        </span>
+
+    </div>
+
+</template>
+
+<template id="tpl-error">
+
+    <div class="perfil-empty">
+
+        <div class="perfil-empty__icon">
+
+            ⚠️
+
+        </div>
+
+        <div class="perfil-empty__title">
+
+            Erro ao carregar os dados
+
+        </div>
+
+    </div>
+
+</template>
+
+</div>

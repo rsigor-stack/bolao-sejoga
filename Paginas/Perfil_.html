@@ -1,0 +1,361 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bolão Se Joga Copa do Mundo 2026 — Palpites</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="CSS/Perfil.css">
+  <link rel="stylesheet" href="CSS/perfil-header.css">
+  <link rel="stylesheet" href="CSS/conquistas-brilho.css">
+  <link rel="stylesheet" href="CSS/perfil-pizza.css">
+  <style>
+  </style>
+
+</head>
+
+<body id="topo">
+
+<! Monta o cabeçalho da página>
+<div id="header-placeholder"></div>
+<script>
+  fetch('header.html')
+    .then(r => r.text())
+    .then(html => document.getElementById('header-placeholder').innerHTML = html);
+</script>
+<! Fim do cabeçalho----------->  
+  
+<div class="page-wrapper">
+
+  <div class="page-title">
+    <h3>👤 Perfil do Participante</h3>
+    <p>Selecione um participante para ver resumo do seu desempenho, conquistas e palpites chave</p>
+  </div>
+
+  <!-- Carregando -->
+  <div id="loading-state">
+    <div class="loading-state"><div class="spinner"></div><span>Carregando participantes…</span></div>
+  </div>
+
+  <!-- Conteúdo principal (oculto até carregar) -->
+  <div id="conteudo" style="display:none;">
+
+    <!-- Seletor de participante -->
+    <div class="selector-card">
+      <div class="selector-label">👤 Selecione o participante</div>
+      <div class="busca-wrap">
+        <span class="busca-icon">🔍</span>
+        <input
+          type="text"
+          id="busca-input"
+          class="busca-input"
+          placeholder="Digite o nome para buscar…"
+          autocomplete="off"
+        >
+        <button class="busca-clear" id="busca-clear" title="Limpar">✕</button>
+      </div>
+
+      <div class="lista-participantes" id="lista-participantes">
+        <div class="lista-scroll" id="lista-scroll"></div>
+      </div>
+      <div class="selecionado-chip" id="selecionado-chip">
+        <span>✓</span>
+        <span id="chip-nome"></span>
+        <button id="chip-trocar" title="Trocar participante">✕</button>
+      </div>
+    </div>
+
+
+<!-- Cabeçalho do resumo -->
+<div class="perfil-header" id="perfil-header">
+
+ <div class="perfil-header-inner">
+
+    <div class="perfil-header-nome">
+
+       <!-- <span class="perfil-avatar">👤</span> -->
+
+        <div>
+
+            <div class="perfil-header-label">
+                Participante
+            </div>
+
+            <div
+                id="perfil-header-nome"
+                class="perfil-header-titulo">
+                —
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="perfil-header-pontos">
+
+        <div
+            id="perfil-header-pontos"
+            class="perfil-header-pontos-valor">
+            —
+        </div>
+    
+        <div class="perfil-header-label">
+            Pontuação Atual
+        </div>
+    
+    </div>
+    
+    <div class="perfil-header-ranking">
+    
+        <div
+            id="perfil-header-posicao"
+            class="perfil-header-posicao">
+            —
+        </div>
+    
+        <div class="perfil-header-label">
+            Classificação Atual
+        </div>
+    
+    </div>
+  </div>
+</div>
+
+
+<div class="tabs">
+
+  <button
+    class="tab-btn active"
+    id="tab-jogos">
+    ⚽ Fase de Grupos
+  </button>
+
+
+  <button
+    class="tab-btn"
+    id="tab-elim">
+    🏆 Eliminatórias
+  </button>
+
+  <button
+    class="tab-btn"
+    id="tab-geral">
+    🏆 Geral
+  </button>
+
+</div>
+
+    <!-- Seção de Conquistas -->
+    <div class="conq-section" id="conq-section" style="display:none;">
+      <div class="conq-header">
+        <span class="conq-header-icon">⭐</span>
+        <div>
+          <h3 class="conq-titulo">Conquistas</h3>
+          <p class="conq-sub">Medalhas e troféus desbloqueados pelo participante</p>
+        </div>
+        <div class="conq-pontos-total">
+          <div class="conq-pontos-valor" id="conq-pontos-total">—</div>
+          <div class="conq-pontos-label">pts em conquistas</div>
+        </div>
+      </div>
+      <div class="conq-grid">
+        <div class="conq-card bloqueado" id="cq-top-ranking">
+          <div class="conq-nivel-badge" id="cq-top-ranking-nivel">—</div>
+          <div class="conq-emoji">👑</div>
+          <div class="conq-nome">Top Ranking</div>
+          <div class="conq-desc" id="cq-top-ranking-desc">—</div>
+        </div>
+        <div class="conq-card bloqueado" id="cq-cravadas">
+          <div class="conq-nivel-badge" id="cq-cravadas-nivel">—</div>
+          <div class="conq-emoji">🎯</div>
+          <div class="conq-nome">Placares Exatos</div>
+          <div class="conq-desc" id="cq-cravadas-desc">—</div>
+        </div>
+        <div class="conq-card bloqueado" id="cq-pensamento-unico">
+          <div class="conq-nivel-badge" id="cq-pensamento-unico-nivel">—</div>
+          <div class="conq-emoji">🧠</div>
+          <div class="conq-nome">Pensamento Único</div>
+          <div class="conq-desc" id="cq-pensamento-unico-desc">—</div>
+        </div>
+        <div class="conq-card bloqueado" id="cq-foguete">
+          <div class="conq-nivel-badge" id="cq-foguete-nivel">—</div>
+          <div class="conq-emoji">🚀</div>
+          <div class="conq-nome">Foguete</div>
+          <div class="conq-desc" id="cq-foguete-desc">—</div>
+        </div>
+        <div class="conq-card bloqueado" id="cq-trofeu">
+          <div class="conq-nivel-badge" id="cq-trofeu-nivel">—</div>
+          <div class="conq-emoji">🏆</div>
+          <div class="conq-nome">Troféu</div>
+          <div class="conq-desc" id="cq-trofeu-desc">—</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+    <!-- Seção Resumo Fase de Grupos -->
+    <div class="fg-resumo-section" id="fg-resumo-section" style="display:none;">
+      <div class="fg-resumo-header">
+        <span class="fg-resumo-icon">⚽</span>
+        <div>
+          <h3 class="fg-resumo-titulo">Desempenho — Fase de Grupos</h3>
+          <p class="fg-resumo-sub">Estatísticas e destaques do participante na fase de grupos</p>
+        </div>
+      </div>
+      <div class="fg-resumo-grid">
+        <div class="fg-stat-card fg-stat-highlight">
+          <div class="fg-stat-icon">🎯</div>
+          <div class="fg-stat-valor" id="fg-resultados-corretos">—</div>
+          <div class="fg-stat-label">Resultados Corretos</div>
+        </div>
+        <div class="fg-stat-card">
+          <div class="fg-stat-icon">⚖️</div>
+          <div class="fg-stat-valor" id="fg-ranking-moral">—</div>
+          <div class="fg-stat-label">Ranking Moral</div>
+        </div>
+        <div class="fg-stat-card">
+          <div class="fg-stat-icon">🏅</div>
+          <div class="fg-stat-valor" id="fg-melhor-class">—</div>
+          <div class="fg-stat-label">Melhor Classificação Geral</div>
+        </div>
+        <div class="fg-stat-card">
+          <div class="fg-stat-icon">📅</div>
+          <div class="fg-stat-valor fg-stat-data" id="fg-data-melhor">—</div>
+          <div class="fg-stat-label">Data da Melhor Classificação</div>
+        </div>
+
+<div class="fg-stat-card fg-stat-wide">
+
+    <div class="fg-stat-icon">
+        ⚽
+    </div>
+
+    <div class="fg-jogo-wrapper">
+
+        <div id="fg-jogo-melhor"></div>
+
+    </div>
+
+    <div class="fg-stat-label">
+        Jogo da Melhor Classificação
+    </div>
+
+</div>
+
+
+      </div>
+    </div>
+
+<!-- /conteudo -->
+
+  <div
+    id="eliminatorias-card"
+    class="eliminatorias-card">
+  </div>
+  <div
+    id="geral-card"
+    class="eliminatorias-card">
+  </div>
+
+  <!-- Seção Gráfico de Pizza - Pontos por Grupo da Fase de Grupos -->
+  <div class="pizza-section" id="pizza-grupos-section" style="display:none;">
+    <div class="pizza-header">
+      <span class="pizza-header-icon">🍕</span>
+      <div>
+        <h3 class="pizza-titulo">Pontos por Grupo — Fase de Grupos</h3>
+        <p class="pizza-sub">Distribuição dos pontos conquistados em cada grupo da primeira fase</p>
+      </div>
+    </div>
+
+    <div class="pizza-body">
+      <div class="pizza-chart-wrap">
+        <canvas id="pizza-grupos-canvas" width="280" height="280"></canvas>
+      </div>
+
+      <div class="pizza-legenda" id="pizza-grupos-legenda" style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; align-items:start;">
+        <!-- itens gerados dinamicamente -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Seção Gráfico de Pizza - Pontos por Rodada da Fase de Grupos -->
+  <div class="pizza-section" id="pizza-section" style="display:none;">
+    <div class="pizza-header">
+      <span class="pizza-header-icon">🍕</span>
+      <div>
+        <h3 class="pizza-titulo">Pontos por Rodada — Fase de Grupos</h3>
+        <p class="pizza-sub">Distribuição dos pontos conquistados em cada rodada da primeira fase</p>
+      </div>
+    </div>
+
+    <div class="pizza-body">
+      <div class="pizza-chart-wrap">
+        <canvas id="pizza-canvas" width="280" height="280"></canvas>
+      </div>
+
+      <div class="pizza-legenda">
+        <div class="pizza-legenda-item" id="pizza-leg-r1">
+          <span class="pizza-legenda-dot" style="background:#F5A623;"></span>
+          <div class="pizza-legenda-info">
+            <span class="pizza-legenda-label">Rodada 1</span>
+            <span class="pizza-legenda-valor" id="pizza-val-r1">—</span>
+          </div>
+          <div class="pizza-legenda-direita-rodada">
+            <span class="pizza-legenda-pct" id="pizza-pct-r1">—</span>
+            <span class="pizza-rkg-badge" id="pizza-rkg-r1" title="Classificação na Rodada 1">—</span>
+          </div>
+        </div>
+        <div class="pizza-legenda-item" id="pizza-leg-r2">
+          <span class="pizza-legenda-dot" style="background:#4ECDC4;"></span>
+          <div class="pizza-legenda-info">
+            <span class="pizza-legenda-label">Rodada 2</span>
+            <span class="pizza-legenda-valor" id="pizza-val-r2">—</span>
+          </div>
+          <div class="pizza-legenda-direita-rodada">
+            <span class="pizza-legenda-pct" id="pizza-pct-r2">—</span>
+            <span class="pizza-rkg-badge" id="pizza-rkg-r2" title="Classificação na Rodada 2">—</span>
+          </div>
+        </div>
+        <div class="pizza-legenda-item" id="pizza-leg-r3">
+          <span class="pizza-legenda-dot" style="background:#A29BFE;"></span>
+          <div class="pizza-legenda-info">
+            <span class="pizza-legenda-label">Rodada 3</span>
+            <span class="pizza-legenda-valor" id="pizza-val-r3">—</span>
+          </div>
+          <div class="pizza-legenda-direita-rodada">
+            <span class="pizza-legenda-pct" id="pizza-pct-r3">—</span>
+            <span class="pizza-rkg-badge" id="pizza-rkg-r3" title="Classificação na Rodada 3">—</span>
+          </div>
+        </div>
+
+        <div class="pizza-total-row">
+          <span class="pizza-total-label">Total Fase de Grupos</span>
+          <span class="pizza-total-valor" id="pizza-total">—</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /page-wrapper -->
+
+<a href="#topo" class="botao-topo">↑ Topo</a>
+
+<footer>
+  © 2026 • Bolão Se Joga Copa do Mundo • Atualizado automaticamente via Google Sheets
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="JS/perfil-core.js" defer></script>
+<script src="JS/perfil-render-base.js" defer></script>
+<script src="JS/perfil-pizza.js" defer></script>
+<script src="JS/perfil-init.js" defer></script>
+<script src="JS/perfil-busca.js" defer></script>
+<script src="JS/utils-bandeiras.js" defer></script>
+
+</body>
+</html>

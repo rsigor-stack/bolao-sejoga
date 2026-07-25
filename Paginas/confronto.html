@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Bolão Se Joga Copa do Mundo 2026 — Confronto de Palpites
+    </title>
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link
+        rel="stylesheet"
+        href="CSS/confronto.css">
+
+</head>
+
+<body id="topo">
+
+<!-- ==========================================================
+     HEADER
+=========================================================== -->
+<! Monta o cabeçalho da página>
+<div id="header-placeholder"></div>
+<script>
+  fetch('header.html')
+    .then(r => r.text())
+    .then(html => document.getElementById('header-placeholder').innerHTML = html);
+</script>
+<! Fim do cabeçalho----------->  
+
+<!-- ==========================================================
+     CONTEÚDO PRINCIPAL
+=========================================================== -->
+
+<main
+    class="page-wrapper"
+    id="page-wrapper">
+
+    <div class="page-title">
+
+        <h2 id="page-title">
+            ⚔️ Confronto de Palpites
+        </h2>
+
+        <p id="page-subtitle">
+            Selecione um jogo para comparar os palpites de todos os participantes
+        </p>
+
+    </div>
+
+    <div
+        id="loading-state"
+        aria-live="polite">
+
+        <div class="loading-state">
+
+            <div class="spinner"></div>
+
+            <span>
+                Carregando dados...
+            </span>
+
+        </div>
+        <div
+            id="page-message"
+            class="page-message"
+            hidden>
+        </div>
+
+    </div>
+
+    <div
+        id="conteudo"
+	class="page-content"
+        style="display:none;">
+
+        <!-- ======================================================
+             SELETOR DE JOGO
+        ======================================================= -->
+
+        <section
+            class="section-card"
+            id="card-seletor">
+
+            <div class="section-header">
+
+                <span class="icon">
+                    📅
+                </span>
+
+                <h3>
+                    Selecione o Jogo
+                </h3>
+
+                <span
+                    class="badge"
+                    id="badge-jogos">
+
+                    —
+
+                </span>
+
+            </div>
+
+            <div class="section-body">
+
+                <div class="selector-inner">
+
+                    <div
+                        class="jogos-lista"
+                        id="jogos-lista">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ======================================================
+             JOGO SELECIONADO
+        ======================================================= -->
+
+        <section
+            class="section-card"
+            id="card-jogo-dest"
+            style="display:none;">
+
+            <div class="section-header">
+
+                <span class="icon">
+                    🏟️
+                </span>
+
+                <h3 id="dest-titulo">
+
+                    Jogo Selecionado
+
+                </h3>
+
+                <span
+                    class="badge"
+                    id="dest-badge">
+
+                    —
+
+                </span>
+
+            </div>
+
+            <div class="section-body">
+
+                <div
+                    class="jogo-destaque-card visivel"
+                    id="jogo-destaque"
+                    aria-live="polite">
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ======================================================
+             TABELA DE CONFRONTO
+        ======================================================= -->
+
+        <section
+            class="section-card tabela-card"
+            id="tabela-card">
+
+            <div class="section-header">
+
+                <span class="icon">
+                    📋
+                </span>
+
+                <h3 id="header-label">
+                    
+                </h3>
+
+                <span
+                    class="badge"
+                    id="badge-tabela">
+
+                    —
+
+                </span>
+
+            </div>
+
+            <div class="section-body">
+
+                <div
+                    class="tabela-scroll"
+                    id="tabela-scroll">
+
+                    <table
+                        id="tabela-confronto"
+                        data-modo="grupo">
+
+                        <thead id="tabela-head">
+
+                            <tr id="tabela-head-row">
+
+                                <th class="col-part">
+                                    Participante
+                                </th>
+
+                                <th>
+                                    Palpite
+                                </th>
+
+                                <th>
+                                    Pontos
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody
+                            id="tabela-body"
+                            aria-live="polite">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+<div
+    id="legenda-status"
+    class="status-legend"
+    hidden>
+
+    <span>
+
+        ⏳ Ainda pode pontuar
+
+    </span>
+
+    <span>
+
+        ✅ Pontuou
+
+    </span>
+
+    <span>
+
+        ❌ Não pontuou
+
+    </span>
+
+</div>
+
+
+</main>
+
+<!-- ==========================================================
+     BOTÃO VOLTAR AO TOPO
+=========================================================== -->
+
+<a
+    href="#topo"
+    class="botao-topo"
+    aria-label="Voltar ao topo">
+
+    ↑ Topo
+
+</a>
+
+<!-- ==========================================================
+     RODAPÉ
+=========================================================== -->
+
+<footer id="page-footer">
+
+    © 2026 • Bolão Se Joga Copa do Mundo •
+    Atualizado automaticamente via Google Sheets
+
+</footer>
+
+<!-- ==========================================================
+     JAVASCRIPT
+=========================================================== -->
+
+<script
+    src="JS/confronto2.js"
+    defer>
+
+</script>

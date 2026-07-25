@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bolão Se Joga Copa do Mundo 2026 — Confronto de Palpites</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --accent:   #00d4ff;
+      --accent-2: #08f7a1;
+      --gold:     #ffd700;
+      --silver:   #c0c0c0;
+      --bronze:   #cd7f32;
+      --text:     #ffffff;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left,  rgba(0,212,255,.18), transparent 25%),
+        radial-gradient(circle at bottom right, rgba(8,247,161,.12), transparent 25%),
+        linear-gradient(135deg, #03101f 0%, #072654 55%, #04142d 100%);
+      overflow-x: hidden;
+    }
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none; z-index: 0;
+    }
+
+    /* ── HEADER ── */
+    header { position: relative; z-index: 2; padding: 32px 24px 16px; }
+    .topbar {
+      display: flex; justify-content: space-between;
+      align-items: center; gap: 16px; flex-wrap: wrap;
+      max-width: 1400px; margin: auto;
+    }
+    .logo { display: flex; align-items: center; gap: 14px; }
+    .logo-icon {
+      width: 58px; height: 58px; border-radius: 18px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem; box-shadow: 0 10px 25px rgba(0,212,255,.35);
+    }
+    .logo h1 { font-size: 2rem; font-weight: 800; letter-spacing: 1px; }
+    .logo p  { opacity: .75; font-size: .95rem; margin-top: 4px; }
+
+    nav {
+      position: relative; z-index: 2;
+      max-width: 1400px; margin: 24px auto 0;
+      display: flex; gap: 12px; flex-wrap: wrap;
+    }
+    nav a {
+      text-decoration: none; color: white;
+      padding: 12px 18px; border-radius: 999px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.08);
+      transition: .25s ease; font-weight: 600; font-size: .95rem;
+      backdrop-filter: blur(10px);
+    }
+    nav a:hover, nav a.active {
+      transform: translateY(-2px);
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #04142d;
+    }
+
+    /* ── PAGE WRAPPER ── */
+    .page-wrapper {
+      position: relative; z-index: 2;
+      max-width: 1400px; margin: 36px auto 48px; padding: 0 24px;
+    }
+    .page-title { margin-bottom: 28px; }
+    .page-title h2 { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; }
+    .page-title p  { opacity: .75; font-size: .95rem; margin-top: 6px; }
+
+    /* ── LOADING / ERROR ── */
+    .loading-state, .error-state {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 12px; padding: 64px 24px;
+      opacity: .7; font-size: .95rem; text-align: center;
+    }
+    .spinner {
+      width: 36px; height: 36px;
+      border: 3px solid rgba(255,255,255,.15);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .error-state { color: #ff8a8a; }
+
+    /* ── SECTION CARD ── */
+    .section-card {
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 28px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 20px 50px rgba(0,0,0,.30);
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+    .section-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 24px 28px 20px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .section-header .icon { font-size: 1.4rem; }
+    .section-header h3 { font-size: 1.1rem; font-weight: 700; }
+    .section-header .badge {
+      margin-left: auto; font-size: .75rem; font-weight: 700;
+      padding: 4px 10px; border-radius: 999px;
+      background: rgba(0,212,255,.15);
+      border: 1px solid rgba(0,212,255,.3);
+      color: var(--accent); letter-spacing: .5px; text-transform: uppercase;
+    }
+
+    /* ── SELETOR DE JOGO ── */
+    .selector-inner { padding: 24px 28px; }
+    .selector-label {
+      font-size: .8rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1px;
+      opacity: .6; margin-bottom: 16px;
+    }
+
+    .jogos-lista { display: flex; flex-direction: column; gap: 10px; }
+
+    .jogo-btn {
+      display: flex; align-items: center;
+      gap: 14px; width: 100%;
+      padding: 14px 18px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 16px;
+      cursor: pointer; transition: .2s ease;
+      color: white; font-family: 'Montserrat', sans-serif;
+      text-align: left;
+    }
+    .jogo-btn:hover {
+      background: rgba(255,255,255,.10);
+      border-color: rgba(0,212,255,.3);
+      transform: translateX(4px);
+    }
+    .jogo-btn.ativo {
+      background: rgba(0,212,255,.10);
+      border-color: rgba(0,212,255,.4);
+      box-shadow: 0 4px 16px rgba(0,212,255,.15);
+    }
+
+    /* Times dentro do botão */
+    .jogo-btn-times {
+      display: flex; align-items: center; gap: 10px; flex: 1; flex-wrap: wrap;
+    }
+    .jogo-btn-time {
+      display: flex; align-items: center; gap: 8px;
+    }
+    .jogo-btn-time img {
+      width: 28px; height: 21px;
+      border-radius: 3px; object-fit: cover; flex-shrink: 0;
+    }
+    .jogo-btn-nome {
+      font-weight: 700; font-size: .92rem;
+    }
+    .jogo-btn-sep {
+      font-size: .85rem; font-weight: 800; opacity: .4;
+    }
+    .jogo-btn-meta {
+      font-size: .75rem; opacity: .55;
+      white-space: nowrap; text-align: right;
+      flex-shrink: 0;
+    }
+    .jogo-btn-placar {
+      font-size: 1rem; font-weight: 800;
+      color: var(--gold); letter-spacing: 2px;
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .jogo-tag {
+      display: inline-block; font-size: .65rem; font-weight: 700;
+      padding: 2px 8px; border-radius: 999px;
+      text-transform: uppercase; letter-spacing: .5px; flex-shrink: 0;
+      background: rgba(0,212,255,.12);
+      border: 1px solid rgba(0,212,255,.2);
+      color: var(--accent);
+    }
+
+    /* ── PLACAR DO JOGO SELECIONADO ── */
+    .jogo-destaque-card {
+      display: none; padding: 28px;
+    }
+    .jogo-destaque-card.visivel { display: block; }
+
+    .jogo-destaque-inner {
+      display: flex; align-items: center;
+      justify-content: space-between; gap: 16px;
+    }
+    .jogo-dest-time {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 8px; flex: 1;
+    }
+    .jogo-dest-time img {
+      width: 56px; height: 42px;
+      border-radius: 6px; object-fit: cover;
+    }
+    .jogo-dest-nome {
+      font-size: .9rem; font-weight: 700; text-align: center;
+    }
+    .jogo-dest-placar {
+      font-size: 2.4rem; font-weight: 800;
+      color: var(--gold); letter-spacing: 6px; flex-shrink: 0;
+      text-align: center;
+    }
+    .jogo-dest-placar.pendente {
+      font-size: 1.4rem; opacity: .4; letter-spacing: 2px;
+    }
+    .jogo-dest-meta {
+      text-align: center; margin-top: 14px;
+      font-size: .8rem; opacity: .6;
+    }
+
+    /* ── TABELA DE CONFRONTO ── */
+    .tabela-card { display: none; }
+    .tabela-card.visivel { display: block; }
+
+    .tabela-scroll { overflow-x: auto; }
+    .tabela-scroll::-webkit-scrollbar { height: 4px; }
+    .tabela-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,.15); border-radius: 99px; }
+
+    table {
+      width: 100%; border-collapse: collapse; font-size: .88rem;
+    }
+    thead tr {
+      background: rgba(255,255,255,.05);
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+    thead th {
+      padding: 12px 14px; text-align: center;
+      font-size: .68rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .8px; opacity: .7;
+      white-space: nowrap;
+    }
+    thead th.col-part { text-align: left; min-width: 140px; }
+
+    tbody tr {
+      border-bottom: 1px solid rgba(255,255,255,.05);
+      transition: background .15s;
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(255,255,255,.04); }
+    tbody tr.destaque-row { background: rgba(255,215,0,.06); }
+
+    td { padding: 12px 14px; text-align: center; vertical-align: middle; }
+    td.col-part { text-align: left; }
+
+    /* Nome do participante */
+    .part-info { display: flex; align-items: center; gap: 10px; }
+    .part-pos {
+      width: 26px; height: 26px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: .75rem; flex-shrink: 0;
+    }
+    .pos-1 { background: rgba(255,215,0,.2);   color: var(--gold);   border: 1px solid rgba(255,215,0,.4); }
+    .pos-2 { background: rgba(192,192,192,.2); color: var(--silver); border: 1px solid rgba(192,192,192,.4); }
+    .pos-3 { background: rgba(205,127,50,.2);  color: var(--bronze); border: 1px solid rgba(205,127,50,.4); }
+    .pos-n { background: rgba(255,255,255,.07); color: rgba(255,255,255,.6); border: 1px solid rgba(255,255,255,.12); }
+
+    .part-nome { font-weight: 600; font-size: .88rem; }
+
+    /* Palpite */
+    .palpite-val { font-weight: 700; font-size: .95rem; letter-spacing: 1px; }
+    .palpite-pendente { opacity: .3; font-size: .8rem; }
+
+    /* Pontuação */
+    .pts-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 34px; height: 34px; border-radius: 50%;
+      font-weight: 800; font-size: .85rem;
+    }
+    .pts-0    { background: rgba(255,255,255,.06); color: rgba(255,255,255,.3); }
+    .pts-low  { background: rgba(0,212,255,.12);  color: var(--accent); border: 1px solid rgba(0,212,255,.25); }
+    .pts-mid  { background: rgba(8,247,161,.12);  color: var(--accent-2); border: 1px solid rgba(8,247,161,.25); }
+    .pts-high { background: rgba(255,215,0,.18);  color: var(--gold); border: 1px solid rgba(255,215,0,.3); }
+    .pts-vazio { opacity: .25; font-size: .72rem; }
+
+    /* Ícone de acerto exato */
+    .exato-icon { font-size: .9rem; margin-left: 4px; }
+
+    /* ── BOTÃO TOPO ── */
+    .botao-topo {
+      position: fixed; bottom: 30px; right: 28px; z-index: 99;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #04142d; font-weight: 700; font-size: .85rem;
+      padding: 12px 18px; border-radius: 999px; text-decoration: none;
+      box-shadow: 0 8px 24px rgba(0,212,255,.35); transition: .25s ease;
+    }
+    .botao-topo:hover { transform: translateY(-3px); }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative; z-index: 2;
+      padding: 32px 24px 48px;
+      text-align: center; opacity: .65; font-size: .92rem;
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 700px) {
+      .logo h1 { font-size: 1.4rem; }
+      .jogo-btn-nome { font-size: .82rem; }
+      .jogo-dest-time img { width: 44px; height: 33px; }
+      .jogo-dest-placar { font-size: 1.8rem; }
+      .jogo-dest-nome { font-size: .8rem; }
+      thead th, td { padding: 10px 8px; }
+      thead th.col-part, td.col-part { min-width: 110px; }
+    }
+  </style>
+</head>
+<body id="topo">
+
+<header>
+  <div class="topbar">
+    <div class="logo">
+      <div class="logo-icon">🏆</div>
+      <div>
+        <h1>Bolão Se Joga na Copa 2026</h1>
+        <p>FIFA World Cup • Canadá • México • Estados Unidos</p>
+        <p>Bolão entre amigos que acham que entendem de futebol e que adoram dar palpite</p>
+      </div>
+    </div>
+  </div>
+  <nav>
+    <a href="#" onclick="window.location.href='https://sejoganacopa.vercel.app/'; return false;">  🏠 Home </a>
+    <a href="#" onclick="window.location.href='https://sejoganacopa.vercel.app/Paginas/premiacao.html'; return false;">🏆 Premiação</a>
+    <a href="#" onclick="window.location.href='https://sejoganacopa.vercel.app/Paginas/ranking.html'; return false;"> 📊 Ranking Geral </a>
+    <a href="#" onclick="window.location.href='https://sejoganacopa.vercel.app/Paginas/palpites.html'; return false;"> 🎯 Palpites </a>
+    <a href="#" onclick="window.location.href='https://sejoganacopa.vercel.app/Paginas/confronto.html'; return false;"> ⚔️ Secador</a>
+    <a href="#" onclick="window.location.href='https://sejoganacopa.vercel.app/Paginas/estatisticas.html'; return false;">📈 Estatísticas</a>
+    <a href="https://drive.google.com/uc?export=download&id=18KAjbenZAbscrTi79QvTMVxT1coHtBYc" target="_blank">⬇️ Regulamento</a>
+    <a href="https://drive.google.com/uc?export=download&id=1DCx8z7_M_7dbO9OuPWeOwjx76ElDD4Am" target="_blank">⬇️ ZIP Palpites</a>
+  </nav>
+</header>
+
+<div class="page-wrapper">
+
+  <div class="page-title">
+    <h2>⚔️ Confronto de Palpites</h2>
+    <p>Selecione um jogo para comparar os palpites de todos os participantes</p>
+  </div>
+
+  <div id="loading-state">
+    <div class="loading-state"><div class="spinner"></div><span>Carregando dados…</span></div>
+  </div>
+
+  <div id="conteudo" style="display:none;">
+
+    <!-- SELETOR DE JOGO -->
+    <div class="section-card">
+      <div class="section-header">
+        <span class="icon">📅</span>
+        <h3>Selecione o Jogo</h3>
+        <span class="badge" id="badge-jogos">—</span>
+      </div>
+      <div class="selector-inner">
+        <div class="jogos-lista" id="jogos-lista"></div>
+      </div>
+    </div>
+
+    <!-- PLACAR DO JOGO SELECIONADO -->
+    <div class="section-card" id="card-jogo-dest" style="display:none;">
+      <div class="section-header">
+        <span class="icon">🏟️</span>
+        <h3 id="dest-titulo">Jogo Selecionado</h3>
+        <span class="badge" id="dest-badge">—</span>
+      </div>
+      <div class="jogo-destaque-card visivel" id="jogo-destaque"></div>
+    </div>
+
+    <!-- TABELA DE CONFRONTO -->
+    <div class="section-card tabela-card" id="tabela-card">
+      <div class="section-header">
+        <span class="icon">📋</span>
+        <h3>Palpites dos Participantes</h3>
+        <span class="badge" id="badge-tabela">—</span>
+      </div>
+      <div class="tabela-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th class="col-part">Participante</th>
+              <th>Palpite</th>
+              <th>Pontos</th>
+            </tr>
+          </thead>
+          <tbody id="tabela-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /conteudo -->
+
+</div>
+
+<a href="#topo" class="botao-topo">↑ Topo</a>
+
+<footer>
+  © 2026 • Bolão Se Joga Copa do Mundo • Atualizado automaticamente via Google Sheets
+</footer>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  CONFIGURAÇÃO
+// ═══════════════════════════════════════════════════════════════
+const URL_PALPITES     = 'https://script.google.com/macros/s/AKfycbw3S0FDdjMZbP0mnyQ4iMDHufuN6QTBtNXcWWpOmCkfqnPHQWiUv15Z0uxagpseoibe/exec?aba=Palpites';
+const URL_PROX_JOGOS   = 'https://script.google.com/macros/s/AKfycbyr_jCKmx6ij0fytIqNjK4evsorDQtxdp4bcvnJ4RQMvU6TTK9zwJZZXjm__p3uyKI/exec?aba=ProxJogos';
+const URL_RANKING      = 'https://script.google.com/macros/s/AKfycbztMaYq2BlP3RMu_3wplQ3E7aVbNTs00QnBK62D71Ft3MsQmfS_MUZK1g7RIBlSFEh8/exec';
+
+// ═══════════════════════════════════════════════════════════════
+//  DICIONÁRIOS
+// ═══════════════════════════════════════════════════════════════
+const BANDEIRAS = {
+  'Argentina':'ar',
+  'Brasil':'br',
+  'Colômbia':'co',
+  'Equador':'ec',
+  'Paraguai':'py',
+  'Uruguai':'uy',
+  'Canadá':'ca',
+  'Curaçao':'cw',
+  'Estados Unidos':'us',
+  'Haiti':'ht',
+  'México':'mx',
+  'Panamá':'pa',
+  'Alemanha':'de',
+  'Áustria':'at',
+  'Bélgica':'be',
+  'Bósnia e Herzegovina':'ba',
+  'Croácia':'hr',
+  'Escócia':'gb-sct',
+  'Espanha':'es',
+  'França':'fr',
+  'Holanda':'nl',
+  'Inglaterra':'gb-eng',
+  'Noruega':'no',
+  'Portugal':'pt',
+  'República Tcheca':'cz',
+  'Suécia':'se',
+  'Suíça':'ch',
+  'Turquia':'tr',
+  'África do Sul':'za',
+  'Argélia':'dz',
+  'Cabo Verde':'cv',
+  'RD Congo':'cd',
+  'Costa do Marfim':'ci',
+  'Egito':'eg',
+  'Gana':'gh',
+  'Marrocos':'ma',
+  'Senegal':'sn',
+  'Tunísia':'tn',
+  'Arábia Saudita':'sa',
+  'Austrália':'au',
+  'Coreia do Sul':'kr',
+  'Iraque':'iq',
+  'Irã':'ir',
+  'Japão':'jp',
+  'Jordânia':'jo',
+  'Catar':'qa',
+  'Uzbequistão':'uz',
+  'Nova Zelândia':'nz',
+};
+
+function flagUrl(pais, w = 40) {
+  const cod = BANDEIRAS[pais];
+  return cod ? `https://flagcdn.com/w${w}/${cod}.png` : null;
+}
+
+function flagImg(pais, w, h, r = 3) {
+  const url = flagUrl(pais, 40);
+  return url
+    ? `<img src="${url}" style="width:${w}px;height:${h}px;border-radius:${r}px;object-fit:cover;" alt="${pais}">`
+    : '';
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  FETCH JSON
+// ═══════════════════════════════════════════════════════════════
+async function fetchJSON(url) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const json = await res.json();
+  if (!json.data || !Array.isArray(json.data)) throw new Error('Formato inesperado.');
+  return json.data;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  PARSER PALPITES
+//  Chaves: Data, Hora, Time1, Time2, Real1, Real2,
+//          Nome_pal1, Nome_pal2, Nome_pts …
+// ═══════════════════════════════════════════════════════════════
+function parsearPalpites(rows) {
+  const chaves = Object.keys(rows[0] || {});
+  const participantes = chaves
+    .filter(k => k.endsWith('_pal1'))
+    .map(k => k.replace('_pal1', ''));
+
+  const val = v => (v === '' || v === null || v === undefined || v === '-') ? null : v;
+
+  const jogos = rows.map(r => {
+    const time1 = String(r.Time1 || '').trim();
+    const time2 = String(r.Time2 || '').trim();
+    if (!time1 && !time2) return null;
+    return {
+      data:      String(r.Data  || '').trim(),
+      horario:   String(r.Hora  || '').trim(),
+      time1, time2,
+      gols1Real: val(r.Real1),
+      gols2Real: val(r.Real2),
+      palpites:  participantes.map(nome => ({
+        nome,
+        gols1:  val(r[`${nome}_pal1`]),
+        gols2:  val(r[`${nome}_pal2`]),
+        pontos: val(r[`${nome}_pts`]),
+      })),
+    };
+  }).filter(Boolean);
+
+  return { participantes, jogos };
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  CHAVE DE CONFRONTO — normaliza para casar ProxJogos ↔ Palpites
+// ═══════════════════════════════════════════════════════════════
+function chaveJogo(t1, t2) {
+  return [t1, t2].map(s => s.trim().toLowerCase()).sort().join('|');
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  CLASSE CSS DOS PONTOS
+// ═══════════════════════════════════════════════════════════════
+function ptsClasse(pts) {
+  if (pts === null || pts === '') return 'pts-vazio';
+  const n = Number(pts);
+  if (n === 0) return 'pts-0';
+  if (n <= 3)  return 'pts-low';
+  if (n <= 6)  return 'pts-mid';
+  return 'pts-high';
+}
+
+function posClasse(i) {
+  return i === 0 ? 'pos-1' : i === 1 ? 'pos-2' : i === 2 ? 'pos-3' : 'pos-n';
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  RENDERIZA LISTA DE JOGOS
+// ═══════════════════════════════════════════════════════════════
+function renderJogos(proxJogos, jogoPalpites, jogoSelecionadoIdx, rankingMap) {
+  const lista = document.getElementById('jogos-lista');
+  document.getElementById('badge-jogos').textContent = `${proxJogos.length} jogos`;
+
+  lista.innerHTML = proxJogos.map((jogo, idx) => {
+    const temPlacar = jogo.gols1 !== null && jogo.gols2 !== null;
+    const ativo     = idx === jogoSelecionadoIdx ? ' ativo' : '';
+
+    const placarHtml = temPlacar
+      ? `<span class="jogo-btn-placar">${jogo.gols1} × ${jogo.gols2}</span>`
+      : '';
+
+    return `
+      <button class="jogo-btn${ativo}" data-idx="${idx}">
+        <span class="jogo-tag">${jogo.grupo || jogo.rodada || '—'}</span>
+        <div class="jogo-btn-times">
+          <div class="jogo-btn-time">
+            ${flagImg(jogo.time1, 28, 21)}
+            <span class="jogo-btn-nome">${jogo.time1}</span>
+          </div>
+          <span class="jogo-btn-sep">×</span>
+          <div class="jogo-btn-time">
+            ${flagImg(jogo.time2, 28, 21)}
+            <span class="jogo-btn-nome">${jogo.time2}</span>
+          </div>
+        </div>
+        ${placarHtml}
+        <div class="jogo-btn-meta">${jogo.data}<br>${jogo.horario}</div>
+      </button>`;
+  }).join('');
+
+  // Eventos
+  lista.querySelectorAll('.jogo-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      lista.querySelectorAll('.jogo-btn').forEach(b => b.classList.remove('ativo'));
+      btn.classList.add('ativo');
+      const idx = parseInt(btn.dataset.idx);
+      renderConfronto(proxJogos[idx], jogoPalpites, rankingMap);
+      btn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  RENDERIZA PLACAR EM DESTAQUE + TABELA
+//  rankingMap: Map<nome, posição> com o ranking atual do bolão
+// ═══════════════════════════════════════════════════════════════
+function renderConfronto(jogo, jogoPalpites, rankingMap) {
+  // Mostra card do jogo
+  const cardDest = document.getElementById('card-jogo-dest');
+  cardDest.style.display = 'block';
+
+  document.getElementById('dest-titulo').textContent =
+    `${jogo.time1}  ×  ${jogo.time2}`;
+
+  const temPlacar = jogo.gols1 !== null && jogo.gols2 !== null;
+  document.getElementById('dest-badge').textContent =
+    temPlacar ? 'Encerrado' : 'Aguardando';
+
+  document.getElementById('jogo-destaque').innerHTML = `
+    <div class="jogo-destaque-inner">
+      <div class="jogo-dest-time">
+        ${flagImg(jogo.time1, 56, 42, 6)}
+        <span class="jogo-dest-nome">${jogo.time1}</span>
+      </div>
+      <div>
+        <div class="jogo-dest-placar${temPlacar ? '' : ' pendente'}">
+          ${temPlacar ? `${jogo.gols1} × ${jogo.gols2}` : '? × ?'}
+        </div>
+        <div class="jogo-dest-meta">
+          ${jogo.grupo || jogo.rodada || ''} · ${jogo.data} · ${jogo.horario}
+        </div>
+      </div>
+      <div class="jogo-dest-time">
+        ${flagImg(jogo.time2, 56, 42, 6)}
+        <span class="jogo-dest-nome">${jogo.time2}</span>
+      </div>
+    </div>`;
+
+  // Casa o jogo com a aba de palpites
+  const chave = chaveJogo(jogo.time1, jogo.time2);
+  const jogoPalp = jogoPalpites.find(j => chaveJogo(j.time1, j.time2) === chave);
+
+  const tabCard = document.getElementById('tabela-card');
+  tabCard.classList.add('visivel');
+
+  if (!jogoPalp) {
+    document.getElementById('tabela-body').innerHTML =
+      `<tr><td colspan="3" style="opacity:.5;padding:32px;text-align:center;">
+        Nenhum palpite encontrado para este jogo.
+      </td></tr>`;
+    document.getElementById('badge-tabela').textContent = '0 palpites';
+    tabCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    return;
+  }
+
+  const temResultado = jogoPalp.gols1Real !== null && jogoPalp.gols2Real !== null;
+
+  // Ordenação:
+  // - Jogo finalizado → por pontuação decrescente (quem acertou mais aparece primeiro)
+  // - Jogo pendente   → pela posição atual no ranking do bolão (menor Pos = primeiro)
+  const POS_FALLBACK = 9999; // participantes sem posição no ranking vão para o final
+  const palpitesOrdenados = [...jogoPalp.palpites].sort((a, b) => {
+    if (temResultado) {
+      const pa = a.pontos !== null ? Number(a.pontos) : -1;
+      const pb = b.pontos !== null ? Number(b.pontos) : -1;
+      return pb - pa;
+    } else {
+      const ra = rankingMap.get(a.nome) ?? POS_FALLBACK;
+      const rb = rankingMap.get(b.nome) ?? POS_FALLBACK;
+      return ra - rb;
+    }
+  });
+
+  const linhas = palpitesOrdenados.map((p, i) => {
+    const temPalpite = p.gols1 !== null && p.gols2 !== null;
+    const temPontos  = p.pontos !== null && p.pontos !== '';
+
+    // Acerto exato
+    const exato = temResultado && temPalpite &&
+      String(p.gols1) === String(jogoPalp.gols1Real) &&
+      String(p.gols2) === String(jogoPalp.gols2Real);
+
+    // Posição exibida: no jogo finalizado usa rank da tabela; no pendente usa rank do bolão
+    const posExibida = temResultado
+      ? i + 1
+      : (rankingMap.get(p.nome) ?? '—');
+
+    const poscls = temResultado ? posClasse(i) : 'pos-n';
+
+    const palpiteHtml = temPalpite
+      ? `<span class="palpite-val">${p.gols1} × ${p.gols2}</span>${exato ? '<span class="exato-icon">🎯</span>' : ''}`
+      : `<span class="palpite-pendente">—</span>`;
+
+    const ptsBadgeHtml = temPontos
+      ? `<span class="pts-badge ${ptsClasse(p.pontos)}">${p.pontos}</span>`
+      : `<span class="pts-badge pts-vazio">·</span>`;
+
+    const destaqueRow = exato ? ' class="destaque-row"' : '';
+
+    return `
+      <tr${destaqueRow}>
+        <td class="col-part">
+          <div class="part-info">
+            <span class="part-pos ${posclsAlias(posExibida, temResultado, i)}">${posExibida}</span>
+            <span class="part-nome">${p.nome}</span>
+          </div>
+        </td>
+        <td>${palpiteHtml}</td>
+        <td>${ptsBadgeHtml}</td>
+      </tr>`;
+  }).join('');
+
+  document.getElementById('tabela-body').innerHTML = linhas;
+  document.getElementById('badge-tabela').textContent =
+    `${palpitesOrdenados.length} participantes · ${temResultado ? 'ordem por pontuação' : 'ordem pelo ranking'}`;
+
+  tabCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// Classe do badge de posição conforme contexto
+function posclsAlias(posExibida, temResultado, i) {
+  if (temResultado) return posClasse(i);
+  const n = Number(posExibida);
+  if (n === 1) return 'pos-1';
+  if (n === 2) return 'pos-2';
+  if (n === 3) return 'pos-3';
+  return 'pos-n';
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  BOOTSTRAP
+// ═══════════════════════════════════════════════════════════════
+async function init() {
+  try {
+    const [rawProx, rawPalp, rawRanking] = await Promise.all([
+      fetchJSON(URL_PROX_JOGOS),
+      fetchJSON(URL_PALPITES),
+      fetchJSON(URL_RANKING),
+    ]);
+
+    // Parseia próximos jogos
+    const proxJogos = rawProx.map(r => ({
+      data:    String(r.data    || r.Data    || '').trim(),
+      horario: String(r.horário || r.horario || r.Hora || '').trim(),
+      grupo:   String(r.grupo   || r.Grupo   || '').trim(),
+      rodada:  String(r.rodada  || r.Rodada  || '').trim(),
+      time1:   String(r.time1   || r.Time1   || '').trim(),
+      time2:   String(r.time2   || r.Time2   || '').trim(),
+      gols1:   (r.gols1 !== '' && r.gols1 != null) ? r.gols1 : null,
+      gols2:   (r.gols2 !== '' && r.gols2 != null) ? r.gols2 : null,
+    })).filter(j => j.time1 && j.time2);
+
+    // Parseia palpites
+    const { jogos: jogoPalpites } = parsearPalpites(rawPalp);
+
+    // Monta mapa nome → posição a partir do ranking completo
+    // Campo de nome: tenta Aposta, depois Nome
+    const rankingMap = new Map();
+    rawRanking.forEach(r => {
+      const nome = String(r.Aposta || r.Nome || '').trim();
+      const pos  = parseInt(r.Pos);
+      if (nome && !isNaN(pos)) rankingMap.set(nome, pos);
+    });
+
+    if (!proxJogos.length) throw new Error('Nenhum jogo encontrado em ProxJogos.');
+
+    document.getElementById('loading-state').style.display = 'none';
+    document.getElementById('conteudo').style.display = 'block';
+
+    // Lê parâmetro ?jogo=N da URL
+    const params    = new URLSearchParams(window.location.search);
+    const jogoParam = params.get('jogo');
+    const jogoIdx   = jogoParam !== null ? parseInt(jogoParam) : -1;
+    const idxValido = jogoIdx >= 0 && jogoIdx < proxJogos.length ? jogoIdx : -1;
+
+    // Renderiza lista de jogos com o botão correto já destacado
+    renderJogos(proxJogos, jogoPalpites, idxValido, rankingMap);
+
+    // Se veio com jogo pré-selecionado, abre automaticamente a tabela
+    if (idxValido >= 0) {
+      renderConfronto(proxJogos[idxValido], jogoPalpites, rankingMap);
+
+      // Aguarda o DOM renderizar os botões antes de rolar
+      setTimeout(() => {
+        const btn = document.querySelector(`.jogo-btn[data-idx="${idxValido}"]`);
+        if (btn) btn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 150);
+    }
+
+  } catch (e) {
+    document.getElementById('loading-state').innerHTML =
+      `<div class="error-state">❌ Erro ao carregar dados.<br><small>${e.message}</small></div>`;
+  }
+}
+
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bolão Se Joga Copa do Mundo 2026 — Premiação</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --accent:   #00d4ff;
+      --accent-2: #08f7a1;
+      --gold:     #ffd700;
+      --silver:   #c0c0c0;
+      --bronze:   #cd7f32;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      min-height: 100vh;
+      color: #fff;
+      background:
+        radial-gradient(circle at top left,  rgba(0,212,255,.18), transparent 25%),
+        radial-gradient(circle at bottom right, rgba(8,247,161,.12), transparent 25%),
+        linear-gradient(135deg, #03101f 0%, #072654 55%, #04142d 100%);
+      overflow-x: hidden;
+    }
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none; z-index: 0;
+    }
+
+    /* ── HEADER ── */
+    header { position: relative; z-index: 2; padding: 32px 24px 16px; }
+    .topbar {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 16px; flex-wrap: wrap; max-width: 1400px; margin: auto;
+    }
+    .logo { display: flex; align-items: center; gap: 14px; }
+    .logo-icon {
+      width: 58px; height: 58px; border-radius: 18px; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem; box-shadow: 0 10px 25px rgba(0,212,255,.35);
+    }
+    .logo h1 { font-size: 2rem; font-weight: 800; letter-spacing: 1px; }
+    .logo p  { opacity: .75; font-size: .95rem; margin-top: 4px; }
+
+    nav {
+      position: relative; z-index: 2;
+      max-width: 1400px; margin: 24px auto 0;
+      display: flex; gap: 10px; flex-wrap: wrap;
+    }
+    nav a {
+      text-decoration: none; color: #fff;
+      padding: 11px 16px; border-radius: 999px;
+      background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.08);
+      transition: .25s ease; font-weight: 600; font-size: .9rem;
+      backdrop-filter: blur(10px);
+    }
+    nav a:hover, nav a.active {
+      transform: translateY(-2px);
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #04142d;
+    }
+
+    /* ── PAGE WRAPPER ── */
+    .page-wrapper {
+      position: relative; z-index: 2;
+      max-width: 1100px; margin: 36px auto 64px; padding: 0 24px;
+    }
+    .page-title { text-align: center; margin-bottom: 8px; }
+    .page-title h2 { font-size: clamp(1.6rem,4vw,2.6rem); font-weight: 800; }
+    .page-title p  { opacity: .7; font-size: 1rem; margin-top: 8px; }
+
+    /* ── TOTAL ARRECADADO ── */
+    .total-card {
+      max-width: 480px;
+      margin: 28px auto 40px;
+      text-align: center;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 24px;
+      padding: 22px 28px;
+      backdrop-filter: blur(16px);
+    }
+    .total-label {
+      font-size: .78rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1px; opacity: .6; margin-bottom: 6px;
+    }
+    .total-valor {
+      font-size: 2.2rem; font-weight: 800;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+
+    /* ── PÓDIO DE PREMIAÇÃO ── */
+    .podio-premios {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 18px; align-items: end;
+      margin-bottom: 40px;
+    }
+    .premio-card {
+      border-radius: 24px;
+      padding: 28px 20px;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(18px);
+      position: relative;
+      overflow: hidden;
+      transition: transform .25s ease;
+    }
+    .premio-card:hover { transform: translateY(-5px); }
+
+    .premio-card.p1 {
+      background: linear-gradient(160deg, rgba(255,215,0,.22), rgba(255,215,0,.04));
+      border-color: rgba(255,215,0,.4);
+      padding-top: 36px; padding-bottom: 36px;
+      box-shadow: 0 20px 50px rgba(255,215,0,.12);
+    }
+    .premio-card.p2 {
+      background: linear-gradient(160deg, rgba(192,192,192,.16), rgba(192,192,192,.03));
+      border-color: rgba(192,192,192,.32);
+    }
+    .premio-card.p3 {
+      background: linear-gradient(160deg, rgba(205,127,50,.16), rgba(205,127,50,.03));
+      border-color: rgba(205,127,50,.32);
+    }
+
+    .premio-medalha { font-size: 2.4rem; margin-bottom: 10px; }
+    .premio-lugar {
+      font-size: .85rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1px; opacity: .75; margin-bottom: 14px;
+    }
+    .premio-valor { font-size: 1.9rem; font-weight: 800; line-height: 1; }
+    .premio-card.p1 .premio-valor { color: var(--gold); font-size: 2.3rem; }
+    .premio-card.p2 .premio-valor { color: var(--silver); }
+    .premio-card.p3 .premio-valor { color: var(--bronze); }
+
+    .premio-pct {
+      display: inline-block; margin-top: 12px;
+      font-size: .78rem; font-weight: 700;
+      padding: 4px 12px; border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
+      opacity: .85;
+    }
+
+    /* ── AVISOS / OBSERVAÇÕES ── */
+    .avisos { display: flex; flex-direction: column; gap: 14px; }
+    .aviso-card {
+      display: flex; gap: 14px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      border-left: 4px solid var(--accent);
+      border-radius: 16px;
+      padding: 18px 20px;
+      backdrop-filter: blur(14px);
+    }
+    .aviso-card.alerta { border-left-color: #ffb020; }
+    .aviso-icon { font-size: 1.4rem; flex-shrink: 0; line-height: 1.3; }
+    .aviso-texto { font-size: .92rem; line-height: 1.6; opacity: .9; }
+    .aviso-texto strong { color: var(--accent); font-weight: 700; }
+    .aviso-card.alerta .aviso-texto strong { color: #ffb020; }
+
+    /* ── SEÇÃO "O QUE VOU FAZER COM O PRÊMIO" ── */
+    .sonhos-section {
+      margin-top: 44px;
+    }
+    .sonhos-header { text-align: center; margin-bottom: 22px; }
+    .sonhos-header h3 { font-size: 1.4rem; font-weight: 800; }
+    .sonhos-header p { opacity: .7; font-size: .92rem; margin-top: 6px; }
+
+    .sonhos-form-card {
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 24px;
+      padding: 26px 28px;
+      backdrop-filter: blur(18px);
+      margin-bottom: 28px;
+    }
+    .form-row { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
+    .form-group { flex: 1; min-width: 200px; }
+    .form-label {
+      display: block; font-size: .78rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .6px;
+      opacity: .65; margin-bottom: 8px;
+    }
+    .form-select, .form-textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.15);
+      background: rgba(255,255,255,.06);
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: .92rem;
+      outline: none;
+      transition: .2s ease;
+    }
+    .form-select:focus, .form-textarea:focus {
+      border-color: rgba(0,212,255,.5);
+      background: rgba(255,255,255,.09);
+      box-shadow: 0 0 0 3px rgba(0,212,255,.1);
+    }
+    .form-select option { background: #0a2d62; color: #fff; }
+    .form-textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
+    .form-charcount {
+      text-align: right; font-size: .72rem; opacity: .45; margin-top: 4px;
+    }
+
+    .form-actions {
+      display: flex; justify-content: flex-end; align-items: center;
+      gap: 12px; margin-top: 6px;
+    }
+    .form-status { font-size: .82rem; opacity: .75; }
+    .form-status.sucesso { color: var(--accent-2); }
+    .form-status.erro    { color: #ff6b6b; }
+
+    .btn-salvar {
+      padding: 12px 24px;
+      border-radius: 999px; border: none;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #04142d; font-family: 'Montserrat', sans-serif;
+      font-weight: 700; font-size: .9rem;
+      cursor: pointer; transition: .2s ease;
+    }
+    .btn-salvar:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(0,212,255,.3); }
+    .btn-salvar:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+    /* ── MURAL DE SONHOS ── */
+    .mural-header {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 14px;
+    }
+    .mural-header h4 { font-size: 1rem; font-weight: 700; }
+    .mural-badge {
+      font-size: .72rem; font-weight: 700;
+      padding: 3px 10px; border-radius: 999px;
+      background: rgba(0,212,255,.15); border: 1px solid rgba(0,212,255,.3);
+      color: var(--accent);
+    }
+
+    .mural-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 14px;
+    }
+    .sonho-card {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 18px;
+      padding: 18px 20px;
+      transition: .2s ease;
+    }
+    .sonho-card:hover { transform: translateY(-3px); border-color: rgba(0,212,255,.25); }
+    .sonho-nome {
+      font-weight: 700; font-size: .88rem; color: var(--accent);
+      margin-bottom: 8px; display: flex; align-items: center; gap: 6px;
+    }
+    .sonho-texto { font-size: .87rem; line-height: 1.55; opacity: .9; white-space: pre-wrap; }
+    .sonho-data { font-size: .68rem; opacity: .4; margin-top: 10px; }
+
+    .mural-vazio, .mural-loading {
+      text-align: center; padding: 32px; opacity: .5; font-size: .9rem;
+      grid-column: 1 / -1;
+    }
+
+    @media (max-width: 700px) {
+      .form-row { flex-direction: column; }
+      .sonhos-form-card { padding: 20px; }
+      .mural-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── BOTÃO TOPO / FOOTER ── */
+    .botao-topo {
+      position: fixed; bottom: 30px; right: 28px; z-index: 99;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #04142d; font-weight: 700; font-size: .85rem;
+      padding: 12px 18px; border-radius: 999px; text-decoration: none;
+      box-shadow: 0 8px 24px rgba(0,212,255,.35); transition: .25s ease;
+    }
+    .botao-topo:hover { transform: translateY(-3px); }
+    footer {
+      position: relative; z-index: 2; padding: 32px 24px 48px;
+      text-align: center; opacity: .65; font-size: .92rem;
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 700px) {
+      .logo h1 { font-size: 1.3rem; }
+      .podio-premios { grid-template-columns: 1fr; gap: 14px; }
+      .premio-card.p1 { order: -1; padding-top: 28px; padding-bottom: 28px; }
+      .total-valor { font-size: 1.7rem; }
+      .aviso-card { padding: 15px 16px; }
+    }
+  </style>
+</head>
+<body id="topo">
+
+<! Monta o cabeçalho da página>
+<div id="header-placeholder"></div>
+<script>
+  fetch('header.html')
+    .then(r => r.text())
+    .then(html => document.getElementById('header-placeholder').innerHTML = html);
+</script>
+<! Fim do cabeçalho----------->  
+
+  
+<div class="page-wrapper">
+
+  <div class="page-title">
+    <h2>🏆 Premiação do Bolão</h2>
+    <p>Veja como será dividido o valor arrecadado entre os 3 primeiros colocados</p>
+  </div>
+
+  <div class="total-card">
+    <div class="total-label">💰 Valor Total Arrecadado</div>
+    <div class="total-valor">R$ 2.280,00</div>
+  </div>
+
+  <div class="podio-premios">
+
+    <div class="premio-card p2">
+      <div class="premio-medalha">🥈</div>
+      <div class="premio-lugar">2º Lugar</div>
+      <div class="premio-valor">R$ 684,00</div>
+      <div class="premio-pct">30% do total</div>
+    </div>
+
+    <div class="premio-card p1">
+      <div class="premio-medalha">🥇</div>
+      <div class="premio-lugar">1º Lugar</div>
+      <div class="premio-valor">R$ 1.368,00</div>
+      <div class="premio-pct">60% do total</div>
+    </div>
+
+    <div class="premio-card p3">
+      <div class="premio-medalha">🥉</div>
+      <div class="premio-lugar">3º Lugar</div>
+      <div class="premio-valor">R$ 228,00</div>
+      <div class="premio-pct">10% do total</div>
+    </div>
+
+  </div>
+
+  <div class="avisos">
+    <div class="aviso-card">
+      <div class="aviso-icon">⏳</div>
+      <div class="aviso-texto">
+        <strong>Classificação final só após o término da Copa.</strong>
+        A definição dos 3 vencedores será feita apenas após a <strong>grande final</strong>,
+        quando todos os resultados e informações do torneio estiverem encerrados.
+        O ranking exibido durante a competição é parcial e pode mudar a qualquer momento.
+      </div>
+    </div>
+
+    <div class="aviso-card alerta">
+      <div class="aviso-icon">⚠️</div>
+      <div class="aviso-texto">
+        <strong>Isto é uma brincadeira entre amigos.</strong>
+        O Bolão "Se Joga" tem caráter recreativo e de entretenimento entre participantes.
+        Em <strong>hipótese alguma</strong> deve ser interpretado como investimento financeiro,
+        aposta regulamentada ou qualquer sistema de "bet". Jogue com responsabilidade e bom humor!
+      </div>
+    </div>
+  </div>
+
+  <!-- O QUE VOU FAZER COM O PRÊMIO -->
+  <div class="sonhos-section">
+    <div class="sonhos-header">
+      <h3>💭 O que eu vou fazer se eu ganhar...</h3>
+      <p>Conte pros outros participantes seus planos (sérios ou nem tanto) para o prêmio</p>
+    </div>
+
+    <div class="sonhos-form-card">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">👤 Seu nome</label>
+          <select class="form-select" id="sonho-nome">
+            <option value="">Selecione seu nome…</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">✍️ O que você vai fazer com o prêmio?</label>
+          <textarea class="form-textarea" id="sonho-texto" maxlength="500"
+            placeholder="Ex: Vou comprar as figurinhas que faltam pra completar meu álbum ... ou fingir que não ganhei nada pra ninguém me pedir dinheiro emprestado 😄"></textarea>
+          <div class="form-charcount"><span id="char-count">0</span>/500</div>
+        </div>
+      </div>
+      <div class="form-actions">
+        <span class="form-status" id="form-status"></span>
+        <button class="btn-salvar" id="btn-salvar">Salvar resposta</button>
+      </div>
+    </div>
+
+    <div class="mural-header">
+      <h4>🗣️ Mural dos Participantes</h4>
+      <span class="mural-badge" id="mural-badge">—</span>
+    </div>
+    <div class="mural-grid" id="mural-grid">
+      <div class="mural-loading">Carregando respostas…</div>
+    </div>
+  </div>
+
+</div>
+
+<a href="#topo" class="botao-topo">↑ Topo</a>
+
+<footer>© 2026 • Bolão Se Joga Copa do Mundo</footer>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  CONFIGURAÇÃO
+// ═══════════════════════════════════════════════════════════════
+const URL_BASE = 'https://script.google.com/macros/s/AKfycbzqa0SYv8nPTePgIz33hKwpqFMluqwaRyoKdsfHPPQYipEKdll692Z5fu-7-IiGPXnI/exec';
+const URL_RANKING_NOMES = 'https://script.google.com/macros/s/AKfycbztMaYq2BlP3RMu_3wplQ3E7aVbNTs00QnBK62D71Ft3MsQmfS_MUZK1g7RIBlSFEh8/exec';
+const URL_SONHOS_GET  = `${URL_BASE}?aba=Sonhos`;
+
+const selectNome   = document.getElementById('sonho-nome');
+const textArea     = document.getElementById('sonho-texto');
+const charCount    = document.getElementById('char-count');
+const btnSalvar    = document.getElementById('btn-salvar');
+const formStatus   = document.getElementById('form-status');
+const muralGrid    = document.getElementById('mural-grid');
+const muralBadge   = document.getElementById('mural-badge');
+
+// ═══════════════════════════════════════════════════════════════
+//  CARREGA LISTA DE PARTICIPANTES (mesma fonte do Ranking)
+// ═══════════════════════════════════════════════════════════════
+async function carregarParticipantes() {
+  try {
+    const res  = await fetch(URL_RANKING_NOMES);
+    const json = await res.json();
+    const linhas = json.data || json || [];
+    const nomes = linhas
+      .map(r => String(r.Aposta || '').trim())
+      .filter(Boolean)
+      .sort((a, b) => a.localeCompare(b, 'pt-BR'));
+
+    nomes.forEach(nome => {
+      const opt = document.createElement('option');
+      opt.value = nome;
+      opt.textContent = nome;
+      selectNome.appendChild(opt);
+    });
+  } catch (e) {
+    console.error('Erro ao carregar participantes:', e);
+    formStatus.textContent = 'Não foi possível carregar a lista de participantes.';
+    formStatus.className = 'form-status erro';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  CONTADOR DE CARACTERES
+// ═══════════════════════════════════════════════════════════════
+textArea.addEventListener('input', () => {
+  charCount.textContent = textArea.value.length;
+});
+
+// ═══════════════════════════════════════════════════════════════
+//  CARREGA O MURAL
+// ═══════════════════════════════════════════════════════════════
+async function carregarMural() {
+  try {
+    const res  = await fetch(URL_SONHOS_GET);
+    const json = await res.json();
+    const linhas = (json.data || []).filter(r => r.Nome && r.Texto);
+
+    muralBadge.textContent = `${linhas.length} resposta${linhas.length !== 1 ? 's' : ''}`;
+
+    if (!linhas.length) {
+      muralGrid.innerHTML = `<div class="mural-vazio">Ninguém escreveu ainda. Seja o primeiro! 🎉</div>`;
+      return;
+    }
+
+    // Mais recentes primeiro
+    linhas.sort((a, b) => {
+      const da = parseDataHora(a.DataHora);
+      const db = parseDataHora(b.DataHora);
+      return db - da;
+    });
+
+    muralGrid.innerHTML = linhas.map(r => `
+      <div class="sonho-card">
+        <div class="sonho-nome">👤 ${r.Nome}</div>
+        <div class="sonho-texto">${escapeHtml(r.Texto)}</div>
+        ${r.DataHora ? `<div class="sonho-data">${r.DataHora}</div>` : ''}
+      </div>`).join('');
+
+  } catch (e) {
+    console.error('Erro ao carregar mural:', e);
+    muralGrid.innerHTML = `<div class="mural-vazio">Não foi possível carregar o mural. Tente recarregar a página.</div>`;
+  }
+}
+
+function parseDataHora(str) {
+  if (!str) return 0;
+  const [data, hora] = str.split(' ');
+  const [dd, mm, aaaa] = (data || '').split('/');
+  return new Date(`${aaaa}-${mm}-${dd}T${hora || '00:00'}`).getTime() || 0;
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SALVA A RESPOSTA
+// ═══════════════════════════════════════════════════════════════
+btnSalvar.addEventListener('click', async () => {
+  const nome  = selectNome.value;
+  const texto = textArea.value.trim();
+
+  if (!nome) {
+    formStatus.textContent = 'Selecione seu nome antes de salvar.';
+    formStatus.className = 'form-status erro';
+    return;
+  }
+  if (!texto) {
+    formStatus.textContent = 'Escreva algo antes de salvar.';
+    formStatus.className = 'form-status erro';
+    return;
+  }
+
+  btnSalvar.disabled = true;
+  formStatus.textContent = 'Salvando…';
+  formStatus.className = 'form-status';
+
+  try {
+    const res = await fetch(URL_BASE, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' }, // evita preflight CORS no Apps Script
+      body: JSON.stringify({ acao: 'salvarSonho', nome, texto }),
+    });
+    const json = await res.json();
+
+    if (json.erro) throw new Error(json.erro);
+
+    formStatus.textContent = '✅ Resposta salva com sucesso!';
+    formStatus.className = 'form-status sucesso';
+    await carregarMural();
+
+  } catch (e) {
+    console.error('Erro ao salvar:', e);
+    formStatus.textContent = '❌ Erro ao salvar. Tente novamente.';
+    formStatus.className = 'form-status erro';
+  } finally {
+    btnSalvar.disabled = false;
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════
+//  BOOTSTRAP
+// ═══════════════════════════════════════════════════════════════
+carregarParticipantes();
+carregarMural();
+</script>
+
+</body>
+</html>

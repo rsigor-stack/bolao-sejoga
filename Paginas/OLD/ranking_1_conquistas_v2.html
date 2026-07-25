@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bolão Se Joga Copa do Mundo 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.3.8/css/dataTables.dataTables.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+	
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    :root {
+      --bg-dark: #04142d;
+      --bg-blue: #0a2d62;
+      --accent: #00d4ff;
+      --accent-2: #08f7a1;
+      --gold: #ffd700;
+      --text: #ffffff;
+      --card: rgba(255,255,255,0.08);
+      --border: rgba(255,255,255,0.15);
+    }
+    body {
+      font-family: 'Montserrat', sans-serif;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(0,212,255,.18), transparent 25%),
+        radial-gradient(circle at bottom right, rgba(8,247,161,.12), transparent 25%),
+        linear-gradient(135deg, #03101f 0%, #072654 55%, #04142d 100%);
+      overflow-x: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+    header {
+      position: relative;
+      z-index: 2;
+      padding: 32px 24px 16px;
+    }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      max-width: 1400px;
+      margin: auto;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .logo-icon {
+      width: 58px;
+      height: 58px;
+      border-radius: 18px;
+      background:
+        linear-gradient(135deg, var(--accent), var(--accent-2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      box-shadow:
+        0 10px 25px rgba(0,212,255,.35);
+    }
+    .logo h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+    .logo p {
+      opacity: .75;
+      font-size: .95rem;
+      margin-top: 4px;
+    }
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid var(--border);
+      padding: 12px 18px;
+      border-radius: 999px;
+      backdrop-filter: blur(10px);
+    }
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent-2);
+      box-shadow: 0 0 12px var(--accent-2);
+    }
+    nav {
+      position: relative;
+      z-index: 2;
+      max-width: 1400px;
+      margin: 24px auto 0;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    nav a {
+      text-decoration: none;
+      color: white;
+      padding: 12px 18px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.08);
+      transition: .25s ease;
+      font-weight: 600;
+      font-size: .95rem;
+      backdrop-filter: blur(10px);
+    }
+    nav a:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #04142d;
+    }
+    .hero {
+      position: relative;
+      z-index: 2;
+      max-width: 1400px;
+      margin: 30px auto 24px;
+      padding: 0 24px;
+    }
+    .hero-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 28px;
+      background:
+        linear-gradient(135deg,
+        rgba(255,255,255,.10),
+        rgba(255,255,255,.04));
+      border: 1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(18px);
+      padding: 48px;
+      box-shadow:
+        0 25px 60px rgba(0,0,0,.35);
+    }
+    .hero-card::after {
+      content: '';
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle, rgba(0,212,255,.35), transparent 70%);
+      top: -100px;
+      right: -100px;
+    }
+
+    .hero h2 {
+      position: relative;
+      z-index: 2;
+      font-size: clamp(2rem, 5vw, 4rem);
+      line-height: 1;
+      font-weight: 800;
+      margin-bottom: 18px;
+      max-width: 800px;
+    }
+
+    .hero p {
+      position: relative;
+      z-index: 2;
+      max-width: 700px;
+      opacity: .85;
+      line-height: 1.7;
+      font-size: 1.05rem;
+    }
+    .stats {
+      position: relative;
+      z-index: 2;
+      max-width: 1400px;
+      margin: 0 auto 24px;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+      gap: 18px;
+    }
+    .stat-card {
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 24px;
+      padding: 24px;
+      backdrop-filter: blur(16px);
+      transition: .25s ease;
+    }
+    .stat-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(0,212,255,.4);
+    }
+    .stat-card h3 {
+      font-size: .95rem;
+      opacity: .7;
+      margin-bottom: 10px;
+    }
+    .stat-card strong {
+      font-size: 2rem;
+      font-weight: 800;
+    }
+    .sheet-wrapper {
+      position: relative;
+      z-index: 2;
+      width: calc(100% - 48px);
+      max-width: 1400px;
+      margin: 0 auto 40px;
+      border-radius: 28px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.08);
+      backdrop-filter: blur(20px);
+      box-shadow:
+        0 25px 60px rgba(0,0,0,.35);
+    }
+	/*CABEÇALHO*/
+	#data tbody td,
+	table.dataTable tbody td {
+	    border-right:
+        1px solid rgba(255,255,255,.10);
+	    border-bottom:
+        1px solid rgba(255,255,255,.08);
+	}
+	/* Remove a borda da última coluna */
+	#data tbody td:last-child,
+	table.dataTable tbody td:last-child {
+    	border-right: none;
+	}
+	table.dataTable {
+    	border-collapse: separate !important;
+    	border-spacing: 0;
+	}
+	table.dataTable thead th:first-child {
+	    border-top-left-radius: 18px;
+	}
+	table.dataTable thead th:last-child {
+	    border-top-right-radius: 18px;
+	}
+	/* FIM CABEÇALHO */
+	/* TOP 5 */
+	.top1{
+	    background:
+	        linear-gradient(
+	            90deg,
+	            rgba(255,215,0,.28),
+	            rgba(255,215,0,.12)
+	        ) !important;
+	    font-weight:700;
+	}
+	.top2{
+	    background:
+	        linear-gradient(
+	            90deg,
+	            rgba(192,192,192,.22),
+	            rgba(192,192,192,.10)
+	        ) !important;
+	}
+	.top3{
+	    background:
+	        linear-gradient(
+	            90deg,
+	            rgba(205,127,50,.22),
+	            rgba(205,127,50,.10)
+	        ) !important;
+	}
+	.top4{
+	    background:
+	        rgba(0,212,255,.10) !important;
+	}
+	.top5{
+	    background:
+	        rgba(8,247,161,.10) !important;
+	}
+	
+	/* Medalhas */
+	.top1 td:first-child::before{
+	    content:"🥇 ";
+	}
+	.top2 td:first-child::before{
+	    content:"🥈 ";
+	}
+	.top3 td:first-child::before{
+	    content:"🥉 ";
+	}
+	.top4 td:first-child::before,
+	.top5 td:first-child::before{
+	    content:"⭐ ";
+	}  
+	/* */
+
+	/* ── ÍCONES DE CONQUISTA ── */
+	.conquistas-wrap {
+		display: inline-flex;
+		gap: 5px;
+		margin-left: 8px;
+		vertical-align: middle;
+	}
+	.conquista-icon {
+		font-size: .95rem;
+		opacity: .92;
+		filter: grayscale(0);
+		cursor: default;
+	}
+	.conquista-icon.nivel-ouro {
+ color:#FFD700;
+		filter:
+			drop-shadow(0 0 3px rgba(255,215,0,.7));
+	}
+	.conquista-icon.nivel-prata {
+ color:#C0C0C0;
+		filter:
+			drop-shadow(0 0 3px rgba(192,192,192,.6));
+		opacity: .85;
+	}
+	.conquista-icon.nivel-bronze {
+ color:#CD7F32;
+		filter:
+			drop-shadow(0 0 3px rgba(205,127,50,.55));
+		opacity: .75;
+	}
+    iframe {
+      width: 100%;
+      height: 85vh;
+      border: none;
+      background: white;
+    }
+    footer {
+      position: relative;
+      z-index: 2;
+      padding: 32px 24px 48px;
+      text-align: center;
+      opacity: .65;
+      font-size: .92rem;
+    }
+    @media (max-width: 768px) {
+      .hero-card {
+        padding: 28px;
+      }
+      .hero h2 {
+        line-height: 1.1;
+      }
+      .logo h1 {
+        font-size: 1.4rem;
+      }
+      iframe {
+        height: 78vh;
+      }
+    }
+  </style>
+</head>
+<body id="topo">
+<header>
+  <div class="topbar">
+    <div class="logo">
+      <div class="logo-icon">
+        🏆
+      </div>
+      <div>
+        <h1>Bolão Se Joga na Copa 2026</h1>
+        <p>FIFA World Cup • Canadá • México • Estados Unidos</p>
+        <p>Bolão entre amigos que acham que entendem de futebol e que adoram dar palpite</p>
+      </div>
+    </div>
+  </div>
+  <nav>
+    <a href="#" onclick="window.location.href='https://sejoganacopa.vercel.app/'; return false;">  🏠 Home </a>
+	<a href="#" onclick="window.location.href='https://sejoganacopa.vercel.app/Paginas/ranking.html'; return false;"> 📊 Ranking Geral </a>
+	<a href="#" onclick="window.location.href='https://sejoganacopa.vercel.app/Paginas/palpites_3.html'; return false;"> 🎯 Palpites </a>
+    <a href="#" onclick="window.location.href='https://sejoganacopa.vercel.app/Paginas/confronto.html'; return false;"> ⚔️ Secador</a>
+    <a href="https://drive.google.com/uc?export=download&id=18KAjbenZAbscrTi79QvTMVxT1coHtBYc" target="_blank">⬇️ Regulamento</a>
+    <a href="https://drive.google.com/uc?export=download&id=1DCx8z7_M_7dbO9OuPWeOwjx76ElDD4Am" target="_blank">⬇️ ZIP Palpites</a>
+    <!-- 
+        <a href="#">📊 Classificação</a>
+        <a href="#">⚽ Jogos</a>
+        <a href="#">📈 Estatísticas</a>
+    -->
+  </nav>
+</header>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <p>
+            🏆 Ranking Geral
+        </p>
+
+    </div>
+
+    <div class="table-wrapper">
+
+        <table id="data">
+            <thead>
+                <tr>
+                    <th>Posição</th>
+                    <th>Participante</th>
+                    <th>Pontos</th>
+                    <th>Placar Exato <br>
+						(12 pt.)</th>
+                    <th>Venc + Pl Venc. <br>
+						(6 pt.)</th>
+                    <th>Venc + Pl Perd. <br>
+						(5 pt.)</th>
+                    <th>Venc <br>
+						(3 pt.)</th>
+                    <th>Empate <br>
+						(5 pt.)</th>
+                    <th>Alg Pl. <br>
+						(2 pt.)</th>
+					<th>Zerou Tudo</th>
+                </tr>
+            </thead>
+        </table>
+	</div>
+</div>
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/2.3.8/js/dataTables.js"></script>
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  CONQUISTAS — busca a aba "Conquistas" do mesmo projeto Apps Script
+// ═══════════════════════════════════════════════════════════════
+
+const ID_PLANILHA_CONQUISTAS = '1fdqehi8cSjY4wHg9izoZgsMeamPEh9wbaRo3siRDRBc';
+const ABA_CONQUISTAS = 'Conquistas';
+
+const URL_CONQUISTAS =
+`https://script.google.com/macros/s/AKfycbyr_jCKmx6ij0fytIqNjK4evsorDQtxdp4bcvnJ4RQMvU6TTK9zwJZZXjm__p3uyKI/exec?planilha=${ID_PLANILHA_CONQUISTAS}&aba=${ABA_CONQUISTAS}`;
+
+function normalizarNivel(valor){
+  if(!valor) return null;
+  valor = String(valor).toLowerCase();
+  if(valor.includes('ouro')) return 'ouro';
+  if(valor.includes('prata')) return 'prata';
+  if(valor.includes('bronze')) return 'bronze';
+  return null;
+}
+
+function htmlConquistas(row) {
+  if (!row) return '';
+
+  const ranking = normalizarNivel(row.cqTopRanking);
+  const cravadas = normalizarNivel(row.cqCravadas);
+  const pensamento = normalizarNivel(row.cqPensamentoUnico);
+  const foguete = normalizarNivel(row.cqFoguete || row.CqFoguete || row['Foguete']);
+
+  const itens = [
+    {nivel:ranking,emoji:'🏅',titulo:`Ranking ${row.cqTopRanking || ''} - ${row.obsTopRanking || ''}`},
+    {nivel:cravadas,emoji:'🎯',titulo:`Cravadas ${row.cqCravadas || ''} - ${row.nCravadas || 0} cravadas`},
+    {nivel:pensamento,emoji:'🧠',titulo:`Pensamento Único ${(row.cqPensamentoUnico||'')} - ${(row.obsPensamentoUnico||row.ObsPensamentoUnico||'')}`},
+    {nivel:foguete,emoji:'🚀',titulo:`Foguete ${(row.cqFoguete||'')} - ${(row.obsFoguete||row.ObsFoguete||'')}`}
+  ].filter(i => i.nivel);
+
+  const pontosValor = row.cqPontos || row['cqPontos'] || row['CQPontos'] || '';
+  const pontos = pontosValor ? `<span class="conquista-icon" style="color:#ffd700;font-weight:700" title="Pontuação total de conquistas">⭐ ${pontosValor}</span>` : '';
+
+  return `<span class="conquistas-wrap">${pontos}${itens.map(i =>
+    `<span class="conquista-icon nivel-${i.nivel}" title="${i.titulo}">${i.emoji}</span>`
+  ).join('')}</span>`;
+}
+
+
+// ═══════════════════════════════════════════════════════════════
+//  BOOTSTRAP — busca conquistas, depois inicializa a DataTable
+// ═══════════════════════════════════════════════════════════════
+async function iniciarTabela() {
+  // Mapa nome do participante → linha de conquistas
+  let mapaConquistas = new Map();
+
+  try {
+    const res  = await fetch(URL_CONQUISTAS);
+    const json = await res.json();
+    const linhas = json.data || [];
+    linhas.forEach(row => {
+      const nome = String(row.Aposta || row.Nome || row.Participante || '').trim();
+      if (nome) mapaConquistas.set(nome, row);
+    });
+  } catch (e) {
+    console.error('Erro ao carregar conquistas:', e);
+    // Segue sem conquistas em caso de falha — não trava o ranking
+  }
+
+  new DataTable('#data', {
+    ajax: 'https://script.google.com/macros/s/AKfycbztMaYq2BlP3RMu_3wplQ3E7aVbNTs00QnBK62D71Ft3MsQmfS_MUZK1g7RIBlSFEh8/exec',
+    columns: [
+      { data: 'Pos' },
+      {
+        data: 'Aposta',
+        render: function(data, type, row) {
+          if (type !== 'display') return data;
+          const conquistasRow = mapaConquistas.get(String(data || '').trim());
+          const icones = htmlConquistas(conquistasRow);
+          return `${data}${icones}`;
+        }
+      },
+      { data: 'Ptos' },
+      { data: 'Pl_Exato' },
+      { data: 'Venc_PlVenc' },
+      { data: 'Venc_PlPerd' },
+      { data: 'Venc' },
+      { data: 'Empate' },
+      { data: 'Alg_Pl' },
+      { data: 'ZerouTudo' }
+    ],
+    columnDefs: [
+      {
+        targets: '_all',
+        className: 'dt-center'
+      },
+      {
+        targets: 2,
+        className: 'dt-left'
+      }
+    ],
+    order: [[0, 'asc']],
+    pageLength: 50,
+    language: {
+      url: 'https://cdn.datatables.net/plug-ins/2.3.8/i18n/pt-BR.json'
+    },
+
+    createdRow: function(row, data) {
+      const posicao = Number(data.Pos);
+      row.classList.remove('top1','top2','top3','top4','top5');
+      switch(posicao){
+        case 1: row.classList.add('top1'); break;
+        case 2: row.classList.add('top2'); break;
+        case 3: row.classList.add('top3'); break;
+        case 4: row.classList.add('top4'); break;
+        case 5: row.classList.add('top5'); break;
+      }
+    }
+  });
+}
+
+iniciarTabela();
+</script>
+<script>
+async function carregarPagina(url){
+    const resposta = await fetch(url);
+    const html = await resposta.text();
+    document.getElementById('conteudo').innerHTML = html;
+}
+</script>
+
+</body>
+</html>

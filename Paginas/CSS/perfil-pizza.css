@@ -1,0 +1,226 @@
+/* ============================================================
+   PIZZA SECTION — Pontos por Rodada da Fase de Grupos
+   Visual: alinhado ao padrão glass-morphism do Perfil.css
+   ============================================================ */
+
+.pizza-section {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(0, 212, 255, 0.18);
+  border-radius: 28px;
+  padding: 28px 32px 32px;
+  margin: 24px 0;
+
+  backdrop-filter: blur(20px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.28);
+}
+
+/* ── Header do card — mesmo padrão fg-resumo-header ── */
+.pizza-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.pizza-header-icon {
+  font-size: 2rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.pizza-titulo {
+  margin: 0 0 4px;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #ffffff;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.pizza-sub {
+  margin: 0;
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* ── Body: gráfico + legenda ── */
+.pizza-body {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  flex-wrap: wrap;
+}
+
+.pizza-chart-wrap {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 50%;
+  padding: 8px;
+}
+
+#pizza-canvas {
+  display: block;
+}
+
+/* ── Legenda ── */
+.pizza-legenda {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pizza-legenda-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  padding: 10px 14px;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.pizza-legenda-item:hover {
+  background: rgba(0, 212, 255, 0.08);
+  border-color: rgba(0, 212, 255, 0.2);
+}
+
+.pizza-legenda-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 0 8px currentColor;
+}
+
+.pizza-legenda-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pizza-legenda-label {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.pizza-legenda-valor {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #ffffff;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.pizza-legenda-pct {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.35);
+  font-family: 'Montserrat', sans-serif;
+  min-width: 38px;
+  text-align: right;
+}
+
+/* ── Linha de total ── */
+.pizza-total-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 14px;
+  margin-top: 4px;
+}
+
+.pizza-total-label {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.45);
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.pizza-total-valor {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #00d4ff;
+  font-family: 'Montserrat', sans-serif;
+  background: linear-gradient(135deg, #00d4ff, #08f7a1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+    /* ── Badge de ranking nas legendas dos gráficos de pizza ── */
+    .pizza-legenda-direita {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 3px;
+      flex-shrink: 0;
+    }
+    .pizza-rkg-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      font-family: 'Montserrat', sans-serif;
+      padding: 1px 6px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.10);
+      color: rgba(255,255,255,0.55);
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+    }
+    .pizza-rkg-badge.pizza-rkg-ouro  { background: rgba(255,215,0,0.20);  color: #FFD700; }
+    .pizza-rkg-badge.pizza-rkg-prata { background: rgba(192,192,192,0.20); color: #C0C0C0; }
+    .pizza-rkg-badge.pizza-rkg-bronze{ background: rgba(205,127,50,0.20);  color: #CD7F32; }
+
+    /* Ajusta o item de legenda do gráfico de grupos para comportar a coluna direita */
+    #pizza-grupos-legenda .pizza-legenda-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    #pizza-grupos-legenda .pizza-legenda-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* Legenda de rodadas: agrupa pct + rkg à direita */
+    .pizza-legenda-item .pizza-legenda-direita-rodada {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 3px;
+      flex-shrink: 0;
+      margin-left: auto;
+    }
+
+
+/* ── Responsividade ── */
+@media (max-width: 640px) {
+  .pizza-section {
+    padding: 20px;
+  }
+
+  .pizza-body {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .pizza-legenda {
+    width: 100%;
+  }
+}

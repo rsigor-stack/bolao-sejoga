@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bolão Se Joga Copa do Mundo 2026 — Estatísticas dos Palpites</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --accent:   #00d4ff;
+      --accent-2: #08f7a1;
+      --gold:     #ffd700;
+      --silver:   #c0c0c0;
+      --bronze:   #cd7f32;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      min-height: 100vh;
+      color: #fff;
+      background:
+        radial-gradient(circle at top left,  rgba(0,212,255,.18), transparent 25%),
+        radial-gradient(circle at bottom right, rgba(8,247,161,.12), transparent 25%),
+        linear-gradient(135deg, #03101f 0%, #072654 55%, #04142d 100%);
+      overflow-x: hidden;
+    }
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none; z-index: 0;
+    }
+
+    /* ── HEADER ── */
+    header { position: relative; z-index: 2; padding: 32px 24px 16px; }
+    .topbar {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 16px; flex-wrap: wrap; max-width: 1400px; margin: auto;
+    }
+    .logo { display: flex; align-items: center; gap: 14px; }
+    .logo-icon {
+      width: 58px; height: 58px; border-radius: 18px; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem; box-shadow: 0 10px 25px rgba(0,212,255,.35);
+    }
+    .logo h1 { font-size: 2rem; font-weight: 800; letter-spacing: 1px; }
+    .logo p  { opacity: .75; font-size: .95rem; margin-top: 4px; }
+
+    nav {
+      position: relative; z-index: 2;
+      max-width: 1400px; margin: 24px auto 0;
+      display: flex; gap: 10px; flex-wrap: wrap;
+    }
+    nav a {
+      text-decoration: none; color: #fff;
+      padding: 11px 16px; border-radius: 999px;
+      background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.08);
+      transition: .25s ease; font-weight: 600; font-size: .9rem;
+      backdrop-filter: blur(10px);
+    }
+    nav a:hover, nav a.active {
+      transform: translateY(-2px);
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #04142d;
+    }
+
+    /* ── PAGE ── */
+    .page-wrapper {
+      position: relative; z-index: 2;
+      max-width: 1200px; margin: 36px auto 64px; padding: 0 24px;
+    }
+    .page-title { margin-bottom: 28px; }
+    .page-title h2 { font-size: clamp(1.5rem,3vw,2.2rem); font-weight: 800; }
+    .page-title p  { opacity: .7; font-size: .95rem; margin-top: 6px; }
+
+    /* ── RESUMO ── */
+    .resumo-grid {
+      display: grid; grid-template-columns: repeat(4,1fr);
+      gap: 14px; margin-bottom: 32px;
+    }
+    .resumo-card {
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 20px; padding: 20px 16px; text-align: center;
+      backdrop-filter: blur(16px);
+    }
+    .resumo-card .r-ico { font-size: 1.6rem; margin-bottom: 6px; }
+    .resumo-card .r-val { font-size: 1.15rem; font-weight: 800; line-height: 1.2; }
+    .resumo-card .r-lbl { font-size: .68rem; opacity: .6; margin-top: 4px; text-transform: uppercase; letter-spacing: .5px; }
+
+    /* ── ABAS ── */
+    .tabs-wrap {
+      display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 22px;
+    }
+    .tab-btn {
+      padding: 10px 16px; border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      color: #fff; font-family: 'Montserrat', sans-serif;
+      font-size: .85rem; font-weight: 600; cursor: pointer;
+      transition: .2s ease; display: flex; align-items: center; gap: 6px;
+    }
+    .tab-btn:hover { background: rgba(255,255,255,.10); transform: translateY(-1px); }
+    .tab-btn.ativo {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #04142d; border-color: transparent;
+      box-shadow: 0 6px 18px rgba(0,212,255,.3);
+    }
+
+    /* ── SECTION CARD ── */
+    .section-card {
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 28px; backdrop-filter: blur(20px);
+      box-shadow: 0 20px 50px rgba(0,0,0,.30); overflow: hidden;
+    }
+    .section-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 22px 28px 18px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .section-header .s-icon { font-size: 1.4rem; }
+    .section-header h3 { font-size: 1.1rem; font-weight: 700; }
+    .section-header .s-badge {
+      margin-left: auto; font-size: .74rem; font-weight: 700;
+      padding: 4px 10px; border-radius: 999px;
+      background: rgba(0,212,255,.15); border: 1px solid rgba(0,212,255,.3);
+      color: var(--accent); letter-spacing: .5px; text-transform: uppercase;
+    }
+
+    /* ── PÓDIO ── */
+    .podio-wrap {
+      display: grid; grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px; padding: 24px 28px 10px; align-items: end;
+    }
+    .podio-card {
+      border-radius: 18px; padding: 18px 14px;
+      text-align: center; border: 1px solid rgba(255,255,255,.10);
+      position: relative; transition: .2s ease;
+    }
+    .podio-card:hover { transform: translateY(-3px); }
+    .podio-card.p1 {
+      background: linear-gradient(160deg, rgba(255,215,0,.18), rgba(255,215,0,.04));
+      border-color: rgba(255,215,0,.35); padding-top: 22px; padding-bottom: 22px;
+    }
+    .podio-card.p2 {
+      background: linear-gradient(160deg, rgba(192,192,192,.14), rgba(192,192,192,.03));
+      border-color: rgba(192,192,192,.3);
+    }
+    .podio-card.p3 {
+      background: linear-gradient(160deg, rgba(205,127,50,.14), rgba(205,127,50,.03));
+      border-color: rgba(205,127,50,.3);
+    }
+    .podio-medalha { font-size: 1.6rem; margin-bottom: 8px; }
+    .podio-flag {
+      width: 52px; height: 39px; border-radius: 6px; object-fit: cover;
+      margin: 0 auto 10px; display: block;
+      box-shadow: 0 4px 12px rgba(0,0,0,.3);
+    }
+    .podio-flag-ph {
+      width: 52px; height: 39px; border-radius: 6px; margin: 0 auto 10px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(255,255,255,.07); font-size: 1.4rem;
+    }
+    .podio-nome { font-weight: 800; font-size: .92rem; margin-bottom: 6px; line-height: 1.3; }
+    .podio-pct  { font-size: 1.6rem; font-weight: 800; line-height: 1; }
+    .podio-card.p1 .podio-pct { color: var(--gold); }
+    .podio-card.p2 .podio-pct { color: var(--silver); }
+    .podio-card.p3 .podio-pct { color: var(--bronze); }
+    .podio-votos { font-size: .7rem; opacity: .6; margin-top: 4px; }
+
+    /* ── BARRAS ── */
+    .barras-wrap { padding: 8px 28px 24px; }
+
+    .barra-sep {
+      font-size: .68rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1px; opacity: .4; margin: 16px 0 6px;
+      padding-bottom: 6px; border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+
+    .barra-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 7px 0;
+    }
+    .barra-rank {
+      width: 22px; font-size: .7rem; font-weight: 700;
+      opacity: .4; text-align: center; flex-shrink: 0;
+    }
+    .barra-flag {
+      width: 26px; height: 19px; border-radius: 3px;
+      object-fit: cover; flex-shrink: 0;
+    }
+    .barra-flag-ph {
+      width: 26px; height: 19px; border-radius: 3px; flex-shrink: 0;
+      background: rgba(255,255,255,.07);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .65rem;
+    }
+    .barra-nome {
+      font-size: .8rem; font-weight: 600; flex-shrink: 0;
+      width: 140px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .barra-track {
+      flex: 1; height: 9px; border-radius: 99px;
+      background: rgba(255,255,255,.06); overflow: hidden;
+    }
+    .barra-fill {
+      height: 100%; border-radius: 99px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      transition: width .5s ease;
+    }
+    .barra-fill.zero { background: rgba(255,255,255,.08); }
+    .barra-pct {
+      font-size: .75rem; font-weight: 700; width: 42px;
+      text-align: right; flex-shrink: 0; color: var(--accent);
+    }
+    .barra-pct.zero { color: rgba(255,255,255,.25); }
+    .barra-votos {
+      font-size: .68rem; opacity: .45; width: 58px;
+      text-align: right; flex-shrink: 0;
+    }
+
+    /* ── FOOTER / BOTÃO TOPO ── */
+    .botao-topo {
+      position: fixed; bottom: 30px; right: 28px; z-index: 99;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #04142d; font-weight: 700; font-size: .85rem;
+      padding: 12px 18px; border-radius: 999px; text-decoration: none;
+      box-shadow: 0 8px 24px rgba(0,212,255,.35); transition: .25s ease;
+    }
+    .botao-topo:hover { transform: translateY(-3px); }
+    footer {
+      position: relative; z-index: 2; padding: 32px 24px 48px;
+      text-align: center; opacity: .65; font-size: .92rem;
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 700px) {
+      .logo h1 { font-size: 1.3rem; }
+      .resumo-grid { grid-template-columns: repeat(2,1fr); }
+      .podio-wrap { grid-template-columns: 1fr; padding: 18px 18px 8px; }
+      .podio-card.p1, .podio-card.p2, .podio-card.p3 { padding: 14px; }
+      .barras-wrap { padding: 6px 16px 20px; }
+      .barra-nome { width: 90px; font-size: .74rem; }
+      .barra-votos { display: none; }
+      .section-header { padding: 16px 18px 14px; }
+    }
+  </style>
+</head>
+<body id="topo">
+
+<header>
+  <div class="topbar">
+    <div class="logo">
+      <div class="logo-icon">🏆</div>
+      <div>
+        <h1>Bolão Se Joga na Copa 2026</h1>
+        <p>FIFA World Cup • Canadá • México • Estados Unidos</p>
+        <p>Bolão entre amigos que acham que entendem de futebol e que adoram dar palpite</p>
+      </div>
+    </div>
+  </div>
+  <nav>
+    <a href="#" onclick="window.location.href='https://sejoganacopa.vercel.app/'; return false;">  🏠 Home </a>
+    <a href="#" onclick="window.location.href='https://sejoganacopa.vercel.app/Paginas/ranking.html'; return false;"> 📊 Ranking Geral </a>
+    <a href="#" onclick="window.location.href='https://sejoganacopa.vercel.app/Paginas/palpites_3.html'; return false;"> 🎯 Palpites </a>
+    <a href="#" onclick="window.location.href='https://sejoganacopa.vercel.app/Paginas/confronto.html'; return false;"> ⚔️ Secador</a>
+    <a href="#" class="active">📈 Estatísticas</a>
+    <a href="https://drive.google.com/uc?export=download&id=18KAjbenZAbscrTi79QvTMVxT1coHtBYc" target="_blank">⬇️ Regulamento</a>
+    <a href="https://drive.google.com/uc?export=download&id=1DCx8z7_M_7dbO9OuPWeOwjx76ElDD4Am" target="_blank">⬇️ ZIP Palpites</a>
+  </nav>
+</header>
+
+<div class="page-wrapper">
+
+  <div class="page-title">
+    <h3>📈 Estatísticas dos Palpites</h3>
+    <p>Veja como os 38 participantes distribuíram seus palpites em cada fase da Copa do Mundo 2026</p>
+  </div>
+
+  <!-- RESUMO -->
+  <div class="resumo-grid" id="resumo-grid"></div>
+
+  <!-- ABAS -->
+  <div class="tabs-wrap" id="tabs-wrap"></div>
+
+  <!-- CONTEÚDO DA FASE ATIVA -->
+  <div class="section-card" id="section-card">
+    <div class="section-header">
+      <span class="s-icon" id="cat-icon"></span>
+      <h3 id="cat-titulo"></h3>
+      <span class="s-badge" id="cat-badge"></span>
+    </div>
+    <div class="podio-wrap" id="podio-wrap"></div>
+    <div class="barras-wrap" id="barras-wrap"></div>
+  </div>
+
+</div>
+
+<a href="#topo" class="botao-topo">↑ Topo</a>
+
+<footer>© 2026 • Bolão Se Joga Copa do Mundo • Estatísticas dos palpites de classificação</footer>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  DADOS ESTÁTICOS — extraídos da planilha Estatisticas.txt
+// ═══════════════════════════════════════════════════════════════
+const SELECOES = [
+  {s:"México",          campeao:0,  finalista:0,  semi:0,  quartas:6,  oitavas:30, segundas:38},
+  {s:"África do Sul",   campeao:0,  finalista:0,  semi:0,  quartas:0,  oitavas:2,  segundas:7 },
+  {s:"Coreia do Sul",   campeao:0,  finalista:0,  semi:0,  quartas:2,  oitavas:12, segundas:29},
+  {s:"República Tcheca",campeao:0,  finalista:0,  semi:0,  quartas:0,  oitavas:7,  segundas:28},
+  {s:"Canadá",          campeao:0,  finalista:0,  semi:0,  quartas:0,  oitavas:18, segundas:35},
+  {s:"Bósnia e Herzegovina",campeao:0,finalista:0,semi:0,  quartas:0,  oitavas:3,  segundas:23},
+  {s:"Catar",           campeao:0,  finalista:0,  semi:0,  quartas:0,  oitavas:0,  segundas:4 },
+  {s:"Suíça",           campeao:0,  finalista:0,  semi:0,  quartas:0,  oitavas:30, segundas:38},
+  {s:"Brasil",          campeao:12, finalista:16, semi:25, quartas:35, oitavas:37, segundas:38},
+  {s:"Marrocos",        campeao:0,  finalista:0,  semi:1,  quartas:12, oitavas:13, segundas:37},
+  {s:"Haiti",           campeao:0,  finalista:0,  semi:0,  quartas:0,  oitavas:0,  segundas:0 },
+  {s:"Escócia",         campeao:0,  finalista:0,  semi:0,  quartas:0,  oitavas:0,  segundas:29},
+  {s:"Estados Unidos",  campeao:0,  finalista:0,  semi:0,  quartas:7,  oitavas:25, segundas:37},
+  {s:"Paraguai",        campeao:0,  finalista:0,  semi:0,  quartas:0,  oitavas:4,  segundas:25},
+  {s:"Austrália",       campeao:0,  finalista:0,  semi:0,  quartas:0,  oitavas:1,  segundas:11},
+  {s:"Turquia",         campeao:0,  finalista:0,  semi:0,  quartas:6,  oitavas:23, segundas:34},
+  {s:"Alemanha",        campeao:0,  finalista:3,  semi:4,  quartas:4,  oitavas:36, segundas:38},
+  {s:"Curaçao",         campeao:0,  finalista:0,  semi:0,  quartas:0,  oitavas:0,  segundas:0 },
+  {s:"Costa do Marfim", campeao:0,  finalista:0,  semi:0,  quartas:1,  oitavas:11, segundas:36},
+  {s:"Equador",         campeao:0,  finalista:0,  semi:0,  quartas:0,  oitavas:11, segundas:38},
+  {s:"Holanda",         campeao:0,  finalista:2,  semi:2,  quartas:25, oitavas:26, segundas:38},
+  {s:"Japão",           campeao:0,  finalista:0,  semi:0,  quartas:1,  oitavas:1,  segundas:30},
+  {s:"Suécia",          campeao:0,  finalista:0,  semi:0,  quartas:0,  oitavas:0,  segundas:32},
+  {s:"Tunísia",         campeao:0,  finalista:0,  semi:0,  quartas:0,  oitavas:0,  segundas:5 },
+  {s:"Bélgica",         campeao:0,  finalista:0,  semi:2,  quartas:21, oitavas:34, segundas:38},
+  {s:"Egito",           campeao:0,  finalista:0,  semi:0,  quartas:0,  oitavas:14, segundas:35},
+  {s:"Irã",             campeao:0,  finalista:0,  semi:0,  quartas:0,  oitavas:4,  segundas:24},
+  {s:"Nova Zelândia",   campeao:0,  finalista:0,  semi:0,  quartas:0,  oitavas:0,  segundas:2 },
+  {s:"Espanha",         campeao:9,  finalista:11, semi:33, quartas:34, oitavas:38, segundas:38},
+  {s:"Cabo Verde",      campeao:0,  finalista:0,  semi:0,  quartas:0,  oitavas:0,  segundas:1 },
+  {s:"Arábia Saudita",  campeao:0,  finalista:0,  semi:0,  quartas:0,  oitavas:2,  segundas:12},
+  {s:"Uruguai",         campeao:0,  finalista:0,  semi:0,  quartas:0,  oitavas:0,  segundas:38},
+  {s:"França",          campeao:9,  finalista:22, semi:33, quartas:35, oitavas:38, segundas:38},
+  {s:"Senegal",         campeao:0,  finalista:0,  semi:0,  quartas:2,  oitavas:8,  segundas:33},
+  {s:"Iraque",          campeao:0,  finalista:0,  semi:0,  quartas:0,  oitavas:0,  segundas:0 },
+  {s:"Noruega",         campeao:0,  finalista:0,  semi:0,  quartas:3,  oitavas:25, segundas:38},
+  {s:"Argentina",       campeao:0,  finalista:6,  semi:18, quartas:38, oitavas:38, segundas:38},
+  {s:"Argélia",         campeao:0,  finalista:0,  semi:0,  quartas:0,  oitavas:2,  segundas:24},
+  {s:"Áustria",         campeao:0,  finalista:0,  semi:0,  quartas:0,  oitavas:3,  segundas:32},
+  {s:"Jordânia",        campeao:0,  finalista:0,  semi:0,  quartas:0,  oitavas:0,  segundas:3 },
+  {s:"Portugal",        campeao:8,  finalista:14, semi:20, quartas:35, oitavas:36, segundas:38},
+  {s:"RD Congo",        campeao:0,  finalista:0,  semi:0,  quartas:0,  oitavas:0,  segundas:8 },
+  {s:"Uzbequistão",     campeao:0,  finalista:0,  semi:0,  quartas:0,  oitavas:0,  segundas:4 },
+  {s:"Colômbia",        campeao:0,  finalista:0,  semi:2,  quartas:5,  oitavas:16, segundas:38},
+  {s:"Inglaterra",      campeao:0,  finalista:2,  semi:10, quartas:28, oitavas:34, segundas:38},
+  {s:"Croácia",         campeao:0,  finalista:0,  semi:2,  quartas:3,  oitavas:24, segundas:38},
+  {s:"Gana",            campeao:0,  finalista:0,  semi:0,  quartas:1,  oitavas:2,  segundas:26},
+  {s:"Panamá",          campeao:0,  finalista:0,  semi:0,  quartas:0,  oitavas:0,  segundas:2 },
+];
+
+const ARTILHEIROS = [
+  {s:"Mbappé (FRA)",    votos:20},
+  {s:"H. Kane (ENG)",   votos:5 },
+  {s:"Oyarzabal (ESP)", votos:2 },
+  {s:"L.Yamal (ESP)",   votos:3 },
+  {s:"Vini Jr. (BRA)",  votos:2 },
+  {s:"Paquetá (BRA)",   votos:1 },
+  {s:"C.Ronaldo (POR)", votos:1 },
+  {s:"Olise (FRA)",     votos:1 },
+  {s:"Endrick (BRA)",   votos:1 },
+  {s:"Neymar Jr. (BRA)",votos:1 },
+  {s:"L. Henrique (BRA)",votos:1},
+];
+
+// ═══════════════════════════════════════════════════════════════
+//  BANDEIRAS
+// ═══════════════════════════════════════════════════════════════
+const BANDEIRAS = {
+  'Argentina':'ar','Brasil':'br','Colômbia':'co','Equador':'ec',
+  'Paraguai':'py','Uruguai':'uy','Canadá':'ca','Curaçao':'cw',
+  'Estados Unidos':'us','Haiti':'ht','México':'mx','Panamá':'pa',
+  'Alemanha':'de','Áustria':'at','Bélgica':'be',
+  'Bósnia e Herzegovina':'ba','Croácia':'hr','Escócia':'gb-sct',
+  'Espanha':'es','França':'fr','Holanda':'nl','Inglaterra':'gb-eng',
+  'Noruega':'no','Portugal':'pt','República Tcheca':'cz','Suécia':'se',
+  'Suíça':'ch','Turquia':'tr','África do Sul':'za','Argélia':'dz',
+  'Cabo Verde':'cv','RD Congo':'cd','Costa do Marfim':'ci','Egito':'eg',
+  'Gana':'gh','Marrocos':'ma','Senegal':'sn','Tunísia':'tn',
+  'Arábia Saudita':'sa','Austrália':'au','Coreia do Sul':'kr',
+  'Iraque':'iq','Irã':'ir','Japão':'jp','Jordânia':'jo',
+  'Catar':'qa','Uzbequistão':'uz','Nova Zelândia':'nz',
+};
+
+function flagUrl(nome) {
+  const cod = BANDEIRAS[nome];
+  return cod ? `https://flagcdn.com/w40/${cod}.png` : null;
+}
+
+
+const FOTOS_ARTILHEIROS = {
+"Mbappé (FRA)":"/imagens/Mbappe.jpg",
+"H. Kane (ENG)":"/imagens/Kane.jpg",
+"Oyarzabal (ESP)":"/imagens/Oyarzabal.jpg",
+"L.Yamal (ESP)":"/imagens/Yamine.jpg",
+"Vini Jr. (BRA)":"/imagens/ViniJr.jpg",
+"Paquetá (BRA)":"/imagens/Paqueta.jpg",
+"C.Ronaldo (POR)":"/imagens/CRonaldo.jpg",
+"Olise (FRA)":"/imagens/Olise.jpg",
+"Endrick (BRA)":"/imagens/Endrick.jpg",
+"Neymar Jr. (BRA)":"/imagens/Neymar.jpg",
+"L. Henrique (BRA)":"/imagens/LHenrique.jpg"
+};
+
+// ═══════════════════════════════════════════════════════════════
+//  DEFINIÇÃO DAS CATEGORIAS / ABAS
+// ═══════════════════════════════════════════════════════════════
+const FASES = [
+  { id:'campeao',   label:'Campeão',          icon:'🏆', campo:'campeao',   tipo:'selecao',
+    desc:'Seleção campeã da Copa do Mundo 2026' },
+  { id:'finalista', label:'Finalista',         icon:'🥈', campo:'finalista', tipo:'selecao',
+    desc:'Seleção finalista (vice-campeã)' },
+  { id:'semi',      label:'Semifinal',         icon:'🔥', campo:'semi',      tipo:'selecao',
+    desc:'Seleções que chegam à semifinal' },
+  { id:'quartas',   label:'Quartas de Final',  icon:'⚔️', campo:'quartas',   tipo:'selecao',
+    desc:'Seleções que chegam às quartas de final' },
+  { id:'oitavas',   label:'Oitavas de Final',  icon:'🎯', campo:'oitavas',   tipo:'selecao',
+    desc:'Seleções que chegam às oitavas de final' },
+  { id:'segundas',  label:'Segunda Fase',      icon:'📋', campo:'segundas',  tipo:'selecao',
+    desc:'Seleções que avançam da fase de grupos' },
+  { id:'artilheiro',label:'Artilheiro',        icon:'⚽', campo:null,        tipo:'jogador',
+    desc:'Jogador favorito ao título de artilheiro' },
+];
+
+// ═══════════════════════════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════════════════════════
+function pct(votos, total) {
+  return total > 0 ? ((votos / total) * 100).toFixed(1) : '0.0';
+}
+
+function flagImgHtml(nome, w, h, r=4) {
+  const url = flagUrl(nome);
+  return url
+    ? `<img src="${url}" style="width:${w}px;height:${h}px;border-radius:${r}px;object-fit:cover;" alt="${nome}">`
+    : `<div style="width:${w}px;height:${h}px;border-radius:${r}px;background:rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;font-size:${Math.round(h*.5)}px;">?</div>`;
+}
+
+// Converte dados para lista ordenada por votos desc, excluindo zeros quando indicado
+function listaOrdenada(fase, excluirZero=false) {
+  let arr;
+  if (fase.tipo === 'jogador') {
+    arr = ARTILHEIROS.map(a => ({nome: a.s, votos: a.votos}));
+  } else {
+    arr = SELECOES.map(r => ({nome: r.s, votos: r[fase.campo]}));
+  }
+  arr.sort((a,b) => b.votos - a.votos);
+  if (excluirZero) arr = arr.filter(x => x.votos > 0);
+  return arr;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  RENDERIZA RESUMO GERAL
+// ═══════════════════════════════════════════════════════════════
+function renderResumo() {
+  const totalPart = 38;
+  const favCampeao   = SELECOES.reduce((m,r) => r.campeao  > m.v ? {n:r.s,v:r.campeao}  : m, {n:'—',v:0});
+  const favFinalista = SELECOES.reduce((m,r) => r.finalista> m.v ? {n:r.s,v:r.finalista}: m, {n:'—',v:0});
+  const favArtilheiro= ARTILHEIROS.reduce((m,a) => a.votos > m.v ? {n:a.s,v:a.votos}    : m, {n:'—',v:0});
+  const cotadasCampeao = SELECOES.filter(r => r.campeao > 0).length;
+
+  const cards = [
+    { ico:'🏆', val: favCampeao.n,         lbl:`Favorito ao título · ${favCampeao.v} votos` },
+    { ico:'⚽', val: favArtilheiro.n,      lbl:`Artilheiro favorito · ${favArtilheiro.v} votos` },
+    { ico:'🎲', val: cotadasCampeao,       lbl:'Seleções cotadas ao título' },
+  ];
+
+  document.getElementById('resumo-grid').innerHTML = cards.map(c => `
+    <div class="resumo-card">
+      <div class="r-ico">${c.ico}</div>
+      <div class="r-val">${c.val}</div>
+      <div class="r-lbl">${c.lbl}</div>
+    </div>`).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  RENDERIZA ABAS
+// ═══════════════════════════════════════════════════════════════
+function renderTabs(faseAtiva) {
+  const wrap = document.getElementById('tabs-wrap');
+  wrap.innerHTML = FASES.map(f => `
+    <button class="tab-btn${f.id === faseAtiva.id ? ' ativo' : ''}" data-id="${f.id}">
+      <span>${f.icon}</span><span>${f.label}</span>
+    </button>`).join('');
+
+  wrap.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const fase = FASES.find(f => f.id === btn.dataset.id);
+      renderTabs(fase);
+      renderFase(fase);
+      // Scroll suave para o card
+      document.getElementById('section-card')
+        .scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  RENDERIZA CONTEÚDO DE UMA FASE
+// ═══════════════════════════════════════════════════════════════
+function renderFase(fase) {
+  document.getElementById('cat-icon').textContent   = fase.icon;
+  document.getElementById('cat-titulo').textContent  = fase.label;
+
+  const todos   = listaOrdenada(fase, false);
+  const comVoto = todos.filter(x => x.votos > 0);
+  const semVoto = todos.filter(x => x.votos === 0);
+  const totalV  = todos.reduce((s,x) => s + x.votos, 0);
+
+  document.getElementById('cat-badge').textContent =
+    `${comVoto.length} seleções · ${totalV} votos`;
+
+  // ── Pódio (top 3 com votos) ──
+  const top3 = comVoto.slice(0, 3);
+  const resto = comVoto.slice(3);
+  const medalhas = ['🥇','🥈','🥉'];
+  const ordemVisual = [1, 0, 2]; // 2º | 1º | 3º para efeito de pódio
+
+  const podioHtml = top3.length
+    ? ordemVisual.filter(i => top3[i]).map(i => {
+        const item  = top3[i];
+        const cls   = ['p1','p2','p3'][i];
+        const perc  = pct(item.votos, totalV);
+        const fImgH = fase.tipo === 'selecao'
+          ? flagImgHtml(item.nome, 52, 39)
+          : (FOTOS_ARTILHEIROS[item.nome]
+             ? `<img class="podio-flag" src="${FOTOS_ARTILHEIROS[item.nome]}" style="width:70px;height:70px;border-radius:50%;object-fit:cover;" alt="${item.nome}">`
+             : `<div class="podio-flag-ph">⚽</div>`);
+        return `
+          <div class="podio-card ${cls}">
+            <div class="podio-medalha">${medalhas[i]}</div>
+            ${fImgH}
+            <div class="podio-nome">${item.nome}</div>
+            <div class="podio-pct">${perc}%</div>
+            <div class="podio-votos">${item.votos} voto${item.votos!==1?'s':''}</div>
+          </div>`;
+      }).join('')
+    : '<div style="opacity:.4;font-size:.9rem;text-align:center;padding:24px 0 8px;grid-column:1/-1;">Sem palpites registrados</div>';
+
+  document.getElementById('podio-wrap').innerHTML = podioHtml;
+
+  // ── Barras (posições 4 em diante com votos + zerados) ──
+  const maxV = comVoto[0]?.votos || 1;
+
+  function barraItem(item, rank) {
+    const p     = pct(item.votos, totalV);
+    const larg  = item.votos > 0 ? (item.votos / maxV * 100) : 0;
+    const zero  = item.votos === 0;
+    const fImgH = fase.tipo === 'selecao'
+      ? (flagUrl(item.nome)
+          ? `<img class="barra-flag" src="${flagUrl(item.nome)}" alt="${item.nome}">`
+          : `<div class="barra-flag-ph">?</div>`)
+      : (FOTOS_ARTILHEIROS[item.nome]
+          ? `<img class="barra-flag" src="${FOTOS_ARTILHEIROS[item.nome]}" style="border-radius:50%;" alt="${item.nome}">`
+          : `<div class="barra-flag-ph">⚽</div>`);
+    return `
+      <div class="barra-item">
+        <span class="barra-rank">${zero ? '·' : rank}</span>
+        ${fImgH}
+        <span class="barra-nome" title="${item.nome}">${item.nome}</span>
+        <div class="barra-track">
+          <div class="barra-fill${zero?' zero':''}" style="width:${larg}%;"></div>
+        </div>
+        <span class="barra-pct${zero?' zero':''}">${zero ? '—' : p+'%'}</span>
+        <span class="barra-votos">${zero ? '0 votos' : item.votos+' voto'+(item.votos!==1?'s':'')}</span>
+      </div>`;
+  }
+
+  let barrasHtml = '';
+
+  if (resto.length > 0) {
+    barrasHtml += resto.map((item, i) => barraItem(item, i + 4)).join('');
+  }
+
+  if (semVoto.length > 0 && fase.id !== 'artilheiro') {
+    barrasHtml += `<div class="barra-sep">Sem palpites nesta fase</div>`;
+    barrasHtml += semVoto.map(item => barraItem(item, 0)).join('');
+  }
+
+  document.getElementById('barras-wrap').innerHTML = barrasHtml ||
+    (top3.length >= todos.length
+      ? `<div style="opacity:.4;text-align:center;padding:12px 0 4px;font-size:.85rem;">Todas as seleções exibidas no pódio acima</div>`
+      : '');
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  BOOTSTRAP
+// ═══════════════════════════════════════════════════════════════
+function init() {
+  renderResumo();
+  renderTabs(FASES[0]);
+  renderFase(FASES[0]);
+}
+
+init();
+</script>
+</body>
+</html>

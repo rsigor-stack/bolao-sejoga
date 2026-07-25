@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Bolão Se Joga Copa do Mundo 2026</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    :root {
+      --bg-dark: #04142d;
+      --bg-blue: #0a2d62;
+      --accent: #00d4ff;
+      --accent-2: #08f7a1;
+      --gold: #ffd700;
+      --text: #ffffff;
+      --card: rgba(255,255,255,0.08);
+      --border: rgba(255,255,255,0.15);
+    }
+    body {
+      font-family: 'Montserrat', sans-serif;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(0,212,255,.18), transparent 25%),
+        radial-gradient(circle at bottom right, rgba(8,247,161,.12), transparent 25%),
+        linear-gradient(135deg, #03101f 0%, #072654 55%, #04142d 100%);
+      overflow-x: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+    header {
+      position: relative;
+      z-index: 2;
+      padding: 32px 24px 16px;
+    }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      max-width: 1400px;
+      margin: auto;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .logo-icon {
+      width: 58px;
+      height: 58px;
+      border-radius: 18px;
+      background:
+        linear-gradient(135deg, var(--accent), var(--accent-2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      box-shadow:
+        0 10px 25px rgba(0,212,255,.35);
+    }
+    .logo h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+    .logo p {
+      opacity: .75;
+      font-size: .95rem;
+      margin-top: 4px;
+    }
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid var(--border);
+      padding: 12px 18px;
+      border-radius: 999px;
+      backdrop-filter: blur(10px);
+    }
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent-2);
+      box-shadow: 0 0 12px var(--accent-2);
+    }
+    nav {
+      position: relative;
+      z-index: 2;
+      max-width: 1400px;
+      margin: 24px auto 0;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    nav a {
+      text-decoration: none;
+      color: white;
+      padding: 12px 18px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.08);
+      transition: .25s ease;
+      font-weight: 600;
+      font-size: .95rem;
+      backdrop-filter: blur(10px);
+    }
+    nav a:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #04142d;
+    }
+    .hero {
+      position: relative;
+      z-index: 2;
+      max-width: 1400px;
+      margin: 30px auto 24px;
+      padding: 0 24px;
+    }
+    .hero-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 28px;
+      background:
+        linear-gradient(135deg,
+        rgba(255,255,255,.10),
+        rgba(255,255,255,.04));
+      border: 1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(18px);
+      padding: 48px;
+      box-shadow:
+        0 25px 60px rgba(0,0,0,.35);
+    }
+    .hero-card::after {
+      content: '';
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle, rgba(0,212,255,.35), transparent 70%);
+      top: -100px;
+      right: -100px;
+    }
+
+    .hero h2 {
+      position: relative;
+      z-index: 2;
+      font-size: clamp(2rem, 5vw, 4rem);
+      line-height: 1;
+      font-weight: 800;
+      margin-bottom: 18px;
+      max-width: 800px;
+    }
+
+    .hero p {
+      position: relative;
+      z-index: 2;
+      max-width: 700px;
+      opacity: .85;
+      line-height: 1.7;
+      font-size: 1.05rem;
+    }
+    .stats {
+      position: relative;
+      z-index: 2;
+      max-width: 1400px;
+      margin: 0 auto 24px;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+      gap: 18px;
+    }
+    .stat-card {
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 24px;
+      padding: 24px;
+      backdrop-filter: blur(16px);
+      transition: .25s ease;
+    }
+    .stat-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(0,212,255,.4);
+    }
+    .stat-card h3 {
+      font-size: .95rem;
+      opacity: .7;
+      margin-bottom: 10px;
+    }
+    .stat-card strong {
+      font-size: 2rem;
+      font-weight: 800;
+    }
+    .sheet-wrapper {
+      position: relative;
+      z-index: 2;
+      width: calc(100% - 48px);
+      max-width: 1400px;
+      margin: 0 auto 40px;
+      border-radius: 28px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.08);
+      backdrop-filter: blur(20px);
+      box-shadow:
+        0 25px 60px rgba(0,0,0,.35);
+    }
+    iframe {
+      width: 100%;
+      height: 85vh;
+      border: none;
+      background: white;
+    }
+    footer {
+      position: relative;
+      z-index: 2;
+      padding: 32px 24px 48px;
+      text-align: center;
+      opacity: .65;
+      font-size: .92rem;
+    }
+    @media (max-width: 768px) {
+      .hero-card {
+        padding: 28px;
+      }
+      .hero h2 {
+        line-height: 1.1;
+      }
+      .logo h1 {
+        font-size: 1.4rem;
+      }
+      iframe {
+        height: 78vh;
+      }
+    }
+        .subtitulo{
+
+            font-size:1.1rem;
+
+            opacity:.85;
+
+            max-width:700px;
+
+            margin:0 auto 40px;
+
+            line-height:1.7;
+        }
+
+        .contador{
+
+            display:grid;
+
+            grid-template-columns:
+                repeat(auto-fit,minmax(140px,1fr));
+
+            gap:20px;
+
+            margin-bottom:40px;
+        }
+
+        .tempo{
+
+            padding:25px 15px;
+
+            border-radius:24px;
+
+            background:
+                rgba(255,255,255,.08);
+
+            border:
+                1px solid rgba(255,255,255,.10);
+
+            backdrop-filter:blur(10px);
+
+            transition:.25s ease;
+        }
+
+        .tempo:hover{
+
+            transform:translateY(-4px);
+
+            border-color:
+                rgba(0,212,255,.35);
+        }
+
+        .numero{
+
+            font-size:3rem;
+
+            font-weight:800;
+
+            color:var(--accent);
+
+            margin-bottom:8px;
+        }
+
+        .label{
+
+            font-size:.9rem;
+
+            text-transform:uppercase;
+
+            letter-spacing:1px;
+
+            opacity:.75;
+        }
+
+        .data-limite{
+
+            font-size:1rem;
+
+            opacity:.85;
+        }
+
+        .encerrado{
+
+            color:var(--gold);
+
+            font-size:2rem;
+
+            font-weight:800;
+
+            margin-top:20px;
+        }
+
+        @media(max-width:768px){
+
+            .card{
+
+                padding:35px 25px;
+            }
+
+            .contador{
+
+                grid-template-columns:
+                    repeat(2,1fr);
+            }
+
+            .numero{
+
+                font-size:2.4rem;
+            }
+        }
+  </style>
+</head>
+<body id="topo">
+<header>
+  <div class="topbar">
+    <div class="logo">
+      <div class="logo-icon">
+        🏆
+      </div>
+      <div>
+        <h1>Bolão Se Joga na Copa 2026</h1>
+        <p>FIFA World Cup • Canadá • México • Estados Unidos</p>
+        <p>Bolão entre amigos que acham que entendem de futebol e que adoram dar palpite</p>
+      </div>
+    </div>
+  </div>
+  <nav>
+    <!--- <a class="download-btn" href="#" onclick="trocarAba('99127306')">📜 Regulamento</a>--->
+    <!--- <a class="download-btn" href="#" onclick="trocarPagina('paginas/regulamento.html'); return false;">📜 Regulamento</a> --->
+    <!--- <a class="download-btn" href="#" onclick="trocarAba('683948336')">📜 Esquenta</a> --->
+    <!--- <a class="download-btn" href="#" onclick="trocarPagina('Paginas/preview_1.html'); return false;">📜 Esquenta</a> --->
+    <!--- <a href="#" onclick="carregarPagina('Paginas/contador.html')">  ⏳ Home </a> -->
+    <a href="#" onclick="window.location.href='Paginas/contador.html'; return false;"> ⏳ Home </a>
+    <a href="#" onclick="carregarPagina('Paginas/historico.html')">  🏠 Histórico </a>
+    <!--- <a href="#" onclick="carregarPagina('Paginas/ranking.html')">    📊 Testes </a> --->
+    <a href="#" onclick="window.location.href='Paginas/ranking.html'; return false;"> 📊 Ranking Geral </a>
+    <a class="download-btn" href="https://drive.google.com/uc?export=download&id=18KAjbenZAbscrTi79QvTMVxT1coHtBYc" target="_blank"> ⬇️ Regulamento</a>
+    <a class="download-btn" href="https://drive.google.com/uc?export=download&id=1fskB66tdE5IeqglOG3UrZA2hICpjnQ-B" target="_blank"> ⬇️ Planilha de Palpites </a>
+    
+    <!-- 
+        <a href="#">📊 Classificação</a>
+        <a href="#">⚽ Jogos</a>
+        <a href="#">📈 Estatísticas</a>
+    -->
+  </nav>
+</header>
+<body>
+
+    <div class="card">
+
+        <div class="logo">
+            ⚽🏆
+        </div>
+
+        <h1>
+            Contagem Regressiva
+        </h1>
+
+        <p class="subtitulo">
+            Faltam poucos momentos para o encerramento do prazo de entrega das planilhas de palpites do
+            <strong>Bolão Se Joga na Copa 2026</strong>.
+            Não deixe para a prorrogação!
+        </p>
+
+        <div class="contador">
+
+            <div class="tempo">
+
+                <div class="numero" id="dias">00</div>
+
+                <div class="label">Dias</div>
+
+            </div>
+
+            <div class="tempo">
+
+                <div class="numero" id="horas">00</div>
+
+                <div class="label">Horas</div>
+
+            </div>
+
+            <div class="tempo">
+
+                <div class="numero" id="minutos">00</div>
+
+                <div class="label">Minutos</div>
+
+            </div>
+
+            <div class="tempo">
+
+                <div class="numero" id="segundos">00</div>
+
+                <div class="label">Segundos</div>
+
+            </div>
+
+        </div>
+
+	<div class="data-limite">
+
+	    ⏰ Prazo final:
+	    <strong id="prazoFormatado"></strong>
+
+	</div>
+
+        <div id="mensagem"></div>
+
+    </div>
+
+    <script>
+
+	/*
+	 * Data limite fixa no Horário de Brasília (UTC-3)
+	 * 10/06/2026 23:59:59 BRT
+	 */
+
+	const dataLimite =
+	    new Date('2026-06-10T23:59:59-03:00');
+
+	document.getElementById('prazoFormatado').textContent =
+	    '10 de junho de 2026 às 23h59min59s (Horário de Brasília)';
+
+        function atualizarContador(){
+
+            const agora =
+                new Date();
+
+            const diferenca =
+                dataLimite - agora;
+
+            if(diferenca <= 0){
+
+                document.getElementById('dias').textContent = '00';
+                document.getElementById('horas').textContent = '00';
+                document.getElementById('minutos').textContent = '00';
+                document.getElementById('segundos').textContent = '00';
+
+                document.getElementById('mensagem').innerHTML =
+                    '<div class="encerrado">🚫 Prazo encerrado!</div>';
+
+                clearInterval(intervalo);
+
+                return;
+            }
+
+            const dias =
+                Math.floor(diferenca / (1000 * 60 * 60 * 24));
+
+            const horas =
+                Math.floor((diferenca / (1000 * 60 * 60)) % 24);
+
+            const minutos =
+                Math.floor((diferenca / (1000 * 60)) % 60);
+
+            const segundos =
+                Math.floor((diferenca / 1000) % 60);
+
+            document.getElementById('dias').textContent =
+                String(dias).padStart(2,'0');
+
+            document.getElementById('horas').textContent =
+                String(horas).padStart(2,'0');
+
+            document.getElementById('minutos').textContent =
+                String(minutos).padStart(2,'0');
+
+            document.getElementById('segundos').textContent =
+                String(segundos).padStart(2,'0');
+        }
+
+        atualizarContador();
+
+        const intervalo =
+            setInterval(atualizarContador,1000);
+
+    </script>
+
+</body>
+
+</html>
