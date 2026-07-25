@@ -501,11 +501,11 @@
 
 <! Monta o cabeçalho da página>
 <div id="header-placeholder"></div>
-<script>
-  fetch('header.html')
-    .then(r => r.text())
-    .then(html => document.getElementById('header-placeholder').innerHTML = html);
-</script>
+<script src="../js/common/core.js"></script>
+<script src="../js/common/config.js"></script>
+<script src="../js/common/auth.js"></script>
+<script src="../js/common/layout.js"></script>
+<script>Bolao.layout.montarHeader();</script>
 <! Fim do cabeçalho----------->  
   
 <div class="page-wrapper">
