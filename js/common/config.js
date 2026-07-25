@@ -36,7 +36,7 @@
 
         GOOGLE_SCRIPT:
 
-            "https://script.google.com/macros/s/AKfycbyr_jCKmx6ij0fytIqNjK4evsorDQtxdp4bcvnJ4RQMvU6TTK9zwJZZXjm__p3uyKI/exec",
+            "https://script.google.com/macros/s/AKfycbxiiDpGwGYiEauxy_1e8fH5ysQGi3IJijVZluOZQI_Ftndbyz6htgngfWQFkfeLwL3XWg/exec",
 
         //--------------------------------------------------
         // Recursos
