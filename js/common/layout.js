@@ -133,7 +133,7 @@
         const placeholder = document.getElementById("header-placeholder");
         if (!placeholder) return;
 
-        fetch("header.html")
+        fetch("Paginas/header.html")
             .then(r => r.text())
             .then(html => {
                 placeholder.innerHTML = html;
