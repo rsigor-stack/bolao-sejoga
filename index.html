@@ -557,28 +557,55 @@ const BANDEIRAS = {
   'Catar':          'qa',
   'Uzbequistão':    'uz',
   // OFC — Oceania (1)
-  'Nova Zelândia':  'nz',
-//Times Libertadores
-
-
-
-  
+  'Nova Zelândia':  'nz', 
 };
 
-const FLAG_STYLE = 'width:36px;height:27px;border-radius:4px;object-fit:cover;';
+// ═══════════════════════════════════════════════════════════════
+//  DICIONÁRIO — escudos dos clubes da Libertadores 2026
+//  Chave: nome do time (conforme aparece na planilha ProxJogos)
+// ═══════════════════════════════════════════════════════════════
+const ESCUDOS = {
+  'Cerro Porteño':           'Cerro Porteño.png',
+  'Coquimbo Unido':          'Coquimbo Unido.png',
+  'Corinthians':             'Corinthians.png',
+  'Flamengo':                'Flamengo.png',
+  'Independiente del Valle': 'Independiente del Valle.png',
+  'Independiente Rivadavia': 'Independiente Rivadavia.png',
+  'LDU':                     'LDU.png',
+  'LDU Quito':               'LDU.png',
+  'Universidad Católica':    'Universidad Católica.png',
+  'Cruzeiro':                'Cruzeiro.png',
+  'Estudiantes de La Plata': 'Estudiantes de La Plata.png',
+  'Fluminense':              'Fluminense.png',
+  'Mirassol':                'Mirassol.png',
+  'Palmeiras':               'Palmeiras.png',
+  'Platense':                'Platense.png',
+  'Rosario Central':         'Rosario Central.png',
+  'Tolima':                  'Tolima.png',
+  'Deportes Tolima':         'Tolima.png',
+};
 
-function bandeira(pais) {
-  if (!pais) return `<img src="https://flagcdn.com/w40/un.png" style="${FLAG_STYLE}" alt="">`;
-  let codigo = BANDEIRAS[pais];
-  if (!codigo) {
-    // Fallback case-insensitive
-    const lower = pais.toLowerCase();
-    for (const [k, v] of Object.entries(BANDEIRAS)) {
-      if (k.toLowerCase() === lower) { codigo = v; break; }
+  
+const ESCUDO_STYLE = 'width:36px;height:36px;border-radius:6px;object-fit:contain;background:#fff;';
+
+function escudoTime(time) {
+  if (!time) return `<span class="jogo-bandeira-vazia">🛡️</span>`;
+
+  let arquivo = ESCUDOS[time];
+  if (!arquivo) {
+    // Fallback case-insensitive, mesmo padrão usado antes para bandeiras
+    const lower = time.toLowerCase();
+    for (const [k, v] of Object.entries(ESCUDOS)) {
+      if (k.toLowerCase() === lower) { arquivo = v; break; }
     }
   }
-  if (!codigo) return `<img src="https://flagcdn.com/w40/un.png" style="${FLAG_STYLE}" alt="${pais}">`;
-  return `<img src="https://flagcdn.com/w40/${codigo}.png" style="${FLAG_STYLE}" alt="${pais}">`;
+
+  if (!arquivo) {
+    console.warn(`Escudo não encontrado para "${time}" — confira o nome na planilha ou no dicionário ESCUDOS.`);
+    return `<span class="jogo-bandeira-vazia" title="${time}">🛡️</span>`;
+  }
+
+  return `<img src="/imagens/Escudos-Times/${encodeURIComponent(arquivo)}" style="${ESCUDO_STYLE}" alt="${time}">`;
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -783,12 +810,12 @@ function renderProximos(rows) {
           </div>
           <div class="jogo-times">
             <div class="jogo-time">
-              <span class="jogo-bandeira">${bandeira(t1)}</span>
+              <span class="jogo-bandeira">${escudoTime(t1)}</span>
               <span class="jogo-nome">${t1}</span>
             </div>
             ${placarHtml}
             <div class="jogo-time">
-              <span class="jogo-bandeira">${bandeira(t2)}</span>
+              <span class="jogo-bandeira">${escudoTime(t2)}</span>
               <span class="jogo-nome">${t2}</span>
             </div>
           </div>
