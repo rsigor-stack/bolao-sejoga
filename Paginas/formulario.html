@@ -6,32 +6,54 @@
 
     <title>Bolão Se Joga na Copa Libertadores 2026</title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
     <style>
 
         * {
             box-sizing: border-box;
         }
 
+        :root {
+            --bg-dark:  #04142d;
+            --accent:   #00d4ff;
+            --accent-2: #08f7a1;
+            --gold:     #ffd700;
+            --text:     #ffffff;
+        }
+
         body {
             margin: 0;
-            background: #ffffff;
-            color: #222;
-            font-family: Arial, Helvetica, sans-serif;
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top left,  rgba(0,212,255,.18), transparent 25%),
+                radial-gradient(circle at bottom right, rgba(8,247,161,.12), transparent 25%),
+                linear-gradient(135deg, #03101f 0%, #072654 55%, #04142d 100%);
+            overflow-x: hidden;
         }
 
         .pagina {
+            position: relative;
+            z-index: 2;
             max-width: 680px;
             margin: 0 auto;
             padding: 1.5rem 1rem 3rem;
         }
 
         h1 {
-            font-size: 22px;
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: .5px;
             margin: 0 0 4px;
         }
 
         h2 {
-            font-size: 16px;
+            font-size: 17px;
+            font-weight: 700;
             margin: 0 0 12px;
         }
 
@@ -40,7 +62,7 @@
         }
 
         .descricao {
-            color: #666;
+            color: rgba(255,255,255,.75);
             font-size: 14px;
         }
 
@@ -50,19 +72,21 @@
 
         .lista-confrontos {
             display: grid;
-            gap: 12px;
+            gap: 14px;
         }
 
         .card-confronto {
-            background: #fafafa;
-            border: 1px solid #e5e5e5;
-            border-radius: 10px;
-            padding: 12px 14px;
+            background: rgba(255,255,255,.08);
+            border: 1px solid rgba(255,255,255,.10);
+            border-radius: 16px;
+            backdrop-filter: blur(16px);
+            box-shadow: 0 12px 30px rgba(0,0,0,.25);
+            padding: 14px 16px;
         }
 
         .titulo-confronto {
-            font-weight: 600;
-            margin-bottom: 8px;
+            font-weight: 700;
+            margin-bottom: 10px;
             font-size: 14px;
         }
 
@@ -74,8 +98,10 @@
 
         .rodada-label {
             font-size: 11px;
-            color: #888;
+            color: rgba(255,255,255,.55);
             margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: .5px;
         }
 
         .score-row {
@@ -118,30 +144,39 @@
             text-align: center;
             padding: 6px 4px;
             border-radius: 6px;
-            border: 1px solid #ccc;
+            border: 1px solid rgba(255,255,255,.2);
+            background: rgba(255,255,255,.08);
+            color: var(--text);
             font-size: 14px;
+        }
+
+        .score-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: rgba(255,255,255,.14);
         }
 
         .separador-placar {
             font-size: 12px;
-            color: #999;
+            color: rgba(255,255,255,.5);
         }
 
         .resultado-classificado {
             margin-top: 10px;
             font-size: 12px;
-            color: #0f6e56;
+            font-weight: 600;
+            color: var(--accent-2);
         }
 
         .area-penaltis {
             margin-top: 12px;
             padding-top: 12px;
-            border-top: 1px dashed #ccc;
+            border-top: 1px dashed rgba(255,255,255,.2);
         }
 
         .texto-penaltis {
             font-size: 12px;
-            color: #854f0b;
+            color: var(--gold);
             margin-bottom: 6px;
         }
 
@@ -151,16 +186,18 @@
         }
 
         .confronto-escolha {
-            background: #fafafa;
-            border: 1px solid #e5e5e5;
-            border-radius: 10px;
-            padding: 12px 14px;
+            background: rgba(255,255,255,.08);
+            border: 1px solid rgba(255,255,255,.10);
+            border-radius: 16px;
+            backdrop-filter: blur(16px);
+            box-shadow: 0 12px 30px rgba(0,0,0,.25);
+            padding: 14px 16px;
         }
 
         .descricao-escolha {
             font-size: 13px;
             margin-bottom: 8px;
-            color: #444;
+            color: rgba(255,255,255,.7);
         }
 
         .botoes-escolha {
@@ -170,51 +207,61 @@
 
         .botao-escolha {
             flex: 1;
-            padding: 8px 10px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            background: #fff;
-            color: #333;
+            padding: 9px 10px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,.18);
+            background: rgba(255,255,255,.06);
+            color: var(--text);
             font-size: 13px;
+            font-family: inherit;
             cursor: pointer;
+            transition: .2s ease;
+        }
+
+        .botao-escolha:hover {
+            background: rgba(255,255,255,.12);
         }
 
         .botao-escolha.selecionado {
-            border: 2px solid #1D9E75;
-            background: #E1F5EE;
-            color: #085041;
+            border: 1px solid transparent;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: #04142d;
+            font-weight: 700;
         }
 
         .texto-bloqueado {
             font-size: 12px;
-            color: #999;
+            color: rgba(255,255,255,.45);
         }
 
         .mensagem-erro {
             margin-top: 20px;
-            background: #fcebeb;
-            border: 1px solid #f0acac;
-            border-radius: 8px;
+            background: rgba(255, 107, 107, .12);
+            border: 1px solid rgba(255, 107, 107, .35);
+            border-radius: 10px;
             padding: 10px 14px;
             font-size: 13px;
-            color: #791f1f;
+            color: #ff9b9b;
         }
 
         .botao-principal {
             margin-top: 28px;
             width: 100%;
-            padding: 12px 0;
-            border-radius: 10px;
+            padding: 13px 0;
+            border-radius: 999px;
             border: none;
-            background: #1D9E75;
-            color: #fff;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: #04142d;
             font-size: 15px;
-            font-weight: 600;
+            font-weight: 700;
+            font-family: inherit;
             cursor: pointer;
+            box-shadow: 0 10px 25px rgba(0,212,255,.25);
         }
 
         .botao-principal:hover {
-            opacity: 0.9;
+            transform: translateY(-1px);
+            opacity: 0.95;
         }
 
         .botoes-final {
@@ -228,21 +275,25 @@
         }
 
         .botao-secundario {
-            background: #fff;
-            color: #333;
-            border: 1px solid #ccc;
+            background: rgba(255,255,255,.06);
+            color: var(--text);
+            border: 1px solid rgba(255,255,255,.2);
+            box-shadow: none;
         }
 
         .tela-sucesso {
+            position: relative;
+            z-index: 2;
             max-width: 640px;
             margin: 0 auto;
             padding: 2rem 1rem;
         }
 
         .card-sucesso {
-            background: #e1f5ee;
-            border: 1px solid #9fe1cb;
-            border-radius: 12px;
+            background: rgba(8,247,161,.10);
+            border: 1px solid rgba(8,247,161,.35);
+            border-radius: 16px;
+            backdrop-filter: blur(16px);
             padding: 1.5rem;
         }
 
@@ -253,12 +304,12 @@
 
         .card-sucesso p {
             margin: 0;
-            color: #333;
+            color: rgba(255,255,255,.85);
         }
 
         .card-bloqueio {
-            background: #fff4e1;
-            border: 1px solid #f0d29a;
+            background: rgba(255,215,0,.08);
+            border: 1px solid rgba(255,215,0,.3);
             text-align: center;
         }
 
@@ -275,12 +326,13 @@
         .debug summary {
             cursor: pointer;
             font-size: 13px;
-            color: #666;
+            color: rgba(255,255,255,.6);
         }
 
         .debug pre {
             font-size: 11px;
-            background: #f5f5f5;
+            background: rgba(0,0,0,.3);
+            color: rgba(255,255,255,.8);
             padding: 12px;
             border-radius: 8px;
             overflow-x: auto;
@@ -288,10 +340,12 @@
 
         .botao-novo-palpite {
             margin-top: 16px;
-            padding: 8px 16px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            background: #fff;
+            padding: 9px 16px;
+            border-radius: 999px;
+            border: 1px solid rgba(255,255,255,.2);
+            background: rgba(255,255,255,.06);
+            color: var(--text);
+            font-family: inherit;
             cursor: pointer;
         }
 
