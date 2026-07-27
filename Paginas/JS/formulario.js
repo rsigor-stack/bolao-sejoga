@@ -1498,172 +1498,191 @@ function validar() {
     return "";
 
 }
+// ============================================================================
+// PEGAR NOME DO USUÁRIO LOGADO
+// ============================================================================
+// Tenta pegar o nome do usuário através do seu módulo Bolao.auth.
+// Caso não consiga, usa um nome padrão para não travar o envio.
+function obterNomeParticipante() {
+    try {
+        if (window.Bolao && Bolao.auth && Bolao.auth.getUsuario) {
+            return Bolao.auth.getUsuario();
+        }
+    } catch (e) {
+        console.warn("Não foi possível obter o usuário logado.");
+    }
+    return "Participante";
+}
 
 
 // ============================================================================
-// MONTAGEM DO PAYLOAD
+// MONTAGEM DO PAYLOAD (Formato da Planilha)
 // ============================================================================
-
 function montarPayload() {
 
-    const classificados =
+    const participante = obterNomeParticipante();
+    const agora = new Date().toISOString();
 
-        obterClassificados();
-
-
-    const quartasComNomes =
-
-        obterQuartasComNomes();
-
-
-    const semisComNomes =
-
-        obterSemisComNomes();
-
-
-    const final =
-
-        obterFinal();
-
-
-    return {
-
-
-        oitavas: OITAVAS.map(jogo => {
-
-            const scores =
-
-                state.scores[jogo.id];
-
-
-            return {
-
-                confronto:
-
-                    `${jogo.casa} x ${jogo.fora}`,
-
-                ida:
-
-                    `${scores.idaCasa}-${scores.idaFora}`,
-
-                volta:
-
-                    `${scores.voltaCasa}-${scores.voltaFora}`,
-
-                penaltis:
-
-                    scores.penaltis || null,
-
-                classificadoInferido:
-
-                    classificados[jogo.id]
-
-            };
-
-        }),
-
-
-        quartas:
-
-            quartasComNomes.map(q => ({
-
-                confronto:
-
-                    `${q.opcaoA} x ${q.opcaoB}`,
-
-                classificado:
-
-                    state.quartas[q.id]
-
-            })),
-
-
-        semis:
-
-            semisComNomes.map(s => ({
-
-                confronto:
-
-                    `${s.opcaoA} x ${s.opcaoB}`,
-
-                classificado:
-
-                    state.semis[s.id]
-
-            })),
-
-
-        final:
-
-            `${final.opcaoA} x ${final.opcaoB}`,
-
-
-        campeao:
-
-            state.final,
-
-
-        enviadoEm:
-
-            new Date().toISOString()
-
+    // Tradutor: converte j1 do JS para J01 da planilha
+    const mapaIds = {
+        "j1": ["J01", "J02"], "j2": ["J03", "J04"],
+        "j3": ["J05", "J06"], "j4": ["J07", "J08"],
+        "j5": ["J09", "J10"], "j6": ["J11", "J12"],
+        "j7": ["J13", "J14"], "j8": ["J15", "J16"]
     };
 
+    let listaDePalpites = [];
+
+    // 1. OITAVAS (Placares de Ida e Volta)
+    OITAVAS.forEach(jogo => {
+        const scores = state.scores[jogo.id];
+        const [idIda, idVolta] = mapaIds[jogo.id];
+
+        // Palpite do Jogo de Ida
+        listaDePalpites.push({
+            Participante: participante,
+            JogoID: idIda,
+            Fase: "Oitavas",
+            TipoPalpite: "Placar",
+            GolsMandante: scores.idaCasa === "" ? null : Number(scores.idaCasa),
+            GolsVisitante: scores.idaFora === "" ? null : Number(scores.idaFora),
+            Valor: "",
+            CriadoEm: agora,
+            AtualizadoEm: agora
+        });
+
+        // Palpite do Jogo de Volta
+        listaDePalpites.push({
+            Participante: participante,
+            JogoID: idVolta,
+            Fase: "Oitavas",
+            TipoPalpite: "Placar",
+            GolsMandante: scores.voltaCasa === "" ? null : Number(scores.voltaCasa),
+            GolsVisitante: scores.voltaFora === "" ? null : Number(scores.voltaFora),
+            Valor: "",
+            CriadoEm: agora,
+            AtualizadoEm: agora
+        });
+
+        // Se foi para os pênaltis, envia uma linha extra com o classificado
+        if (scores.penaltis) {
+            listaDePalpites.push({
+                Participante: participante,
+                JogoID: idIda, // Amarrado ao jogo de ida
+                Fase: "Oitavas",
+                TipoPalpite: "Penaltis",
+                GolsMandante: null,
+                GolsVisitante: null,
+                Valor: scores.penaltis,
+                CriadoEm: agora,
+                AtualizadoEm: agora
+            });
+        }
+    });
+
+    // 2. QUARTAS DE FINAL (Classificados)
+    const quartasComNomes = obterQuartasComNomes();
+    quartasComNomes.forEach(q => {
+        listaDePalpites.push({
+            Participante: participante,
+            JogoID: q.id.toUpperCase(), // Vira Q1, Q2...
+            Fase: "Quartas",
+            TipoPalpite: "Classificado",
+            GolsMandante: null,
+            GolsVisitante: null,
+            Valor: state.quartas[q.id] || "",
+            CriadoEm: agora,
+            AtualizadoEm: agora
+        });
+    });
+
+    // 3. SEMIFINAIS (Classificados)
+    const semisComNomes = obterSemisComNomes();
+    semisComNomes.forEach(s => {
+        listaDePalpites.push({
+            Participante: participante,
+            JogoID: s.id.toUpperCase(), // Vira S1, S2
+            Fase: "Semifinal",
+            TipoPalpite: "Classificado",
+            GolsMandante: null,
+            GolsVisitante: null,
+            Valor: state.semis[s.id] || "",
+            CriadoEm: agora,
+            AtualizadoEm: agora
+        });
+    });
+
+    // 4. FINAL (Campeão)
+    listaDePalpites.push({
+        Participante: participante,
+        JogoID: "F1",
+        Fase: "Final",
+        TipoPalpite: "Campeao",
+        GolsMandante: null,
+        GolsVisitante: null,
+        Valor: state.final,
+        CriadoEm: agora,
+        AtualizadoEm: agora
+    });
+
+    return listaDePalpites;
 }
 
 
 // ============================================================================
-// ENVIO DO FORMULÁRIO
+// ENVIO DO FORMULÁRIO (Comunicação com o Google Sheets)
 // ============================================================================
 
-function handleSubmit() {
+async function handleSubmit() {
 
+    // 1. Verifica se tudo está preenchido
     const mensagem = validar();
-
-
     if (mensagem) {
-
         mostrarErro(mensagem);
-
         return;
-
     }
-
-
     limparErro();
 
-
+    // 2. Monta os dados no formato da planilha
     const payload = montarPayload();
-
-
-    // ========================================================================
-    // MODO DE TESTE
-    // ========================================================================
-
     state.payloadDebug = payload;
 
-    state.enviado = true;
+    // URL do seu Google Apps Script
+    const urlDaPlanilha = 'https://script.google.com/macros/s/AKfycbxiiDpGwGYiEauxy_1e8fH5ysQGi3IJijVZluOZQI_Ftndbyz6htgngfWQFkfeLwL3XWg/exec';
 
+    // Pega o botão e trava para evitar cliques duplos
+    const btnEnviar = get("btn-enviar");
+    btnEnviar.disabled = true;
+    btnEnviar.textContent = "Enviando...";
 
-    mostrarTelaSucesso();
+    try {
+        // 3. Envia os dados para a internet
+        const resposta = await fetch(urlDaPlanilha, {
+            method: 'POST',
+            // Usa text/plain para evitar erro de CORS do Google
+            headers: {
+                'Content-Type': 'text/plain;charset=utf-8',
+            },
+            body: JSON.stringify(payload)
+        });
 
+        // 4. Se deu tudo certo, mostra a tela de sucesso
+        if (resposta.ok) {
+            state.enviado = true;
+            mostrarTelaSucesso();
+        } else {
+            alert("Erro ao enviar palpites. Código: " + resposta.status);
+            btnEnviar.disabled = false;
+            btnEnviar.textContent = "Enviar Palpites";
+        }
 
-    // ========================================================================
-    // FUTURA INTEGRAÇÃO COM GOOGLE APPS SCRIPT
-    // ========================================================================
-    //
-    // fetch("SUA_URL_DO_APPS_SCRIPT_AQUI", {
-    //
-    //     method: "POST",
-    //
-    //     body: JSON.stringify(payload)
-    //
-    // });
-    //
-    // ========================================================================
-
+    } catch (erro) {
+        console.error("Erro de conexão:", erro);
+        alert("Erro de conexão ao enviar. Verifique sua internet e tente novamente.");
+        btnEnviar.disabled = false;
+        btnEnviar.textContent = "Enviar Palpites";
+    }
 }
-
 
 // ============================================================================
 // TELA DE SUCESSO
