@@ -36,6 +36,42 @@
             overflow-x: hidden;
         }
 
+        /* ── HEADER (mesmo CSS usado nas outras páginas do site) ── */
+        header { position: relative; z-index: 2; padding: 32px 24px 16px; }
+        .topbar {
+            display: flex; justify-content: space-between;
+            align-items: center; gap: 16px; flex-wrap: wrap;
+            max-width: 1400px; margin: auto;
+        }
+        .logo { display: flex; align-items: center; gap: 14px; }
+        .logo-icon {
+            width: 58px; height: 58px; border-radius: 18px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.8rem; box-shadow: 0 10px 25px rgba(0,212,255,.35);
+        }
+        .logo h1 { font-size: 2rem; font-weight: 800; letter-spacing: 1px; margin: 0; }
+        .logo p  { opacity: .75; font-size: .95rem; margin-top: 4px; }
+
+        nav {
+            position: relative; z-index: 2;
+            max-width: 1400px; margin: 24px auto 0;
+            display: flex; gap: 12px; flex-wrap: wrap;
+        }
+        nav a {
+            text-decoration: none; color: white;
+            padding: 12px 18px; border-radius: 999px;
+            background: rgba(255,255,255,.06);
+            border: 1px solid rgba(255,255,255,.08);
+            transition: .25s ease; font-weight: 600; font-size: .95rem;
+            backdrop-filter: blur(10px);
+        }
+        nav a:hover, nav a.active {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: #04142d;
+        }
+
         .pagina {
             position: relative;
             z-index: 2;
@@ -655,7 +691,7 @@
     <script src="/js/common/clubs.js"></script>
     <script>Bolao.layout.montarHeader();</script>
 
-    <script src="JS/formulario.js"></script>
+    <script src="formulario.js"></script>
 
 </body>
 
