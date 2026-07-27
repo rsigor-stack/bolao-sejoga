@@ -54,17 +54,17 @@
         "FLA": { nome: "Flamengo",                 pais: "Brasil",    arquivo: "Flamengo.png" },
         "IDV": { nome: "Independiente del Valle",  pais: "Equador",   arquivo: "Independiente del Valle.png" },
         "INR": { nome: "Independiente Rivadavia",  pais: "Argentina", arquivo: "Independiente Rivadavia.png" },
-        "LDU": { nome: "LDU Quito",                pais: "Equador",   arquivo: "LDU.png" },
+        "LDU": { nome: "LDU Quito",                pais: "Equador",   arquivo: "LDU.png", aliases: ["LDU"] },
         "UCA": { nome: "Universidad Católica",     pais: "Chile",     arquivo: "Universidad Católica.png" },
 
         "CRU": { nome: "Cruzeiro",                 pais: "Brasil",    arquivo: "Cruzeiro.png" },
-        "EST": { nome: "Estudiantes de La Plata",  pais: "Argentina", arquivo: "Estudiantes de La Plata.png" },
+        "EST": { nome: "Estudiantes de La Plata",  pais: "Argentina", arquivo: "Estudiantes de La Plata.png", aliases: ["Estudiantes"] },
         "FLU": { nome: "Fluminense",               pais: "Brasil",    arquivo: "Fluminense.png" },
         "MIR": { nome: "Mirassol",                 pais: "Brasil",    arquivo: "Mirassol.png" },
         "PAL": { nome: "Palmeiras",                pais: "Brasil",    arquivo: "Palmeiras.png" },
         "PLA": { nome: "Platense",                 pais: "Argentina", arquivo: "Platense.png" },
         "ROS": { nome: "Rosario Central",          pais: "Argentina", arquivo: "Rosario Central.png" },
-        "TOL": { nome: "Deportes Tolima",          pais: "Colômbia",  arquivo: "Tolima.png" }
+        "TOL": { nome: "Deportes Tolima",          pais: "Colômbia",  arquivo: "Tolima.png", aliases: ["Tolima"] }
 
     };
 
@@ -76,8 +76,12 @@
     Bolao.clubs.index.NOME_TRIGRAMA = {};
 
     Object.keys(Bolao.clubs.data.CLUBES).forEach(tri => {
-        const nome = Bolao.clubs.data.CLUBES[tri].nome;
-        Bolao.clubs.index.NOME_TRIGRAMA[nome.toLowerCase()] = tri;
+        const info = Bolao.clubs.data.CLUBES[tri];
+        Bolao.clubs.index.NOME_TRIGRAMA[info.nome.toLowerCase()] = tri;
+
+        (info.aliases || []).forEach(alias => {
+            Bolao.clubs.index.NOME_TRIGRAMA[alias.toLowerCase()] = tri;
+        });
     });
 
     console.log(`✔ Clubes carregados (${Object.keys(Bolao.clubs.data.CLUBES).length} escudos)`);
