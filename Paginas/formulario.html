@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Bolão Se Joga na Copa Libertadores 2026</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #ffffff;
+            color: #222;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .pagina {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 1.5rem 1rem 3rem;
+        }
+
+        h1 {
+            font-size: 22px;
+            margin: 0 0 4px;
+        }
+
+        h2 {
+            font-size: 16px;
+            margin: 0 0 12px;
+        }
+
+        p {
+            margin-top: 0;
+        }
+
+        .descricao {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .secao {
+            margin-top: 32px;
+        }
+
+        .lista-confrontos {
+            display: grid;
+            gap: 12px;
+        }
+
+        .card-confronto {
+            background: #fafafa;
+            border: 1px solid #e5e5e5;
+            border-radius: 10px;
+            padding: 12px 14px;
+        }
+
+        .titulo-confronto {
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .placares {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .rodada-label {
+            font-size: 11px;
+            color: #888;
+            margin-bottom: 4px;
+        }
+
+        .score-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nome-time {
+            font-size: 12px;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            min-width: 0;
+        }
+
+        .nome-time.casa {
+            justify-content: flex-end;
+        }
+
+        .nome-time-texto {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .escudo-time {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+
+        .score-input {
+            width: 36px;
+            text-align: center;
+            padding: 6px 4px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        .separador-placar {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .resultado-classificado {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #0f6e56;
+        }
+
+        .area-penaltis {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px dashed #ccc;
+        }
+
+        .texto-penaltis {
+            font-size: 12px;
+            color: #854f0b;
+            margin-bottom: 6px;
+        }
+
+        .lista-escolhas {
+            display: grid;
+            gap: 10px;
+        }
+
+        .confronto-escolha {
+            background: #fafafa;
+            border: 1px solid #e5e5e5;
+            border-radius: 10px;
+            padding: 12px 14px;
+        }
+
+        .descricao-escolha {
+            font-size: 13px;
+            margin-bottom: 8px;
+            color: #444;
+        }
+
+        .botoes-escolha {
+            display: flex;
+            gap: 8px;
+        }
+
+        .botao-escolha {
+            flex: 1;
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            background: #fff;
+            color: #333;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .botao-escolha.selecionado {
+            border: 2px solid #1D9E75;
+            background: #E1F5EE;
+            color: #085041;
+        }
+
+        .texto-bloqueado {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .mensagem-erro {
+            margin-top: 20px;
+            background: #fcebeb;
+            border: 1px solid #f0acac;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 13px;
+            color: #791f1f;
+        }
+
+        .botao-principal {
+            margin-top: 28px;
+            width: 100%;
+            padding: 12px 0;
+            border-radius: 10px;
+            border: none;
+            background: #1D9E75;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .botao-principal:hover {
+            opacity: 0.9;
+        }
+
+        .botoes-final {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .botoes-final .botao-principal {
+            margin-top: 0;
+        }
+
+        .botao-secundario {
+            background: #fff;
+            color: #333;
+            border: 1px solid #ccc;
+        }
+
+        .tela-sucesso {
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .card-sucesso {
+            background: #e1f5ee;
+            border: 1px solid #9fe1cb;
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .card-sucesso h2 {
+            margin: 0 0 8px;
+            font-size: 20px;
+        }
+
+        .card-sucesso p {
+            margin: 0;
+            color: #333;
+        }
+
+        .card-bloqueio {
+            background: #fff4e1;
+            border: 1px solid #f0d29a;
+            text-align: center;
+        }
+
+        .card-bloqueio .botao-principal {
+            margin-top: 16px;
+            width: auto;
+            padding: 12px 28px;
+        }
+
+        .debug {
+            margin-top: 16px;
+        }
+
+        .debug summary {
+            cursor: pointer;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .debug pre {
+            font-size: 11px;
+            background: #f5f5f5;
+            padding: 12px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+
+        .botao-novo-palpite {
+            margin-top: 16px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            background: #fff;
+            cursor: pointer;
+        }
+
+        @media (max-width: 600px) {
+
+            .placares {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .botoes-final {
+                flex-direction: column;
+            }
+
+            .nome-time {
+                max-width: 110px;
+            }
+
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div id="header-placeholder"></div>
+
+    <!-- ============================================================
+         TELA DE ACESSO NEGADO (usuário não logado)
+         ============================================================ -->
+
+    <main id="tela-login-necessario" class="tela-sucesso" hidden>
+
+        <div class="card-sucesso card-bloqueio">
+
+            <h2>🔒 Faça login para continuar</h2>
+
+            <p>Você precisa estar logado para enviar seus palpites da Libertadores.</p>
+
+            <button id="btn-fazer-login" class="botao-principal" type="button">Entrar</button>
+
+        </div>
+
+    </main>
+
+    <!-- ============================================================
+         TELA PRINCIPAL
+         ============================================================ -->
+
+    <main id="app" class="pagina" hidden>
+
+        <h1>Bolão Se Joga na Copa Libertadores 2026</h1>
+
+        <p class="descricao">
+            Preencha seus palpites para as Oitavas de Final e indique quem avança até o título.
+        </p>
+
+
+
+        <!-- ========================================================
+             ETAPA 1 — OITAVAS
+             ======================================================== -->
+
+        <section
+            id="etapa-1"
+            class="secao"
+        >
+
+            <h2>
+                Etapa 1 de 2 — Oitavas de final: placares
+            </h2>
+
+            <p class="descricao">
+
+                Informe o placar do jogo de ida e do jogo de volta de cada confronto.
+                Quem se classifica é calculado automaticamente pelo agregado —
+                só te perguntamos algo extra se der empate.
+
+            </p>
+
+
+            <div
+                id="lista-oitavas"
+                class="lista-confrontos"
+            ></div>
+
+
+            <div
+                id="erro-etapa-1"
+                class="mensagem-erro"
+                hidden
+            ></div>
+
+
+            <button
+                id="btn-avancar"
+                class="botao-principal"
+                type="button"
+            >
+
+                Continuar para quartas, semis e final
+
+            </button>
+
+        </section>
+
+
+        <!-- ========================================================
+             ETAPA 2 — FASES FINAIS
+             ======================================================== -->
+
+        <section
+            id="etapa-2"
+            class="secao"
+            hidden
+        >
+
+
+            <!-- ====================================================
+                 QUARTAS DE FINAL
+                 ==================================================== -->
+
+            <section>
+
+                <h2>
+                    Etapa 2 de 2 — Quartas de final: quem passa
+                </h2>
+
+                <p class="descricao">
+
+                    Indique quem você acha que se classifica em cada confronto
+                    (10 pontos por acerto).
+
+                </p>
+
+
+                <div
+                    id="lista-quartas"
+                    class="lista-escolhas"
+                ></div>
+
+            </section>
+
+
+            <!-- ====================================================
+                 SEMIFINAIS
+                 ==================================================== -->
+
+            <section class="secao">
+
+                <h2>
+                    Semifinal — quem passa
+                </h2>
+
+                <p class="descricao">
+
+                    Semi 1 = vencedores das Quartas 1 e 2.
+                    Semi 2 = vencedores das Quartas 3 e 4.
+                    (15 pontos por acerto)
+
+                </p>
+
+
+                <div
+                    id="lista-semis"
+                    class="lista-escolhas"
+                ></div>
+
+            </section>
+
+
+            <!-- ====================================================
+                 FINAL
+                 ==================================================== -->
+
+            <section class="secao">
+
+                <h2>
+                    Final — quem é campeão
+                </h2>
+
+                <p class="descricao">
+
+                    O time escolhido aqui é automaticamente seu palpite de campeão
+                    (20 pts por ser finalista / 30 pts extra se acertar o título).
+
+                </p>
+
+
+                <div
+                    id="card-final"
+                    class="confronto-escolha"
+                ></div>
+
+
+                <div
+                    id="campeao-selecionado"
+                    class="resultado-classificado"
+                    hidden
+                ></div>
+
+            </section>
+
+
+            <!-- ====================================================
+                 MENSAGEM DE ERRO
+                 ==================================================== -->
+
+            <div
+                id="erro-etapa-2"
+                class="mensagem-erro"
+                hidden
+            ></div>
+
+
+            <!-- ====================================================
+                 BOTÕES
+                 ==================================================== -->
+
+            <div class="botoes-final">
+
+                <button
+                    id="btn-voltar"
+                    class="botao-principal botao-secundario"
+                    type="button"
+                >
+
+                    Voltar aos placares
+
+                </button>
+
+
+                <button
+                    id="btn-enviar"
+                    class="botao-principal"
+                    type="button"
+                >
+
+                    Enviar palpite
+
+                </button>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- ============================================================
+         TELA DE SUCESSO
+         ============================================================ -->
+
+    <main
+        id="tela-sucesso"
+        class="tela-sucesso"
+        hidden
+    >
+
+        <div class="card-sucesso">
+
+            <h2>
+                Palpite registrado!
+            </h2>
+
+            <p id="mensagem-sucesso"></p>
+
+        </div>
+
+
+        <details class="debug">
+
+            <summary>
+                Ver dados que seriam enviados (modo teste)
+            </summary>
+
+
+            <pre
+                id="payload-debug"
+            ></pre>
+
+        </details>
+
+
+        <button
+            id="btn-novo-palpite"
+            class="botao-novo-palpite"
+            type="button"
+        >
+
+            Preencher outro palpite (teste)
+
+        </button>
+
+    </main>
+
+
+    <!-- ============================================================
+         JAVASCRIPT
+         ============================================================ -->
+
+    <!-- Módulos compartilhados do site (caminho absoluto — funciona em qualquer pasta) -->
+    <script src="/js/common/core.js"></script>
+    <script src="/js/common/config.js"></script>
+    <script src="/js/common/auth.js"></script>
+    <script src="/js/common/layout.js"></script>
+    <script src="/js/common/clubs.js"></script>
+    <script>Bolao.layout.montarHeader();</script>
+
+    <script src="formulario.js"></script>
+
+</body>
+
+</html>
