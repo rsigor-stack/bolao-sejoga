@@ -1602,7 +1602,22 @@ function validar() {
 function obterNomeParticipante() {
     try {
         if (window.Bolao && Bolao.auth && Bolao.auth.getUsuario) {
-            return Bolao.auth.getUsuario();
+
+            const usuario = Bolao.auth.getUsuario();
+
+            // getUsuario() retorna o objeto de sessão inteiro
+            // ({ nome, token, criadoEm }), não só o nome. Por isso
+            // extraímos explicitamente o campo "nome" aqui — se o
+            // payload usar o objeto inteiro, ele é serializado como
+            // "{nome=..., token=..., criadoEm=...}" na planilha.
+            if (usuario && typeof usuario === "object" && usuario.nome) {
+                return usuario.nome;
+            }
+
+            if (typeof usuario === "string" && usuario) {
+                return usuario;
+            }
+
         }
     } catch (e) {
         console.warn("Não foi possível obter o usuário logado.");
