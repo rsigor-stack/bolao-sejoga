@@ -1761,13 +1761,33 @@ async function handleSubmit() {
             },
             body: JSON.stringify({acao: 'salvarPalpite', payload})
         });
-        
+
+        // O Apps Script (ContentService) sempre responde com HTTP 200,
+        // mesmo quando a gravação falhou internamente. Por isso não basta
+        // checar resposta.ok — é preciso ler o corpo da resposta e
+        // conferir o campo "status" que o próprio script devolve.
+        let resultado;
+        try {
+            resultado = await resposta.json();
+        } catch (erroParse) {
+            resultado = null;
+        }
+
+        const sucesso =
+            resposta.ok &&
+            resultado &&
+            resultado.status === "sucesso";
+
         // 4. Se deu tudo certo, mostra a tela de sucesso
-        if (resposta.ok) {
+        if (sucesso) {
             state.enviado = true;
             mostrarTelaSucesso();
         } else {
-            alert("Erro ao enviar palpites. Código: " + resposta.status);
+            const detalhe =
+                (resultado && resultado.mensagem) ||
+                "Código: " + resposta.status;
+
+            alert("Erro ao enviar palpites. " + detalhe);
             btnEnviar.disabled = false;
             btnEnviar.textContent = "Enviar Palpites";
         }
