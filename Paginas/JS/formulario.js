@@ -1966,14 +1966,24 @@ function mostrarBloqueioLogin() {
 }
 
 
-function liberarFormulario() {
+async function liberarFormulario() {
 
     get("tela-login-necessario").hidden = true;
     get("app").hidden = false;
 
     configurarEventos();
-    renderOitavas();
+    
+    // Antes de renderizar a tela, busca na nuvem se já existem palpites salvos
+    await carregarPalpitesSalvos();
 
+    // Renderiza a tela já preenchida (ou vazia, se não havia nada salvo)
+    renderOitavas();
+    renderFasesFinais();
+
+    // Se ao carregar a etapa 2 já estiver liberada (do código acima), rola a tela
+    if (state.etapa === 2) {
+         get("etapa-2").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
 }
 
 
@@ -2018,6 +2028,89 @@ function iniciarComVerificacaoDeLogin() {
 
 }
 
+// ============================================================================
+// CARREGAR PALPITES SALVOS DO GOOGLE SHEETS
+// ============================================================================
+
+async function carregarPalpitesSalvos() {
+    const participante = obterNomeParticipante();
+    const urlDaPlanilha = 'https://script.google.com/macros/s/AKfycbxiiDpGwGYiEauxy_1e8fH5ysQGi3IJijVZluOZQI_Ftndbyz6htgngfWQFkfeLwL3XWg/exec';
+
+    try {
+        const resposta = await fetch(urlDaPlanilha, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ acao: 'buscarPalpites', nome: participante })
+        });
+
+        const resultado = await resposta.json();
+
+        // Se a planilha devolveu palpites desse usuário
+        if (resultado.sucesso && resultado.palpites && resultado.palpites.length > 0) {
+
+            // Tradutor reverso: converte J01 da planilha para j1 do site
+            const mapaReverso = {
+                "J01": "j1", "J02": "j1", "J03": "j2", "J04": "j2",
+                "J05": "j3", "J06": "j3", "J07": "j4", "J08": "j4",
+                "J09": "j5", "J10": "j5", "J11": "j6", "J12": "j6",
+                "J13": "j7", "J14": "j7", "J15": "j8", "J16": "j8"
+            };
+
+            // Zera o estado atual antes de preencher
+            state.scores = criarScoresIniciais();
+            state.quartas = {};
+            state.semis = {};
+            state.final = "";
+
+            resultado.palpites.forEach(p => {
+                const jogoIdSite = mapaReverso[p.JogoID];
+
+                // 1. Preenche Oitavas
+                if (p.Fase === "Oitavas" && p.TipoPalpite === "Placar" && jogoIdSite) {
+                    const numeroJogo = parseInt(p.JogoID.replace('J', ''));
+                    // Jogos de Ida são ímpares (J01, J03...), Volta são pares (J02, J04...)
+                    if (numeroJogo % 2 !== 0) { 
+                        state.scores[jogoIdSite].idaCasa = p.GolsMandante ? String(p.GolsMandante) : "";
+                        state.scores[jogoIdSite].idaFora = p.GolsVisitante ? String(p.GolsVisitante) : "";
+                    } else { 
+                        state.scores[jogoIdSite].voltaCasa = p.GolsMandante ? String(p.GolsMandante) : "";
+                        state.scores[jogoIdSite].voltaFora = p.GolsVisitante ? String(p.GolsVisitante) : "";
+                    }
+                }
+
+                // 2. Preenche Pênaltis
+                if (p.Fase === "Oitavas" && p.TipoPalpite === "Penaltis" && jogoIdSite) {
+                    state.scores[jogoIdSite].penaltis = p.Valor;
+                }
+
+                // 3. Preenche Quartas
+                if (p.Fase === "Quartas") {
+                    const qId = p.JogoID.toLowerCase(); // Q1 -> q1
+                    state.quartas[qId] = p.Valor;
+                }
+
+                // 4. Preenche Semifinais
+                if (p.Fase === "Semifinal") {
+                    const sId = p.JogoID.toLowerCase(); // S1 -> s1
+                    state.semis[sId] = p.Valor;
+                }
+
+                // 5. Preenche Final
+                if (p.Fase === "Final") {
+                    state.final = p.Valor;
+                }
+            });
+            
+            // Se preencheu tudo, avança o usuário direto para a etapa 2
+            if (oitavasCompletas() && !haEmpatesPendentes() && state.final) {
+                state.etapa = 2;
+                get("etapa-2").hidden = false;
+            }
+        }
+    } catch (erro) {
+        console.error("Erro ao carregar palpites salvos:", erro);
+    }
+}
 
 // ============================================================================
 // INICIALIZAÇÃO
