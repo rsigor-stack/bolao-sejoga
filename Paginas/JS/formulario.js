@@ -2068,13 +2068,17 @@ async function carregarPalpitesSalvos() {
                 // 1. Preenche Oitavas
                 if (p.Fase === "Oitavas" && p.TipoPalpite === "Placar" && jogoIdSite) {
                     const numeroJogo = parseInt(p.JogoID.replace('J', ''));
+                    
+                    // Função auxiliar rápida para tratar o 0 corretamente
+                    const tratarGol = (val) => (val === "" || val === null || val === undefined) ? "" : String(val);
+
                     // Jogos de Ida são ímpares (J01, J03...), Volta são pares (J02, J04...)
                     if (numeroJogo % 2 !== 0) { 
-                        state.scores[jogoIdSite].idaCasa = p.GolsMandante ? String(p.GolsMandante) : "";
-                        state.scores[jogoIdSite].idaFora = p.GolsVisitante ? String(p.GolsVisitante) : "";
+                        state.scores[jogoIdSite].idaCasa = tratarGol(p.GolsMandante);
+                        state.scores[jogoIdSite].idaFora = tratarGol(p.GolsVisitante);
                     } else { 
-                        state.scores[jogoIdSite].voltaCasa = p.GolsMandante ? String(p.GolsMandante) : "";
-                        state.scores[jogoIdSite].voltaFora = p.GolsVisitante ? String(p.GolsVisitante) : "";
+                        state.scores[jogoIdSite].voltaCasa = tratarGol(p.GolsMandante);
+                        state.scores[jogoIdSite].voltaFora = tratarGol(p.GolsVisitante);
                     }
                 }
 
