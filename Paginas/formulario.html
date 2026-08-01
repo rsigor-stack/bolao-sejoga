@@ -384,6 +384,20 @@
             font-family: inherit;
             cursor: pointer;
         }
+        
+        #lista-oitavas {
+            display: flex;
+            flex-direction: column; /* ISSO FAZ FICAR UM ABAIXO DO OUTRO */
+            gap: 20px; /* Espaço entre os cards */
+        }
+        
+        /* Se quiser estilizar a data para ficar menor ou cinza */
+        .data-jogo {
+            font-size: 0.85em;
+            color: #666;
+            font-weight: normal;
+            margin-left: 8px;
+        }
 
         @media (max-width: 600px) {
 
