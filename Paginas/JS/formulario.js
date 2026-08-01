@@ -774,29 +774,18 @@ function criarBotoesEscolha(
 // ============================================================================
 
 function criarScoreRow({
-
     label,
-
     casa,
-
     fora,
-
     valCasa,
-
     valFora,
-
     onCasa,
-
     onFora,
-
     jogoId,
-
     campoCasa,
-
-    campoFora,
-    
-    dataHora // ADICIONADO
-
+    campoFora, 
+    dataHora,
+    bloqueado = false // ADICIONADO
 }) {
 
     const container = document.createElement("div");
@@ -811,113 +800,60 @@ function criarScoreRow({
         labelElement.textContent = label;
     }
 
-    const row = document.createElement("div");
+    // ADICIONADO: Aviso visual de bloqueio
+    if (bloqueado) {
+        labelElement.innerHTML += ` <span style="color: var(--gold); font-weight: bold; font-size: 0.9em;">🔒 Encerrado</span>`;
+    }
 
+    const row = document.createElement("div");
     row.className = "score-row";
 
-
     const timeCasa = document.createElement("span");
-
     timeCasa.className = "nome-time casa";
-
     timeCasa.title = casa;
-
-    timeCasa.innerHTML =
-        `<span class="nome-time-texto">${escapeHTML(casa)}</span>${escudoTimeHTML(casa)}`;
-
+    timeCasa.innerHTML = `<span class="nome-time-texto">${escapeHTML(casa)}</span>${escudoTimeHTML(casa)}`;
 
     const inputCasa = document.createElement("input");
-
     inputCasa.className = "score-input";
-
     inputCasa.type = "text";
-
     inputCasa.inputMode = "numeric";
-
     inputCasa.maxLength = 2;
-
     inputCasa.value = valCasa;
-
     inputCasa.dataset.jogoId = jogoId;
-
     inputCasa.dataset.campo = campoCasa;
+    inputCasa.disabled = bloqueado; // ADICIONADO: Trava o input
 
-
-    inputCasa.addEventListener(
-
-        "input",
-
-        event => {
-
-            onCasa(event.target.value);
-
-        }
-
-    );
-
+    inputCasa.addEventListener("input", event => {onCasa(event.target.value);});
 
     const separador = document.createElement("span");
-
     separador.className = "separador-placar";
-
     separador.textContent = "x";
 
-
     const inputFora = document.createElement("input");
-
     inputFora.className = "score-input";
-
     inputFora.type = "text";
-
     inputFora.inputMode = "numeric";
-
     inputFora.maxLength = 2;
-
     inputFora.value = valFora;
-
     inputFora.dataset.jogoId = jogoId;
-
     inputFora.dataset.campo = campoFora;
+    inputFora.disabled = bloqueado; // ADICIONADO: Trava o input
 
-
-    inputFora.addEventListener(
-
-        "input",
-
-        event => {
-
-            onFora(event.target.value);
-
-        }
-
-    );
-
+    inputFora.addEventListener("input", event => {onFora(event.target.value);});
 
     const timeFora = document.createElement("span");
-
     timeFora.className = "nome-time";
-
     timeFora.title = fora;
-
-    timeFora.innerHTML =
-        `${escudoTimeHTML(fora)}<span class="nome-time-texto">${escapeHTML(fora)}</span>`;
-
+    timeFora.innerHTML = `${escudoTimeHTML(fora)}<span class="nome-time-texto">${escapeHTML(fora)}</span>`;
 
     row.appendChild(timeCasa);
-
     row.appendChild(inputCasa);
-
     row.appendChild(separador);
-
     row.appendChild(inputFora);
-
     row.appendChild(timeFora);
 
-
     container.appendChild(labelElement);
-
     container.appendChild(row);
-
 
     return container;
 
@@ -997,31 +933,19 @@ function restaurarFoco(container, focoSalvo) {
 function renderOitavas() {
 
     const container = get("lista-oitavas");
-
     const focoSalvo = salvarFocoAtual(container);
-
     container.innerHTML = "";
-
     const classificados = obterClassificados();
 
     OITAVAS.forEach(jogo => {
-
         const scores = state.scores[jogo.id];
-
         const resultado = classificados[jogo.id];
-
         const card = document.createElement("div");
-
         card.className = "card-confronto";
-
         const titulo = document.createElement("div");
-
         titulo.className = "titulo-confronto";
-
         titulo.textContent = `${jogo.casa} x ${jogo.fora}`;
-
         const placares = document.createElement("div");
-
         placares.className = "placares";
 
         // Pega os IDs corretos da planilha para buscar a data
@@ -1036,96 +960,59 @@ function renderOitavas() {
             ? `${state.datasJogos[idVolta].data} ${state.datasJogos[idVolta].horario}` 
             : "";
 
+        // ADICIONADO: Verifica se os jogos estão bloqueados
+        const idaBloqueada = verificarBloqueio(idIda);
+        const voltaBloqueada = verificarBloqueio(idVolta);
+        
         const ida = criarScoreRow({
-
             label: "Ida",
-
             casa: jogo.casa,
-
             fora: jogo.fora,
-
             valCasa: scores.idaCasa,
-
             valFora: scores.idaFora,
-
             onCasa: valor =>
-
                 atualizarPlacar(
-
                     jogo.id,
-
                     "idaCasa",
-
                     valor
-
                 ),
-
             onFora: valor =>
-
                 atualizarPlacar(
-
                     jogo.id,
-
                     "idaFora",
-
                     valor
-
                 ),
-
             jogoId: jogo.id,
-
             campoCasa: "idaCasa",
-
             campoFora: "idaFora",
-
-            dataHora: dataIda
+            dataHora: dataIda,
+            bloqueado: idaBloqueada // ADICIONADO
 
         });
 
         const volta = criarScoreRow({
-
             label: "Volta",
-
             casa: jogo.fora,
-
             fora: jogo.casa,
-
             valCasa: scores.voltaCasa,
-
             valFora: scores.voltaFora,
-
             onCasa: valor =>
-
                 atualizarPlacar(
-
                     jogo.id,
-
                     "voltaCasa",
-
                     valor
-
                 ),
-
             onFora: valor =>
-
                 atualizarPlacar(
-
                     jogo.id,
-
                     "voltaFora",
-
                     valor
-
                 ),
-
             jogoId: jogo.id,
-
             campoCasa: "voltaCasa",
-
             campoFora: "voltaFora",
-
-            dataHora: dataVolta
-
+            dataHora: dataVolta,
+            bloqueado: voltaBloqueada // ADICIONADO
         });
 
         placares.appendChild(ida);
@@ -2172,6 +2059,39 @@ async function buscarListaDeJogos() {
     } catch (erro) {
         console.error("Erro ao buscar datas dos jogos:", erro);
     }
+}
+
+// ============================================================================
+// VERIFICAR SE O JOGO ESTÁ BLOQUEADO
+// ============================================================================
+function verificarBloqueio(idJogo) {
+    const dadosJogo = state.datasJogos[idJogo];
+    // Se não tiver data na planilha, não bloqueia
+    if (!dadosJogo || !dadosJogo.data) return false; 
+    
+    let dia, mes, ano;
+    // Aceita data no formato dd/MM/yyyy ou yyyy-MM-dd
+    if (dadosJogo.data.includes('/')) {
+        const partes = dadosJogo.data.split('/');
+        dia = parseInt(partes[0]);
+        mes = parseInt(partes[1]) - 1; // Mês no JS começa do 0
+        ano = parseInt(partes[2]);
+    } else if (dadosJogo.data.includes('-')) {
+        const partes = dadosJogo.data.split('-');
+        ano = parseInt(partes[0]);
+        mes = parseInt(partes[1]) - 1;
+        dia = parseInt(partes[2]);
+    } else {
+        return false;
+    }
+
+    // Cria a data do jogo meia-noite (início do dia do jogo)
+    const dataJogo = new Date(ano, mes, dia, 0, 0, 0);
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0); // Zera as horas de hoje para comparar só os dias
+
+    // Bloqueia se o dia de hoje for igual ou maior que o dia do jogo
+    return hoje >= dataJogo;
 }
 
 // ============================================================================
