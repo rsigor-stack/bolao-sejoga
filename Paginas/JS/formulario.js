@@ -102,25 +102,24 @@ const QUARTAS = [
 // ============================================================================
 
 const state = {
-
     scores: {},
-
     quartas: {},
-
     semis: {},
-
     final: "",
-
     etapa: 1,
-
     erro: "",
-
     enviado: false,
-
-    payloadDebug: null
-
+    payloadDebug: null,
+    datasJogos: {} // ADICIONADO: Guardará as datas vindas da planilha
 };
 
+// Movido para cá para ser global e reutilizado
+const mapaIds = {
+    "j1": ["J01", "J02"], "j2": ["J03", "J04"],
+    "j3": ["J05", "J06"], "j4": ["J07", "J08"],
+    "j5": ["J09", "J10"], "j6": ["J11", "J12"],
+    "j7": ["J13", "J14"], "j8": ["J15", "J16"]
+};
 
 // ============================================================================
 // INICIALIZAÇÃO DOS PLACARES
@@ -794,19 +793,23 @@ function criarScoreRow({
 
     campoCasa,
 
-    campoFora
+    campoFora,
+    
+    dataHora // ADICIONADO
 
 }) {
 
     const container = document.createElement("div");
 
-
     const labelElement = document.createElement("div");
-
     labelElement.className = "rodada-label";
 
-    labelElement.textContent = label;
-
+    // ADICIONADO: Se tiver data, coloca ao lado do label
+    if (dataHora) {
+        labelElement.innerHTML = `<strong>${label}</strong> <span class="data-jogo">${escapeHTML(dataHora)}</span>`;
+    } else {
+        labelElement.textContent = label;
+    }
 
     const row = document.createElement("div");
 
@@ -1042,35 +1045,17 @@ function renderOitavas() {
 
             valFora: scores.idaFora,
 
-            onCasa: valor =>
+            onCasa: valor => atualizarPlacar(jogo.id, "idaCasa", valor),
 
-                atualizarPlacar(
-
-                    jogo.id,
-
-                    "idaCasa",
-
-                    valor
-
-                ),
-
-            onFora: valor =>
-
-                atualizarPlacar(
-
-                    jogo.id,
-
-                    "idaFora",
-
-                    valor
-
-                ),
+            onFora: valor => atualizarPlacar(jogo.id, "idaFora", valor),
 
             jogoId: jogo.id,
 
             campoCasa: "idaCasa",
 
-            campoFora: "idaFora"
+            campoFora: "idaFora",
+
+            dataHora: dataIda // ADICIONADO
 
         });
 
@@ -1087,35 +1072,17 @@ function renderOitavas() {
 
             valFora: scores.voltaFora,
 
-            onCasa: valor =>
+            onCasa: valor => atualizarPlacar(jogo.id, "voltaCasa", valor),
 
-                atualizarPlacar(
-
-                    jogo.id,
-
-                    "voltaCasa",
-
-                    valor
-
-                ),
-
-            onFora: valor =>
-
-                atualizarPlacar(
-
-                    jogo.id,
-
-                    "voltaFora",
-
-                    valor
-
-                ),
+            onFora: valor => atualizarPlacar(jogo.id, "voltaFora", valor),
 
             jogoId: jogo.id,
 
             campoCasa: "voltaCasa",
 
-            campoFora: "voltaFora"
+            campoFora: "voltaFora",
+
+            dataHora: dataVolta // ADICIONADO
 
         });
 
@@ -1666,14 +1633,6 @@ function montarPayload() {
     // Dicionário com as datas originais (se o usuário já tinha palpites salvos)
     const datasCriadas = state.datasCriacao || {};
 
-    // Tradutor: converte j1 do JS para J01 da planilha
-    const mapaIds = {
-        "j1": ["J01", "J02"], "j2": ["J03", "J04"],
-        "j3": ["J05", "J06"], "j4": ["J07", "J08"],
-        "j5": ["J09", "J10"], "j6": ["J11", "J12"],
-        "j7": ["J13", "J14"], "j8": ["J15", "J16"]
-    };
-
     let listaDePalpites = [];
 
     // 1. OITAVAS (Placares de Ida e Volta)
@@ -2005,6 +1964,7 @@ async function liberarFormulario() {
     
     // Antes de renderizar a tela, busca na nuvem se já existem palpites salvos
     await carregarPalpitesSalvos();
+    await buscarListaDeJogos(); // ADICIONADO: Busca as datas antes de desenhar a tela
 
     // Renderiza a tela já preenchida (ou vazia, se não havia nada salvo)
     renderOitavas();
@@ -2156,6 +2116,31 @@ async function carregarPalpitesSalvos() {
         }
     } catch (erro) {
         console.error("Erro ao carregar palpites salvos:", erro);
+    }
+}
+
+// ============================================================================
+// BUSCAR DATAS DOS JOGOS
+// ============================================================================
+async function buscarListaDeJogos() {
+    const urlDaPlanilha = 'https://script.google.com/macros/s/AKfycbxiiDpGwGYiEauxy_1e8fH5ysQGi3IJijVZluOZQI_Ftndbyz6htgngfWQFkfeLwL3XWg/exec';
+    try {
+        // Usa GET passando o nome da aba
+        const resposta = await fetch(`${urlDaPlanilha}?aba=ListaDeJogos`);
+        const resultado = await resposta.json();
+        
+        if (resultado.data) {
+            resultado.data.forEach(jogo => {
+                if (jogo.idJogo) {
+                    state.datasJogos[jogo.idJogo] = {
+                        data: jogo.data || "",
+                        horario: jogo.horario || ""
+                    };
+                }
+            });
+        }
+    } catch (erro) {
+        console.error("Erro ao buscar datas dos jogos:", erro);
     }
 }
 
