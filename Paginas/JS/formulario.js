@@ -1629,10 +1629,16 @@ function obterNomeParticipante() {
 // ============================================================================
 // MONTAGEM DO PAYLOAD (Formato da Planilha)
 // ============================================================================
+// ============================================================================
+// MONTAGEM DO PAYLOAD (Formato da Planilha)
+// ============================================================================
 function montarPayload() {
 
     const participante = obterNomeParticipante();
     const agora = new Date().toISOString();
+
+    // Dicionário com as datas originais (se o usuário já tinha palpites salvos)
+    const datasCriadas = state.datasCriacao || {};
 
     // Tradutor: converte j1 do JS para J01 da planilha
     const mapaIds = {
@@ -1658,8 +1664,8 @@ function montarPayload() {
             GolsMandante: scores.idaCasa === "" ? null : Number(scores.idaCasa),
             GolsVisitante: scores.idaFora === "" ? null : Number(scores.idaFora),
             Valor: "",
-            CriadoEm: agora,
-            AtualizadoEm: agora
+            CriadoEm: datasCriadas[idIda + "_Placar"] || agora, // Mantém a data original
+            AtualizadoEm: agora // Data de hoje
         });
 
         // Palpite do Jogo de Volta
@@ -1671,7 +1677,7 @@ function montarPayload() {
             GolsMandante: scores.voltaCasa === "" ? null : Number(scores.voltaCasa),
             GolsVisitante: scores.voltaFora === "" ? null : Number(scores.voltaFora),
             Valor: "",
-            CriadoEm: agora,
+            CriadoEm: datasCriadas[idVolta + "_Placar"] || agora,
             AtualizadoEm: agora
         });
 
@@ -1685,7 +1691,7 @@ function montarPayload() {
                 GolsMandante: null,
                 GolsVisitante: null,
                 Valor: scores.penaltis,
-                CriadoEm: agora,
+                CriadoEm: datasCriadas[idIda + "_Penaltis"] || agora,
                 AtualizadoEm: agora
             });
         }
@@ -1702,7 +1708,7 @@ function montarPayload() {
             GolsMandante: null,
             GolsVisitante: null,
             Valor: state.quartas[q.id] || "",
-            CriadoEm: agora,
+            CriadoEm: datasCriadas[q.id.toUpperCase() + "_Classificado"] || agora,
             AtualizadoEm: agora
         });
     });
@@ -1718,7 +1724,7 @@ function montarPayload() {
             GolsMandante: null,
             GolsVisitante: null,
             Valor: state.semis[s.id] || "",
-            CriadoEm: agora,
+            CriadoEm: datasCriadas[s.id.toUpperCase() + "_Classificado"] || agora,
             AtualizadoEm: agora
         });
     });
@@ -1732,13 +1738,12 @@ function montarPayload() {
         GolsMandante: null,
         GolsVisitante: null,
         Valor: state.final,
-        CriadoEm: agora,
+        CriadoEm: datasCriadas["F1_Campeao"] || agora,
         AtualizadoEm: agora
     });
 
     return listaDePalpites;
 }
-
 
 // ============================================================================
 // ENVIO DO FORMULÁRIO (Comunicação com o Google Sheets)
@@ -2062,6 +2067,13 @@ async function carregarPalpitesSalvos() {
             state.semis = {};
             state.final = "";
 
+            // Zera o estado atual antes de preencher
+            state.scores = criarScoresIniciais();
+            state.quartas = {};
+            state.semis = {};
+            state.final = "";
+            state.datasCriacao = {}; // <--- ADICIONE ESTA LINHA
+            
             resultado.palpites.forEach(p => {
                 const jogoIdSite = mapaReverso[p.JogoID];
 
@@ -2102,6 +2114,12 @@ async function carregarPalpitesSalvos() {
                 // 5. Preenche Final
                 if (p.Fase === "Final") {
                     state.final = p.Valor;
+                }
+
+                // 6. Guarda a data de criação original de cada palpite <--- ADICIONE ESTE BLOCO
+                const chaveData = p.JogoID + "_" + p.TipoPalpite;
+                if (p.CriadoEm) {
+                    state.datasCriacao[chaveData] = p.CriadoEm;
                 }
             });
             
