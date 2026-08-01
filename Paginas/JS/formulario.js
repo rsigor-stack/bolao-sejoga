@@ -1535,10 +1535,6 @@ function obterNomeParticipante() {
     return "Participante";
 }
 
-
-// ============================================================================
-// MONTAGEM DO PAYLOAD (Formato da Planilha)
-// ============================================================================
 // ============================================================================
 // MONTAGEM DO PAYLOAD (Formato da Planilha)
 // ============================================================================
@@ -1566,8 +1562,8 @@ function montarPayload() {
             GolsMandante: scores.idaCasa === "" ? null : Number(scores.idaCasa),
             GolsVisitante: scores.idaFora === "" ? null : Number(scores.idaFora),
             Valor: "",
-            CriadoEm: datasCriadas[idIda + "_Placar"] || agora, // Mantém a data original
-            AtualizadoEm: agora // Data de hoje
+            CriadoEm: datasCriadas[idIda + "_Placar"] || agora,
+            AtualizadoEm: agora
         });
 
         // Palpite do Jogo de Volta
@@ -1583,65 +1579,95 @@ function montarPayload() {
             AtualizadoEm: agora
         });
 
-        // ENVIA SEMPRE a linha de pênaltis (mesmo vazia) para limpar a planilha 
-        // caso o usuário tenha mudado o placar e o jogo não vá mais para os pênaltis
+        // Linha de pênaltis (sempre envia para limpar caso não haja)
         listaDePalpites.push({
             Participante: participante,
-            JogoID: idIda, // Amarrado ao jogo de ida
+            JogoID: idIda,
             Fase: "Oitavas",
             TipoPalpite: "Penaltis",
             GolsMandante: null,
             GolsVisitante: null,
-            Valor: scores.penaltis || "", // Envia vazio se não houver pênaltis
+            Valor: scores.penaltis || "",
             CriadoEm: datasCriadas[idIda + "_Penaltis"] || agora,
             AtualizadoEm: agora
         });
     });
 
-    // 2. QUARTAS DE FINAL (Classificados)
-    const quartasComNomes = obterQuartasComNomes();
-    quartasComNomes.forEach(q => {
+    // 2. QUARTAS DE FINAL (8 times classificados)
+    const classificadosOitavas = obterClassificados();
+    let qIdx = 1;
+    for (const jogoId in classificadosOitavas) {
+        const timeClassificado = classificadosOitavas[jogoId];
+        if (timeClassificado && timeClassificado !== "EMPATE") {
+            listaDePalpites.push({
+                Participante: participante,
+                JogoID: `Q${qIdx}`, // Q1 a Q8
+                Fase: "Quartas",
+                TipoPalpite: "Classificado",
+                GolsMandante: null,
+                GolsVisitante: null,
+                Valor: timeClassificado,
+                CriadoEm: datasCriadas[`Q${qIdx}_Classificado`] || agora,
+                AtualizadoEm: agora
+            });
+            qIdx++;
+        }
+    }
+
+    // 3. SEMIFINAL (4 times classificados)
+    let sIdx = 1;
+    for (const qId in state.quartas) {
+        const timeClassificado = state.quartas[qId];
+        if (timeClassificado) {
+            listaDePalpites.push({
+                Participante: participante,
+                JogoID: `S${sIdx}`, // S1 a S4
+                Fase: "Semifinal",
+                TipoPalpite: "Classificado",
+                GolsMandante: null,
+                GolsVisitante: null,
+                Valor: timeClassificado,
+                CriadoEm: datasCriadas[`S${sIdx}_Classificado`] || agora,
+                AtualizadoEm: agora
+            });
+            sIdx++;
+        }
+    }
+
+    // 4. FINAL (2 times classificados)
+    let fIdx = 1;
+    for (const sId in state.semis) {
+        const timeClassificado = state.semis[sId];
+        if (timeClassificado) {
+            listaDePalpites.push({
+                Participante: participante,
+                JogoID: `F${fIdx}`, // F1 e F2
+                Fase: "Final",
+                TipoPalpite: "Classificado",
+                GolsMandante: null,
+                GolsVisitante: null,
+                Valor: timeClassificado,
+                CriadoEm: datasCriadas[`F${fIdx}_Classificado`] || agora,
+                AtualizadoEm: agora
+            });
+            fIdx++;
+        }
+    }
+
+    // 5. CAMPEÃO (1 time)
+    if (state.final) {
         listaDePalpites.push({
             Participante: participante,
-            JogoID: q.id.toUpperCase(), // Vira Q1, Q2...
-            Fase: "Quartas",
-            TipoPalpite: "Classificado",
+            JogoID: "C1",
+            Fase: "Campeao",
+            TipoPalpite: "Campeao",
             GolsMandante: null,
             GolsVisitante: null,
-            Valor: state.quartas[q.id] || "",
-            CriadoEm: datasCriadas[q.id.toUpperCase() + "_Classificado"] || agora,
+            Valor: state.final,
+            CriadoEm: datasCriadas["C1_Campeao"] || agora,
             AtualizadoEm: agora
         });
-    });
-
-    // 3. SEMIFINAIS (Classificados)
-    const semisComNomes = obterSemisComNomes();
-    semisComNomes.forEach(s => {
-        listaDePalpites.push({
-            Participante: participante,
-            JogoID: s.id.toUpperCase(), // Vira S1, S2
-            Fase: "Semifinal",
-            TipoPalpite: "Classificado",
-            GolsMandante: null,
-            GolsVisitante: null,
-            Valor: state.semis[s.id] || "",
-            CriadoEm: datasCriadas[s.id.toUpperCase() + "_Classificado"] || agora,
-            AtualizadoEm: agora
-        });
-    });
-
-    // 4. FINAL (Campeão)
-    listaDePalpites.push({
-        Participante: participante,
-        JogoID: "F1",
-        Fase: "Final",
-        TipoPalpite: "Campeao",
-        GolsMandante: null,
-        GolsVisitante: null,
-        Valor: state.final,
-        CriadoEm: datasCriadas["F1_Campeao"] || agora,
-        AtualizadoEm: agora
-    });
+    }
 
     return listaDePalpites;
 }
@@ -2001,24 +2027,31 @@ async function carregarPalpitesSalvos() {
                     state.scores[jogoIdSite].penaltis = p.Valor;
                 }
 
-                // 3. Preenche Quartas
-                if (p.Fase === "Quartas") {
-                    const qId = p.JogoID.toLowerCase(); // Q1 -> q1
-                    state.quartas[qId] = p.Valor;
-                }
+                // 3. QUARTAS: Não precisamos recarregar, pois as Quartas são
+                // calculadas automaticamente na tela ao ler os placares das Oitavas.
 
-                // 4. Preenche Semifinais
+                // 4. SEMIFINAIS (Lê os 4 times da planilha e joga pro state.quartas)
                 if (p.Fase === "Semifinal") {
-                    const sId = p.JogoID.toLowerCase(); // S1 -> s1
-                    state.semis[sId] = p.Valor;
+                    const idx = parseInt(p.JogoID.replace('S', '')); // S1 vira 1, S2 vira 2...
+                    if (idx >= 1 && idx <= 4) {
+                        state.quartas[`q${idx}`] = p.Valor;
+                    }
                 }
 
-                // 5. Preenche Final
+                // 5. FINAL (Lê os 2 times da planilha e joga pro state.semis)
                 if (p.Fase === "Final") {
+                    const idx = parseInt(p.JogoID.replace('F', '')); // F1 vira 1, F2 vira 2
+                    if (idx >= 1 && idx <= 2) {
+                        state.semis[`s${idx}`] = p.Valor;
+                    }
+                }
+
+                // 6. CAMPEÃO (Lê o 1 time da planilha e joga pro state.final)
+                if (p.Fase === "Campeao") {
                     state.final = p.Valor;
                 }
 
-                // 6. Guarda a data de criação original de cada palpite <--- ADICIONE ESTE BLOCO
+                // 7. Guarda a data de criação original de cada palpite
                 const chaveData = p.JogoID + "_" + p.TipoPalpite;
                 if (p.CriadoEm) {
                     state.datasCriacao[chaveData] = p.CriadoEm;
