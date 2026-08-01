@@ -628,40 +628,34 @@ function limparErro() {
 // ATUALIZAÇÃO DE PLACAR
 // ============================================================================
 
-function atualizarPlacar(
-
-    jogoId,
-
-    campo,
-
-    valor
-
-) {
+function atualizarPlacar(jogoId, campo, valor) {
 
     // Aceita somente:
-
     // ""
-
     // ou até dois dígitos numéricos.
-
     if (
-
         valor !== "" &&
-
         !/^\d{0,2}$/.test(valor)
-
     ) {
-
         return;
-
     }
-
 
     state.scores[jogoId][campo] = valor;
 
+    // NOVA LÓGICA: Verifica se o classificado mudou e limpa a cascata
+    const jogo = OITAVAS.find(j => j.id === jogoId);
+    const novoClassificado = calcularClassificado(jogo, state.scores[jogoId]);
+
+    // Se o agregado não está mais empatado, limpa a escolha de pênaltis
+    if (novoClassificado !== "EMPATE") {
+        state.scores[jogoId].penaltis = "";
+    }
+
+    // Limpa as fases seguintes se o time classificado mudou
+    limparCadeiaSeNecessario(jogoId, novoClassificado);
 
     renderOitavas();
-
+    renderFasesFinais(); // Atualiza as fases seguintes na tela imediatamente
 }
 
 
@@ -669,20 +663,52 @@ function atualizarPlacar(
 // SELEÇÃO NOS PÊNALTIS
 // ============================================================================
 
-function selecionarPenaltis(
-
-    jogoId,
-
-    vencedor
-
-) {
+function selecionarPenaltis(jogoId, vencedor) {
 
     state.scores[jogoId].penaltis = vencedor;
 
+    // NOVA LÓGICA: Ao definir os pênaltis, o classificado mudou, logo limpamos a cascata
+    limparCadeiaSeNecessario(jogoId, vencedor);
 
     renderOitavas();
-
+    renderFasesFinais();
 }
+
+// ============================================================================
+// LIMPEZA EM CASCATA (Se um time muda, limpa as fases seguintes)
+// ============================================================================
+
+function limparCadeiaSeNecessario(jogoId, classificadoAtual) {
+    
+    // Mapa de qual jogo das Oitavas alimenta qual chave das Quartas
+    const mapaOitavasParaQuartas = {
+        "j1": "q1", "j2": "q1",
+        "j3": "q2", "j4": "q2",
+        "j5": "q3", "j6": "q3",
+        "j7": "q4", "j8": "q4"
+    };
+    
+    const qId = mapaOitavasParaQuartas[jogoId];
+    if (!qId) return;
+
+    const selecaoAnteriorQuartas = state.quartas[qId];
+    
+    // Se o time que se classificou mudou (ou ficou nulo/empate), 
+    // e era diferente do que estava selecionado, limpa a seleção das Quartas
+    if (classificadoAtual !== selecaoAnteriorQuartas) {
+        state.quartas[qId] = "";
+        
+        // Se limpou as Quartas, verifica se precisa limpar a Semi
+        const sId = (qId === "q1" || qId === "q2") ? "s1" : "s2";
+        if (state.semis[sId]) {
+            state.semis[sId] = "";
+            
+            // Se limpou a Semi, limpa a Final
+            state.final = "";
+        }
+    }
+}
+
 
 
 // ============================================================================
@@ -1681,20 +1707,19 @@ function montarPayload() {
             AtualizadoEm: agora
         });
 
-        // Se foi para os pênaltis, envia uma linha extra com o classificado
-        if (scores.penaltis) {
-            listaDePalpites.push({
-                Participante: participante,
-                JogoID: idIda, // Amarrado ao jogo de ida
-                Fase: "Oitavas",
-                TipoPalpite: "Penaltis",
-                GolsMandante: null,
-                GolsVisitante: null,
-                Valor: scores.penaltis,
-                CriadoEm: datasCriadas[idIda + "_Penaltis"] || agora,
-                AtualizadoEm: agora
-            });
-        }
+        // ENVIA SEMPRE a linha de pênaltis (mesmo vazia) para limpar a planilha 
+        // caso o usuário tenha mudado o placar e o jogo não vá mais para os pênaltis
+        listaDePalpites.push({
+            Participante: participante,
+            JogoID: idIda, // Amarrado ao jogo de ida
+            Fase: "Oitavas",
+            TipoPalpite: "Penaltis",
+            GolsMandante: null,
+            GolsVisitante: null,
+            Valor: scores.penaltis || "", // Envia vazio se não houver pênaltis
+            CriadoEm: datasCriadas[idIda + "_Penaltis"] || agora,
+            AtualizadoEm: agora
+        });
     });
 
     // 2. QUARTAS DE FINAL (Classificados)
