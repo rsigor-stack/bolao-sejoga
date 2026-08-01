@@ -108,6 +108,7 @@
 
         .lista-confrontos {
             display: grid;
+            grid-template-columns: 1fr; /* Garante que os cards ficam um abaixo do outro */
             gap: 14px;
         }
 
@@ -128,8 +129,8 @@
 
         .placares {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            grid-template-columns: 1fr; /* Coloca Ida e Volta um abaixo do outro */
+            gap: 16px;
         }
 
         .rodada-label {
@@ -383,14 +384,8 @@
             color: var(--text);
             font-family: inherit;
             cursor: pointer;
-        }
-        
-        #lista-oitavas {
-            display: flex;
-            flex-direction: column; /* ISSO FAZ FICAR UM ABAIXO DO OUTRO */
-            gap: 20px; /* Espaço entre os cards */
-        }
-        
+        }      
+       
         /* Se quiser estilizar a data para ficar menor ou cinza */
         .data-jogo {
             font-size: 0.85em;
