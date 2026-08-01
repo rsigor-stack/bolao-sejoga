@@ -1000,12 +1000,9 @@ function renderOitavas() {
 
     const focoSalvo = salvarFocoAtual(container);
 
-
     container.innerHTML = "";
 
-
     const classificados = obterClassificados();
-
 
     OITAVAS.forEach(jogo => {
 
@@ -1013,25 +1010,31 @@ function renderOitavas() {
 
         const resultado = classificados[jogo.id];
 
-
         const card = document.createElement("div");
 
         card.className = "card-confronto";
-
 
         const titulo = document.createElement("div");
 
         titulo.className = "titulo-confronto";
 
-        titulo.textContent =
-
-            `${jogo.casa} x ${jogo.fora}`;
-
+        titulo.textContent = `${jogo.casa} x ${jogo.fora}`;
 
         const placares = document.createElement("div");
 
         placares.className = "placares";
 
+        // Pega os IDs corretos da planilha para buscar a data
+        const [idIda, idVolta] = mapaIds[jogo.id];
+
+        // Busca as datas salvas no estado
+        const dataIda = state.datasJogos[idIda] 
+            ? `${state.datasJogos[idIda].data} ${state.datasJogos[idIda].horario}` 
+            : "";
+            
+        const dataVolta = state.datasJogos[idVolta] 
+            ? `${state.datasJogos[idVolta].data} ${state.datasJogos[idVolta].horario}` 
+            : "";
 
         const ida = criarScoreRow({
 
@@ -1045,9 +1048,29 @@ function renderOitavas() {
 
             valFora: scores.idaFora,
 
-            onCasa: valor => atualizarPlacar(jogo.id, "idaCasa", valor),
+            onCasa: valor =>
 
-            onFora: valor => atualizarPlacar(jogo.id, "idaFora", valor),
+                atualizarPlacar(
+
+                    jogo.id,
+
+                    "idaCasa",
+
+                    valor
+
+                ),
+
+            onFora: valor =>
+
+                atualizarPlacar(
+
+                    jogo.id,
+
+                    "idaFora",
+
+                    valor
+
+                ),
 
             jogoId: jogo.id,
 
@@ -1055,10 +1078,9 @@ function renderOitavas() {
 
             campoFora: "idaFora",
 
-            dataHora: dataIda // ADICIONADO
+            dataHora: dataIda
 
         });
-
 
         const volta = criarScoreRow({
 
@@ -1072,9 +1094,29 @@ function renderOitavas() {
 
             valFora: scores.voltaFora,
 
-            onCasa: valor => atualizarPlacar(jogo.id, "voltaCasa", valor),
+            onCasa: valor =>
 
-            onFora: valor => atualizarPlacar(jogo.id, "voltaFora", valor),
+                atualizarPlacar(
+
+                    jogo.id,
+
+                    "voltaCasa",
+
+                    valor
+
+                ),
+
+            onFora: valor =>
+
+                atualizarPlacar(
+
+                    jogo.id,
+
+                    "voltaFora",
+
+                    valor
+
+                ),
 
             jogoId: jogo.id,
 
@@ -1082,20 +1124,17 @@ function renderOitavas() {
 
             campoFora: "voltaFora",
 
-            dataHora: dataVolta // ADICIONADO
+            dataHora: dataVolta
 
         });
-
 
         placares.appendChild(ida);
 
         placares.appendChild(volta);
 
-
         card.appendChild(titulo);
 
         card.appendChild(placares);
-
 
         // Empate no agregado
 
@@ -1105,7 +1144,6 @@ function renderOitavas() {
 
             areaPenaltis.className = "area-penaltis";
 
-
             const texto = document.createElement("div");
 
             texto.className = "texto-penaltis";
@@ -1113,7 +1151,6 @@ function renderOitavas() {
             texto.textContent =
 
                 "Agregado empatado — vai para os pênaltis. Quem passa?";
-
 
             const botoes = criarBotoesEscolha(
 
@@ -1133,16 +1170,13 @@ function renderOitavas() {
 
             );
 
-
             areaPenaltis.appendChild(texto);
 
             areaPenaltis.appendChild(botoes);
 
-
             card.appendChild(areaPenaltis);
 
         }
-
 
         // Classificado definido
 
@@ -1156,21 +1190,17 @@ function renderOitavas() {
 
             const classificado = document.createElement("div");
 
-
             classificado.className =
 
                 "resultado-classificado";
-
 
             classificado.textContent =
 
                 `Classificado: ${resultado}`;
 
-
             card.appendChild(classificado);
 
         }
-
 
         container.appendChild(card);
 
