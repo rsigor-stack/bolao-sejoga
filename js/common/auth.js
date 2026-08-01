@@ -97,6 +97,12 @@
 
     Bolao.auth.logout = function () {
         limparSessao();
+        
+        // Redireciona o usuário para a página inicial do site
+        // A barra '/' significa "pasta raiz", ou seja, a Home.
+        // Se a sua home tiver um nome específico (ex: 'index.html'), 
+        // você pode trocar '/' por '/index.html'.
+        window.location.href = '/index.html'; 
     };
 
     /**
