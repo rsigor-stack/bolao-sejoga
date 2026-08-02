@@ -373,6 +373,56 @@
     object-fit: cover;
   }
 
+  /* ---- Barra de status/carregamento do vídeo ---- */
+
+  .video-progress {
+    max-width: 380px;
+    margin: 16px auto 0;
+    transition: opacity .5s ease;
+  }
+
+  .video-progress__track {
+    width: 100%;
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.08);
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .video-progress__fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    transition: width .3s ease, background .3s ease;
+  }
+
+  .video-progress__label {
+    text-align: center;
+    font-size: .76rem;
+    opacity: .55;
+    margin-top: 8px;
+    letter-spacing: .01em;
+  }
+
+  /* estado de erro — fica vermelho e a mensagem some mais escura */
+  .video-progress--error .video-progress__fill {
+    background: #ff4d4d;
+    width: 100%;
+  }
+  .video-progress--error .video-progress__label {
+    color: #ff9b9b;
+    opacity: 1;
+    font-weight: 600;
+  }
+
+  /* concluído/reproduzindo — barra dá fade-out sozinha */
+  .video-progress--done {
+    opacity: 0;
+    pointer-events: none;
+  }
+
   /* ===================== SECTIONS (shared) ===================== */
 
   section.section {
@@ -687,6 +737,13 @@
         Seu navegador não suporta a exibição deste vídeo.
       </video>
     </div>
+
+    <div class="video-progress" id="videoProgress" role="status" aria-live="polite">
+      <div class="video-progress__track">
+        <div class="video-progress__fill" id="videoProgressFill"></div>
+      </div>
+      <p class="video-progress__label" id="videoProgressLabel">Carregando vídeo...</p>
+    </div>
   </section>
 
   <!-- ===================== COMO FUNCIONA ===================== -->
@@ -925,15 +982,89 @@
     } catch (e) { /* sessão ausente ou inválida — segue fluxo normal */ }
   }
 
-  // ---- Vídeo de abertura: pausa fora da tela e respeita prefers-reduced-motion ----
+  // ---- Vídeo de abertura: barra de status, pausa fora da tela e prefers-reduced-motion ----
   function controlarVideoIntro() {
     const video = document.getElementById('videoIntro');
+    const progressWrap = document.getElementById('videoProgress');
+    const fill = document.getElementById('videoProgressFill');
+    const label = document.getElementById('videoProgressLabel');
     if (!video) return;
 
+    function setProgress(pct, texto) {
+      if (fill) fill.style.width = Math.min(100, Math.max(0, pct)) + '%';
+      if (label) label.textContent = texto;
+    }
+
+    function marcarErro(motivo) {
+      if (progressWrap) progressWrap.classList.remove('video-progress--done');
+      if (progressWrap) progressWrap.classList.add('video-progress--error');
+      setProgress(100, motivo);
+      console.error('[video-intro] Falha ao carregar o vídeo:', motivo, video.error);
+    }
+
+    function ocultarBarraComAtraso() {
+      setTimeout(() => {
+        if (progressWrap && !progressWrap.classList.contains('video-progress--error')) {
+          progressWrap.classList.add('video-progress--done');
+        }
+      }, 700);
+    }
+
+    // ---- Eventos de carregamento (o que alimenta a barra) ----
+    video.addEventListener('loadstart', () => setProgress(5, 'Carregando vídeo...'));
+
+    video.addEventListener('progress', () => {
+      if (video.buffered.length > 0 && video.duration) {
+        const bufferedEnd = video.buffered.end(video.buffered.length - 1);
+        const pct = (bufferedEnd / video.duration) * 100;
+        setProgress(pct, `Carregando vídeo... ${Math.round(pct)}%`);
+      }
+    });
+
+    video.addEventListener('canplay', () => setProgress(95, 'Quase pronto...'));
+
+    video.addEventListener('canplaythrough', () => {
+      setProgress(100, 'Vídeo carregado.');
+      ocultarBarraComAtraso();
+    });
+
+    video.addEventListener('playing', () => {
+      setProgress(100, 'Reproduzindo.');
+      ocultarBarraComAtraso();
+    });
+
+    video.addEventListener('error', () => {
+      const err = video.error;
+      let motivo = 'Não foi possível carregar o vídeo.';
+      if (err) {
+        switch (err.code) {
+          case err.MEDIA_ERR_ABORTED:
+            motivo = 'Carregamento do vídeo foi interrompido.'; break;
+          case err.MEDIA_ERR_NETWORK:
+            motivo = 'Erro de rede ao carregar o vídeo.'; break;
+          case err.MEDIA_ERR_DECODE:
+            motivo = 'Formato de vídeo incompatível com o navegador.'; break;
+          case err.MEDIA_ERR_SRC_NOT_SUPPORTED:
+            motivo = 'Arquivo não encontrado — confira o caminho /Videos/PixVerse_IntroVideo.mp4 no servidor.'; break;
+        }
+      }
+      marcarErro(motivo);
+    });
+
+    // Timeout de segurança: se nada acontecer em 8s, sinaliza problema em vez de
+    // deixar a barra "carregando..." parada pra sempre.
+    setTimeout(() => {
+      if (video.readyState < 3 && progressWrap && !progressWrap.classList.contains('video-progress--error')) {
+        marcarErro('Tempo de carregamento excedido — verifique se o arquivo do vídeo está publicado no servidor.');
+      }
+    }, 8000);
+
+    // ---- Reprodução: pausa fora da tela / respeita prefers-reduced-motion ----
     const prefereReduzirMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefereReduzirMovimento) {
       video.removeAttribute('autoplay');
       video.pause();
+      if (progressWrap) progressWrap.classList.add('video-progress--done');
       return; // mantém só o poster estático, sem reprodução automática
     }
 
