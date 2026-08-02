@@ -311,7 +311,7 @@ Bolao.layout.abrirModalCadastro = function () {
             <input type="password" id="cad-pin2" placeholder="Confirme o PIN" inputmode="numeric" maxlength="6" />
             <div class="cad-regulamento">
                 <input type="checkbox" id="cad-regulamento" />
-                <label for="cad-regulamento">Li e concordo com o <a href="https://drive.google.com/uc?export=download&id=18KAjbenZAbscrTi79QvTMVxT1coHtBYc" target="_blank">Regulamento</a></label>
+                <label for="cad-regulamento">Li e concordo com o <a href="/Files/Regulamento Bolao Se Joga na Copa Libertadores 2026.pdf" target="_blank">Regulamento</a></label>
             </div>
             <div class="modal-login-erro" id="cad-erro"></div>
             <div class="modal-login-botoes">
