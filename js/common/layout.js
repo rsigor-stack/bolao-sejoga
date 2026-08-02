@@ -388,3 +388,4 @@ Bolao.layout.abrirModalCadastro = function () {
         document.getElementById("cad-fechar").addEventListener("click", () => modal.remove());
     });
 };
+})();
