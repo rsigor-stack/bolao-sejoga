@@ -306,7 +306,7 @@ Bolao.layout.abrirModalCadastro = function () {
     modal.innerHTML = `
         <div class="modal-login-caixa">
             <h3>Solicitar cadastro</h3>
-            <input type="text" id="cad-nome" placeholder="Seu nome completo" autocomplete="name" />
+            <input type="text" id="cad-nome" placeholder="ID desejado" autocomplete="name" />
             <input type="password" id="cad-pin" placeholder="Escolha um PIN (4-6 dígitos)" inputmode="numeric" maxlength="6" />
             <input type="password" id="cad-pin2" placeholder="Confirme o PIN" inputmode="numeric" maxlength="6" />
             <div class="cad-regulamento">
