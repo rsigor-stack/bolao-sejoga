@@ -297,92 +297,94 @@
     // Modal de solicitação de cadastro (fica Pendente até aprovação)
     //----------------------------------------------------------
 
-    Bolao.layout.abrirModalCadastro = function () {
-        if (document.getElementById("modal-login")) return;
+Bolao.layout.abrirModalCadastro = function () {
+    if (document.getElementById("modal-login")) return;
 
-        const modal = document.createElement("div");
-        modal.id = "modal-login";
-        modal.className = "modal-login-overlay";
-        modal.innerHTML = `
-            <div class="modal-login-caixa">
-                <h3>Solicitar cadastro</h3>
-                <input type="text" id="cad-nome" placeholder="Seu ID desejado" autocomplete="name" />
-                <input type="password" id="cad-pin" placeholder="Escolha um PIN (4-6 dígitos)" inputmode="numeric" maxlength="6" />
-                <input type="password" id="cad-pin2" placeholder="Confirme o PIN" inputmode="numeric" maxlength="6" />
-                <div class="modal-login-erro" id="cad-erro"></div>
+    const modal = document.createElement("div");
+    modal.id = "modal-login";
+    modal.className = "modal-login-overlay";
+    modal.innerHTML = `
+        <div class="modal-login-caixa">
+            <h3>Solicitar cadastro</h3>
+            <input type="text" id="cad-nome" placeholder="Seu nome completo" autocomplete="name" />
+            <input type="password" id="cad-pin" placeholder="Escolha um PIN (4-6 dígitos)" inputmode="numeric" maxlength="6" />
+            <input type="password" id="cad-pin2" placeholder="Confirme o PIN" inputmode="numeric" maxlength="6" />
+            <div class="cad-regulamento">
+                <input type="checkbox" id="cad-regulamento" />
+                <label for="cad-regulamento">Li e concordo com o <a href="https://drive.google.com/uc?export=download&id=18KAjbenZAbscrTi79QvTMVxT1coHtBYc" target="_blank">Regulamento</a></label>
+            </div>
+            <div class="modal-login-erro" id="cad-erro"></div>
+            <div class="modal-login-botoes">
+                <button type="button" id="cad-cancelar">Cancelar</button>
+                <button type="button" id="cad-confirmar" disabled>Enviar</button>
+            </div>
+            <div class="modal-login-rodape">
+                Já tem conta?
+                <a href="#" id="link-login">Entrar</a>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
 
-                //ADICIONADO - INI
-                <div class="form-group aceite-regulamento">
-                  <input type="checkbox" id="aceiteRegulamento" name="aceite_regulamento" required>
-                  <label for="aceiteRegulamento">
-                    Li e estou de acordo com o <a href="regulamento.pdf" target="_blank">Regulamento Oficial</a>.
-                  </label>
-                </div>
-                
-                <!-- Seu botão de envio (certifique-se de começar com disabled) -->
-                <button type="submit" id="btnSubmitCadastro" class="btn btn--primary" disabled>
-                  Confirmar Cadastro
-                </button>
-                //ADICIONADO - FIM
-                
-                <div class="modal-login-botoes">
-                    <button type="button" id="cad-cancelar">Cancelar</button>
-                    <button type="button" id="cad-confirmar">Enviar</button>
-                </div>
-                <div class="modal-login-rodape">
-                    Já tem conta?
-                    <a href="#" id="link-login">Entrar</a>
-                </div>
+    document.getElementById("cad-cancelar").addEventListener("click", () => {
+        modal.remove();
+    });
+
+    document.getElementById("link-login").addEventListener("click", (e) => {
+        e.preventDefault();
+        modal.remove();
+        Bolao.layout.abrirModalLogin();
+    });
+
+    // Habilita o botão de envio somente quando o usuário marcar o checkbox
+    const checkbox = document.getElementById("cad-regulamento");
+    const btnEnviar = document.getElementById("cad-confirmar");
+    if (checkbox && btnEnviar) {
+        checkbox.addEventListener("change", (e) => {
+            btnEnviar.disabled = !e.target.checked;
+        });
+    }
+
+    document.getElementById("cad-confirmar").addEventListener("click", async () => {
+        const nome = document.getElementById("cad-nome").value.trim();
+        const pin = document.getElementById("cad-pin").value.trim();
+        const pin2 = document.getElementById("cad-pin2").value.trim();
+        const regulamento = document.getElementById("cad-regulamento").checked;
+        const erroEl = document.getElementById("cad-erro");
+
+        if (!nome || !pin || !pin2) {
+            erroEl.textContent = "Preencha todos os campos.";
+            return;
+        }
+        if (pin.length < 4) {
+            erroEl.textContent = "O PIN deve ter pelo menos 4 dígitos.";
+            return;
+        }
+        if (pin !== pin2) {
+            erroEl.textContent = "Os PINs não coincidem.";
+            return;
+        }
+        if (!regulamento) {
+            // Proteção extra: o botão já deve estar desabilitado, mas checamos de qualquer forma.
+            erroEl.textContent = "Você precisa concordar com o Regulamento.";
+            return;
+        }
+
+        erroEl.textContent = "Enviando...";
+        const resultado = await Bolao.auth.solicitarCadastro(nome, pin);
+
+        if (resultado.erro) {
+            erroEl.textContent = resultado.erro;
+            return;
+        }
+
+        modal.querySelector(".modal-login-caixa").innerHTML = `
+            <h3>Cadastro enviado! ✅</h3>
+            <p>Assim que o organizador aprovar, você já pode entrar com o nome e PIN escolhidos.</p>
+            <div class="modal-login-botoes">
+                <button type="button" id="cad-fechar">Fechar</button>
             </div>
         `;
-        document.body.appendChild(modal);
-
-        document.getElementById("cad-cancelar").addEventListener("click", () => {
-            modal.remove();
-        });
-
-        document.getElementById("link-login").addEventListener("click", (e) => {
-            e.preventDefault();
-            modal.remove();
-            Bolao.layout.abrirModalLogin();
-        });
-
-        document.getElementById("cad-confirmar").addEventListener("click", async () => {
-            const nome = document.getElementById("cad-nome").value.trim();
-            const pin = document.getElementById("cad-pin").value.trim();
-            const pin2 = document.getElementById("cad-pin2").value.trim();
-            const erroEl = document.getElementById("cad-erro");
-
-            if (!nome || !pin || !pin2) {
-                erroEl.textContent = "Preencha todos os campos.";
-                return;
-            }
-            if (pin.length < 4) {
-                erroEl.textContent = "O PIN deve ter pelo menos 4 dígitos.";
-                return;
-            }
-            if (pin !== pin2) {
-                erroEl.textContent = "Os PINs não coincidem.";
-                return;
-            }
-
-            erroEl.textContent = "Enviando...";
-            const resultado = await Bolao.auth.solicitarCadastro(nome, pin);
-
-            if (resultado.erro) {
-                erroEl.textContent = resultado.erro;
-                return;
-            }
-
-            modal.querySelector(".modal-login-caixa").innerHTML = `
-                <h3>Cadastro enviado! ✅</h3>
-                <p>Assim que o organizador aprovar, você já pode entrar com o nome e PIN escolhidos.</p>
-                <div class="modal-login-botoes">
-                    <button type="button" id="cad-fechar">Fechar</button>
-                </div>
-            `;
-            document.getElementById("cad-fechar").addEventListener("click", () => modal.remove());
-        });
-    };
-
-})();
+        document.getElementById("cad-fechar").addEventListener("click", () => modal.remove());
+    });
+};
