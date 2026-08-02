@@ -1875,16 +1875,37 @@ function mostrarBloqueioLogin() {
 }
 
 
+// ============================================================================
+// LIBERAR FORMULÁRIO (Com tela de carregamento)
+// ============================================================================
+
 async function liberarFormulario() {
 
     get("tela-login-necessario").hidden = true;
-    get("app").hidden = false;
-
-    configurarEventos();
     
-    // Antes de renderizar a tela, busca na nuvem se já existem palpites salvos
+    // 1. Mostra a tela de carregamento e esconde o app
+    const telaCarregando = get("tela-carregando");
+    const app = get("app");
+    const etapa1 = get("etapa-1");
+    const etapa2 = get("etapa-2");
+    
+    if (telaCarregando) telaCarregando.hidden = false;
+    if (app) app.hidden = true;
+    
+    // Configura os botões enquanto carrega
+    configurarEventos();
+
+    // 2. Busca os dados na nuvem (enquanto o usuário vê o loader)
     await carregarPalpitesSalvos();
-    await buscarListaDeJogos(); // ADICIONADO: Busca as datas antes de desenhar a tela
+    await buscarListaDeJogos();
+
+    // 3. Esconde o loader e mostra o app preenchido
+    if (telaCarregando) telaCarregando.hidden = true;
+    if (app) app.hidden = false;
+    
+    // Garante que a etapa 1 fique visível inicialmente
+    if (etapa1) etapa1.hidden = false;
+    if (etapa2) etapa2.hidden = true;
 
     // Renderiza a tela já preenchida (ou vazia, se não havia nada salvo)
     renderOitavas();
@@ -1892,6 +1913,7 @@ async function liberarFormulario() {
 
     // Se ao carregar a etapa 2 já estiver liberada (do código acima), rola a tela
     if (state.etapa === 2) {
+         if (etapa2) etapa2.hidden = false;
          get("etapa-2").scrollIntoView({ behavior: "smooth", block: "start" });
     }
 }
