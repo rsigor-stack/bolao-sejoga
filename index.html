@@ -871,6 +871,26 @@
     montarMarquee();
     verificarSessao();
   });
+
+
+  // ============================================================
+  // CONTROLE DO CHECKBOX DO REGULAMENTO NO FORMULÁRIO
+  // ============================================================
+  // Usamos "document.addEventListener" para garantir que vai funcionar
+  // mesmo que o formulário seja aberto depois num modal.
+  document.addEventListener('change', function(event) {
+    // Verifica se o elemento que sofreu a alteração é o nosso checkbox
+    if (event.target && event.target.id === 'aceiteRegulamento') {
+      const checkbox = event.target;
+      // Procura o botão de envio pelo ID
+      const submitBtn = document.getElementById('btnSubmitCadastro');
+      
+      if (submitBtn) {
+        // Habilita o botão se o checkbox estiver marcado, desabilita se não estiver
+        submitBtn.disabled = !checkbox.checked;
+      }
+    }
+  });
 </script>
 
 <script src="/js/common/core.js"></script>
