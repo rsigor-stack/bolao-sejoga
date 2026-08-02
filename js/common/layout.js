@@ -130,6 +130,54 @@
                 background: linear-gradient(135deg, #00d4ff, #08f7a1);
                 color: #04142d;
             }
+            
+            /* ===================== ACEITE DO REGULAMENTO ===================== */
+            .form-group.aceite-regulamento {
+              display: flex;
+              align-items: flex-start;
+              gap: 12px;
+              margin-bottom: 24px;
+              font-size: 0.9rem;
+              opacity: 0.9;
+            }
+            
+            .form-group.aceite-regulamento input[type="checkbox"] {
+              width: 20px;
+              height: 20px;
+              margin-top: 2px;
+              accent-color: var(--accent-2); /* Aplica a cor verde/neon ao checkbox */
+              cursor: pointer;
+              flex-shrink: 0;
+            }
+            
+            .form-group.aceite-regulamento label {
+              cursor: pointer;
+              line-height: 1.4;
+            }
+            
+            .form-group.aceite-regulamento a {
+              color: var(--accent);
+              text-decoration: underline;
+              text-underline-offset: 3px;
+              font-weight: 600;
+            }
+            .form-group.aceite-regulamento a:hover {
+              color: var(--accent-2);
+            }
+            
+            /* Estado desabilitado do botão primário */
+            .btn--primary:disabled {
+              background: rgba(255,255,255,0.1);
+              color: rgba(255,255,255,0.4);
+              cursor: not-allowed;
+              box-shadow: none;
+              transform: none;
+            }
+            .btn--primary:disabled:hover {
+              transform: none;
+              box-shadow: none;
+            }
+            
         `;
         document.head.appendChild(style);
     }
@@ -258,10 +306,25 @@
         modal.innerHTML = `
             <div class="modal-login-caixa">
                 <h3>Solicitar cadastro</h3>
-                <input type="text" id="cad-nome" placeholder="Seu nome completo" autocomplete="name" />
+                <input type="text" id="cad-nome" placeholder="Seu ID desejado" autocomplete="name" />
                 <input type="password" id="cad-pin" placeholder="Escolha um PIN (4-6 dígitos)" inputmode="numeric" maxlength="6" />
                 <input type="password" id="cad-pin2" placeholder="Confirme o PIN" inputmode="numeric" maxlength="6" />
                 <div class="modal-login-erro" id="cad-erro"></div>
+
+                //ADICIONADO - INI
+                <div class="form-group aceite-regulamento">
+                  <input type="checkbox" id="aceiteRegulamento" name="aceite_regulamento" required>
+                  <label for="aceiteRegulamento">
+                    Li e estou de acordo com o <a href="regulamento.pdf" target="_blank">Regulamento Oficial</a>.
+                  </label>
+                </div>
+                
+                <!-- Seu botão de envio (certifique-se de começar com disabled) -->
+                <button type="submit" id="btnSubmitCadastro" class="btn btn--primary" disabled>
+                  Confirmar Cadastro
+                </button>
+                //ADICIONADO - FIM
+                
                 <div class="modal-login-botoes">
                     <button type="button" id="cad-cancelar">Cancelar</button>
                     <button type="button" id="cad-confirmar">Enviar</button>
