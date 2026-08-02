@@ -1753,39 +1753,29 @@ async function handleSubmit() {
 
 function mostrarTelaSucesso() {
 
-    get("app").hidden = true;
+    // Esconde o app e mostra a tela de sucesso (apenas se existirem)
+    const app = get("app");
+    const telaSucesso = get("tela-sucesso");
+    
+    if (app) app.hidden = true;
+    if (telaSucesso) telaSucesso.hidden = false;
 
-    get("tela-sucesso").hidden = false;
+    // Atualiza a mensagem de sucesso
+    const mensagem = get("mensagem-sucesso");
+    if (mensagem) {
+        mensagem.textContent = "Seu palpite foi registrado com sucesso.";
+    }
 
-
-
-
-    get("mensagem-sucesso").textContent =
-
-        "Seu palpite foi registrado com sucesso.";
-
-
-    get("payload-debug").textContent =
-
-        JSON.stringify(
-
-            state.payloadDebug,
-
-            null,
-
-            2
-
-        );
-
+    // Atualiza o payload no console de debug (apenas se o elemento existir)
+    const payloadDebug = get("payload-debug");
+    if (payloadDebug) {
+        payloadDebug.textContent = JSON.stringify(state.payloadDebug, null, 2);
+    }
 
     window.scrollTo({
-
         top: 0,
-
         behavior: "smooth"
-
     });
-
 }
 
 
