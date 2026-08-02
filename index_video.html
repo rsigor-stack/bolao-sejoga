@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bolão Se Joga — Copa Libertadores 2026</title>
+<meta name="description" content="O bolão da Libertadores 2026. Cadastre-se antes do prazo, envie seus palpites e dispute a tabela com a galera.">
+
+<meta property="og:title" content="Bolão Se Joga — Copa Libertadores 2026">
+<meta property="og:description" content="Palpitou, pagou, jogou. Cadastre-se antes que o tempo acabe.">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg-dark:  #04142d;
+    --bg-blue:  #0a2d62;
+    --accent:   #00d4ff;
+    --accent-2: #08f7a1;
+    --gold:     #ffd700;
+    --silver:   #c0c0c0;
+    --bronze:   #cd7f32;
+    --text:     #ffffff;
+    --card:     rgba(255,255,255,0.08);
+    --border:   rgba(255,255,255,0.15);
+  }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    min-height: 100vh;
+    color: var(--text);
+    background:
+      radial-gradient(circle at top left,  rgba(0,212,255,.18), transparent 25%),
+      radial-gradient(circle at bottom right, rgba(8,247,161,.12), transparent 25%),
+      linear-gradient(135deg, #03101f 0%, #072654 55%, #04142d 100%);
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  a { color: inherit; text-decoration: none; }
+  ul { list-style: none; }
+  img { max-width: 100%; display: block; }
+
+  :focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: .95rem;
+    padding: 15px 30px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    transition: .25s ease;
+  }
+
+  .btn--primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #04142d;
+    box-shadow: 0 10px 25px rgba(0,212,255,.3);
+  }
+  .btn--primary:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(0,212,255,.4); }
+
+  .btn--ghost {
+    background: rgba(255,255,255,.06);
+    color: var(--text);
+    border: 1px solid var(--border);
+    backdrop-filter: blur(10px);
+  }
+  .btn--ghost:hover { background: rgba(255,255,255,.12); transform: translateY(-2px); }
+
+  .eyebrow {
+    font-size: .78rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--accent-2);
+  }
+
+  /* ===================== HEADER ===================== */
+  /* Mesmo bloco usado nas demais páginas (index.html, formulario.html etc.) —
+     header.html não traz estilo próprio, cada página replica este CSS. */
+
+  header {
+    position: relative;
+    z-index: 2;
+    padding: 32px 24px 16px;
+  }
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    max-width: 1400px;
+    margin: auto;
+  }
+  .logo { display: flex; align-items: center; gap: 14px; }
+  .logo-icon {
+    width: 58px; height: 58px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.8rem;
+    box-shadow: 0 10px 25px rgba(0,212,255,.35);
+  }
+  .logo h1 { font-size: 2rem; font-weight: 800; letter-spacing: 1px; }
+  .logo p  { opacity: .75; font-size: .95rem; margin-top: 4px; }
+
+  nav {
+    position: relative;
+    z-index: 2;
+    max-width: 1400px;
+    margin: 24px auto 0;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  nav a {
+    text-decoration: none;
+    color: white;
+    padding: 12px 18px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.08);
+    transition: .25s ease;
+    font-weight: 600;
+    font-size: .95rem;
+    backdrop-filter: blur(10px);
+  }
+  nav a:hover, nav a.active {
+    transform: translateY(-2px);
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #04142d;
+  }
+
+  /* ===================== HERO ===================== */
+
+  .hero {
+    position: relative;
+    z-index: 1;
+    padding: 64px 0 56px;
+  }
+
+  .hero__grid {
+    display: grid;
+    grid-template-columns: 1.1fr .9fr;
+    gap: 48px;
+    align-items: center;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.4rem, 5vw, 3.6rem);
+    font-weight: 800;
+    letter-spacing: -.01em;
+    line-height: 1.08;
+    margin: 16px 0 20px;
+  }
+  .hero h1 span {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .hero__sub {
+    font-size: 1.1rem;
+    opacity: .8;
+    max-width: 48ch;
+    margin-bottom: 32px;
+  }
+
+  .hero__actions {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+
+  .hero__note {
+    font-size: .85rem;
+    opacity: .6;
+  }
+
+  /* ---- Placar eletrônico (countdown) ---- */
+
+  .scoreboard {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 20px 50px rgba(0,0,0,.30);
+    padding: 28px 24px 24px;
+  }
+
+  .scoreboard__label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+    font-size: .75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: var(--accent-2);
+    margin-bottom: 18px;
+  }
+
+  .scoreboard__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent-2);
+    box-shadow: 0 0 8px var(--accent-2);
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{ opacity:1; } 50%{ opacity:.35; } }
+  @media (prefers-reduced-motion: reduce) { .scoreboard__dot{ animation:none; } }
+
+  .scoreboard__digits {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+
+  .scoreboard__unit { text-align: center; }
+
+  .scoreboard__value {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: clamp(1.7rem, 4vw, 2.4rem);
+    color: var(--accent);
+    background: rgba(0,0,0,.35);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 12px 4px;
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 0 18px rgba(0,212,255,.5);
+  }
+
+  .scoreboard__unit-label {
+    font-size: .65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    opacity: .6;
+    margin-top: 8px;
+  }
+
+  .scoreboard__foot {
+    text-align: center;
+    font-size: .75rem;
+    opacity: .55;
+    margin-top: 16px;
+  }
+
+  @media (max-width: 900px) {
+    .hero__grid { grid-template-columns: 1fr; }
+    .scoreboard { max-width: 440px; margin: 0 auto; }
+  }
+
+  /* ===================== MARQUEE DE TIMES ===================== */
+
+  .marquee {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 0;
+    overflow: hidden;
+    background: rgba(255,255,255,.03);
+    position: relative;
+    z-index: 1;
+  }
+
+  .marquee__track {
+    display: flex;
+    gap: 40px;
+    width: max-content;
+    animation: scroll-marquee 38s linear infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .marquee__track { animation: none; overflow-x: auto; }
+  }
+  @keyframes scroll-marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  .marquee__item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+    opacity: .85;
+  }
+
+  .marquee__crest {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+  }
+
+  .marquee__tri {
+    font-size: .8rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+    opacity: .75;
+  }
+
+  /* ===================== VÍDEO DE ABERTURA ===================== */
+
+  .video-intro {
+    padding: 72px 0 88px;
+  }
+
+  .video-showcase {
+    position: relative;
+    max-width: 380px;
+    margin: 0 auto;
+    aspect-ratio: 1 / 1;
+    border-radius: 28px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--card);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 25px 60px rgba(0,0,0,.4);
+  }
+
+  .video-showcase::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 28px;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.06);
+    background: linear-gradient(160deg, rgba(0,212,255,.12), transparent 40%);
+    pointer-events: none;
+  }
+
+  .video-showcase__player {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+  }
+
+  /* ===================== SECTIONS (shared) ===================== */
+
+  section.section {
+    position: relative;
+    z-index: 1;
+    padding: 84px 0;
+  }
+
+  .section__header {
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto 44px;
+  }
+
+  .section__header h2 {
+    font-size: clamp(1.7rem, 3.4vw, 2.4rem);
+    font-weight: 800;
+    margin: 12px 0 14px;
+  }
+
+  .section__header p { opacity: .75; font-size: 1.02rem; }
+
+  /* ===================== COMO FUNCIONA ===================== */
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  @media (max-width: 800px) { .steps { grid-template-columns: 1fr; } }
+
+  .step {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    backdrop-filter: blur(20px);
+    padding: 30px 26px;
+  }
+
+  .step__num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #04142d;
+    font-weight: 800;
+    font-size: .85rem;
+    margin-bottom: 18px;
+  }
+
+  .step h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; }
+  .step p  { opacity: .75; font-size: .92rem; }
+
+  /* ===================== REGRAS ===================== */
+
+  .rules {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    backdrop-filter: blur(20px);
+    overflow: hidden;
+  }
+
+  .rules__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 28px;
+    border-bottom: 1px solid var(--border);
+  }
+  .rules__row:last-child { border-bottom: none; }
+
+  .rules__desc { font-size: .95rem; opacity: .9; }
+  .rules__pts  { font-weight: 800; font-size: 1.05rem; color: var(--accent-2); }
+
+  .rules__link {
+    display: block;
+    text-align: center;
+    padding: 18px;
+    font-size: .82rem;
+    opacity: .7;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .rules__link:hover { opacity: 1; color: var(--accent); }
+
+  /* ===================== PROVA SOCIAL ===================== */
+
+  .testimonials {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  @media (max-width: 800px) { .testimonials { grid-template-columns: 1fr; } }
+
+  .testimonial {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    backdrop-filter: blur(20px);
+    padding: 26px;
+  }
+
+  .testimonial__label {
+    font-size: .68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--accent-2);
+    margin-bottom: 12px;
+  }
+
+  .testimonial p { font-size: .96rem; margin-bottom: 12px; }
+  .testimonial__author { font-size: .8rem; opacity: .6; }
+
+  /* ===================== CTA FINAL ===================== */
+
+  .cta-final {
+    position: relative;
+    z-index: 1;
+    padding: 72px 0 80px;
+    text-align: center;
+  }
+
+  .cta-final h2 {
+    font-size: clamp(1.9rem, 4.2vw, 2.8rem);
+    font-weight: 800;
+    margin-bottom: 14px;
+  }
+  .cta-final h2 span { color: var(--gold); }
+
+  .cta-final p { opacity: .75; margin-bottom: 32px; font-size: 1.02rem; }
+
+  .cta-final .scoreboard {
+    max-width: 440px;
+    margin: 0 auto 32px;
+  }
+
+  /* ===================== FOOTER ===================== */
+
+  footer {
+    position: relative;
+    z-index: 1;
+    padding: 32px 0;
+    text-align: center;
+    font-size: .8rem;
+    opacity: .55;
+    border-top: 1px solid var(--border);
+  }
+  footer a { text-decoration: underline; text-underline-offset: 3px; }
+  footer a:hover { color: var(--accent); }
+
+  /* ==========================================================
+  REGULAMENTO
+  ========================================================== */
+  
+  .regulamento-section {
+  padding: 72px 0;
+  }
+  
+  .section-header {
+  text-align: center;
+  margin-bottom: 32px;
+  }
+  
+  .section-label {
+  display: block;
+  color: #1fe6a8;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  }
+  
+  .section-title {
+  color: #ffffff;
+  font-size: 3rem;
+  font-weight: 800;
+  margin: 0 0 12px;
+  }
+  
+  .section-subtitle {
+  color: rgba(255,255,255,0.72);
+  font-size: 1.1rem;
+  margin: 0;
+  }
+  
+  .regulamento-card {
+  width: min(1120px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 40px;
+  border-radius: 24px;
+  background: rgba(31, 52, 96, 0.88);
+  border: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  }
+  
+  .btn-regulamento {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px 40px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #18d7ff, #18e08d);
+  color: #06233f;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform .2s ease, box-shadow .2s ease;
+  box-shadow: 0 12px 28px rgba(24,224,141,0.28);
+  }
+  
+  .btn-regulamento {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 36px rgba(24,224,141,0.38);
+  }
+  
+  @media (max-width: 768px) {
+  .section-title {
+  font-size: 2.2rem;
+  }
+  
+  .regulamento-card {
+      padding: 28px;
+  }
+  
+  .btn-regulamento {
+      width: 100%;
+  }
+  
+  }
+ 
+</style>
+</head>
+<body>
+
+<div id="header-placeholder"></div>
+
+<main>
+
+  <!-- ===================== HERO ===================== -->
+  <section class="hero container">
+    <div class="hero__grid">
+      <div class="hero__copy">
+        
+        <h1>Se cadastrou, pagou, <span>tá dentro!</span></h1>
+        <div class="hero__actions">
+          <button class="btn btn--primary" data-action="abrir-cadastro">Garantir minha vaga</button>
+          <a href="#como-funciona" class="btn btn--ghost">Como funciona</a>
+        </div>
+        <p class="hero__note">Nome e PIN. Sem e-mail, sem enrolação.</p>
+      </div>
+
+      <div class="hero__board-wrap">
+        <div class="scoreboard" id="countdownBoard">
+          <p class="scoreboard__label"><span class="scoreboard__dot"></span> Prazo do 1º lote de palpites</p>
+          <div class="scoreboard__digits">
+            <div class="scoreboard__unit">
+              <div class="scoreboard__value" id="cd-dias">00</div>
+              <div class="scoreboard__unit-label">Dias</div>
+            </div>
+            <div class="scoreboard__unit">
+              <div class="scoreboard__value" id="cd-horas">00</div>
+              <div class="scoreboard__unit-label">Horas</div>
+            </div>
+            <div class="scoreboard__unit">
+              <div class="scoreboard__value" id="cd-min">00</div>
+              <div class="scoreboard__unit-label">Min</div>
+            </div>
+            <div class="scoreboard__unit">
+              <div class="scoreboard__value" id="cd-seg">00</div>
+              <div class="scoreboard__unit-label">Seg</div>
+            </div>
+          </div>
+          <p class="scoreboard__foot" id="cd-foot">até 23:59:59 de 10/08/2026</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== MARQUEE DE TIMES ===================== -->
+  <div class="marquee" id="times" aria-label="Times classificados para as oitavas de final">
+    <div class="marquee__track" id="marqueeTrack">
+      <!-- preenchido via JS com Bolao.clubs (16 classificados das oitavas) -->
+    </div>
+  </div>
+
+  <!-- ===================== VÍDEO DE ABERTURA ===================== -->
+  <section class="section container video-intro">
+    <div class="section__header">
+      <p class="eyebrow">Aquecendo pro que vem</p>
+      <h2>Ele já tá afiado. E você?</h2>
+      <p>Craque também começou dando embaixadinha no quintal.</p>
+    </div>
+    <div class="video-showcase">
+      <video
+        class="video-showcase__player"
+        id="videoIntro"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+        poster="/imagens/Logo_SeJoga_2026.png"
+      >
+        <source src="/Videos/PixVerse_IntroVideo.mp4" type="video/mp4">
+        Seu navegador não suporta a exibição deste vídeo.
+      </video>
+    </div>
+  </section>
+
+  <!-- ===================== COMO FUNCIONA ===================== -->
+  <section class="section container" id="como-funciona">
+    <div class="section__header">
+      <p class="eyebrow">O jogo em 3 lances</p>
+      <h2>Como funciona</h2>
+      <p>Do cadastro à última rodada, sem complicação.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <span class="step__num">1</span>
+        <h3>Cadastre-se</h3>
+        <p>Nome e PIN. Seu acesso fica salvo no navegador — não precisa logar de novo a cada visita.</p>
+        <p>Seu cadastro será validado após pagamento da taxa de participação.</p>
+      </div>
+      <div class="step">
+        <span class="step__num">2</span>
+        <h3>Palpite</h3>
+        <p>Envie o placar de cada confronto antes do fechamento da rodada. Dá pra editar até um dia antes do apito inicial.</p>
+      </div>
+      <div class="step">
+        <span class="step__num">3</span>
+        <h3>Dispute</h3>
+        <p>Acompanhe a classificação em tempo real e brigue pelo topo da tabela até a final.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= REGRAS RESUMIDAS ================= -->
+  <section class="section container" id="regras">
+    <div class="section__header">
+      <p class="eyebrow">Pontuação</p>
+      <h2>Regras resumidas</h2>
+      <p>Quanto mais preciso o palpite, mais pontos na tabela.</p>
+    </div>
+    <div class="rules">
+      <div class="rules__row">
+        <span class="rules__desc">Placar exato</span>
+        <span class="rules__pts">15 pts</span>
+      </div>
+      <div class="rules__row">
+        <span class="rules__desc">Acertou o vencedor + N° de gols do Vencedor</span>
+        <span class="rules__pts">8 pts</span>
+      </div>
+      <div class="rules__row">
+        <span class="rules__desc">Acertou o vencedor + N° de gols do Perdedor</span>
+        <span class="rules__pts">6 pts</span>
+      </div>
+     <div class="rules__row">
+        <span class="rules__desc">Acertou só o vencedor</span>
+        <span class="rules__pts">4 pts</span>
+      </div>
+     <div class="rules__row">
+        <span class="rules__desc">Empate sem placar exato</span>
+        <span class="rules__pts">7 pts</span>
+      </div>
+      <div class="rules__row">
+        <span class="rules__desc">Algum placar (sem acertar resultado) - Chorinho</span>
+        <span class="rules__pts">1 pts</span>
+      </div>
+      <!-- <a href="#" class="rules__link">Baixar regulamento completo →</a> -->
+    </div>
+  </section>
+  <!-- ================= REGULAMENTO ================= -->
+  <section class="section container">
+    <div class="section__header">
+        <p class="eyebrow">Regulamento</p>
+        <h2>Regulamento Oficial Completo</h2>
+        <p class="section-subtitle">
+            Consulte todas as regras, critérios de pontuação, desempates e premiação da edição 2026.
+        </p>
+    </div>
+    <div class="regulamento-card">
+        <a href="/Files/Regulamento-Bolao-SeJoga-Libertadores-2026.pdf" class="btn-regulamento" download>
+            ↓ Baixar regulamento (PDF)
+        </a>
+    </div>
+  </section>
+  <!-- ===================== PROVA SOCIAL ===================== -->
+  <section class="section container">
+    <div class="section__header">
+      <p class="eyebrow">Quem já jogou</p>
+      <h2>A galera aprova</h2>
+    </div>
+    <div class="testimonials">
+      <div class="testimonial">
+        <p class="testimonial__label">Súmula · Copa 2026</p>
+        <p>"vamo fazer bolão do mata-mata da Libertadores, da Sul-americana e da Copa do Brasil. Se for te dar muito trabalho podíamos ver algum site só pra colocar os palpites."</p>
+        <p class="testimonial__author">— participante da edição da Copa do Mundo</p>
+      </div>
+      <div class="testimonial">
+        <p class="testimonial__label">Súmula · Copa 2026</p>
+        <p>"Quase belisquei um 3o colocado. Parabéns pelo bolão. Cada ano melhor!"</p>
+        <p class="testimonial__author">— participante da edição da Copa do Mundo</p>
+      </div>
+      <div class="testimonial">
+        <p class="testimonial__label">Súmula · Copa 2026</p>
+        <p>"Parabéns Seleça!!!!! Como sempre tirou onda na organização!!!!"</p>
+        <p class="testimonial__author">— participante da edição da Copa do Mundo</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ===================== CTA FINAL ===================== -->
+<section class="cta-final container">
+  <h2>Faltam poucos dias. <span>Não fica de fora.</span></h2>
+  <p>Depois do fechamento do 1º lote, não tem mais como entrar na disputa.</p>
+
+  <div class="scoreboard">
+    <p class="scoreboard__label"><span class="scoreboard__dot"></span> Prazo do 1º lote de palpites</p>
+    <div class="scoreboard__digits">
+      <div class="scoreboard__unit">
+        <div class="scoreboard__value" id="cd2-dias">00</div>
+        <div class="scoreboard__unit-label">Dias</div>
+      </div>
+      <div class="scoreboard__unit">
+        <div class="scoreboard__value" id="cd2-horas">00</div>
+        <div class="scoreboard__unit-label">Horas</div>
+      </div>
+      <div class="scoreboard__unit">
+        <div class="scoreboard__value" id="cd2-min">00</div>
+        <div class="scoreboard__unit-label">Min</div>
+      </div>
+      <div class="scoreboard__unit">
+        <div class="scoreboard__value" id="cd2-seg">00</div>
+        <div class="scoreboard__unit-label">Seg</div>
+      </div>
+    </div>
+    <p class="scoreboard__foot">até 23:59:59 de 10/08/2026</p>
+  </div>
+
+  <button class="btn btn--primary" data-action="abrir-cadastro">Quero palpitar</button>
+</section>
+
+<footer>
+  <div class="container">
+    <p>Bolão Se Joga · Copa Libertadores 2026 · Feito entre amigos, sem fins lucrativos.</p>
+    <p><a href="#regras">Regulamento</a> · <a href="#">Contato</a></p>
+  </div>
+</footer>
+
+<script>
+  // ============================================================
+  // CONFIG
+  // ============================================================
+  // Prazo final do 1º lote de palpites: 23:59:59 de 10/ago/2026 (horário de Brasília)
+  const PRAZO_LOTE_1 = new Date('2026-08-10T23:59:59-03:00');
+
+  // Ordem de exibição no marquee: Pote 1 (líderes) + Pote 2 (vice-líderes)
+  // das oitavas de final da Libertadores 2026 — trigramas batem com clubs.js
+  const TIMES_OITAVAS = [
+    'FLA', 'COR', 'IDV', 'LDU', 'CER', 'INR', 'COQ', 'UCA',
+    'PAL', 'FLU', 'CRU', 'MIR', 'EST', 'ROS', 'PLA', 'TOL'
+  ];
+
+  // ---- Countdown (placar eletrônico) ----
+  function pad(n) { return String(Math.max(n, 0)).padStart(2, '0'); }
+
+  function atualizarCountdown() {
+    const agora = new Date();
+    let diff = PRAZO_LOTE_1 - agora;
+
+    const encerrado = diff <= 0;
+    diff = Math.max(diff, 0);
+
+    const dias  = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const horas = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const min   = Math.floor((diff / (1000 * 60)) % 60);
+    const seg   = Math.floor((diff / 1000) % 60);
+
+    ['cd-dias', 'cd2-dias'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = pad(dias); });
+    ['cd-horas', 'cd2-horas'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = pad(horas); });
+    ['cd-min', 'cd2-min'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = pad(min); });
+    ['cd-seg', 'cd2-seg'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = pad(seg); });
+
+    if (encerrado) {
+      const foot = document.getElementById('cd-foot');
+      if (foot) foot.textContent = '1º lote de palpites encerrado';
+    }
+  }
+  atualizarCountdown();
+  setInterval(atualizarCountdown, 1000);
+
+  // ---- Marquee de times (usa Bolao.clubs para escudo + trigrama reais) ----
+  function montarMarquee() {
+    const track = document.getElementById('marqueeTrack');
+    if (!track) return;
+
+    const lista = [...TIMES_OITAVAS, ...TIMES_OITAVAS]; // duplicado p/ loop contínuo
+
+    if (window.Bolao && Bolao.clubs && Bolao.clubs.methods) {
+      track.innerHTML = lista.map(tri => {
+        const clube = Bolao.clubs.methods.getClube(tri);
+        if (!clube) return '';
+        return `
+          <div class="marquee__item">
+            <img class="marquee__crest" src="${clube.escudo}" alt="${clube.nome}" loading="lazy">
+            <span class="marquee__tri">${clube.trigrama}</span>
+          </div>
+        `;
+      }).join('');
+    } else {
+      // Fallback caso clubs.js ainda não tenha carregado — evita marquee vazio
+      track.innerHTML = lista.map(tri => `
+        <div class="marquee__item"><span class="marquee__tri">${tri}</span></div>
+      `).join('');
+    }
+  }
+
+  // ---- Ações de cadastro/login (via Bolao.layout, mesmo padrão das demais páginas) ----
+  document.querySelectorAll('[data-action="abrir-cadastro"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (window.Bolao && Bolao.layout && typeof Bolao.layout.abrirModalCadastro === 'function') {
+        Bolao.layout.abrirModalCadastro();
+      } else {
+        console.warn('Bolao.layout.abrirModalCadastro() não encontrado.');
+      }
+    });
+  });
+
+  // ---- Estado "já cadastrado": troca CTA se houver sessão ativa ----
+  function verificarSessao() {
+    try {
+      const usuario = window.Bolao && Bolao.auth && typeof Bolao.auth.getUsuario === 'function'
+        ? Bolao.auth.getUsuario()
+        : null;
+      if (usuario && usuario.nome) {
+        document.querySelectorAll('[data-action="abrir-cadastro"]').forEach(btn => {
+          btn.textContent = 'Ver meus palpites';
+          btn.onclick = () => { window.location.href = '/Paginas/formulario.html'; };
+        });
+      }
+    } catch (e) { /* sessão ausente ou inválida — segue fluxo normal */ }
+  }
+
+  // ---- Vídeo de abertura: pausa fora da tela e respeita prefers-reduced-motion ----
+  function controlarVideoIntro() {
+    const video = document.getElementById('videoIntro');
+    if (!video) return;
+
+    const prefereReduzirMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefereReduzirMovimento) {
+      video.removeAttribute('autoplay');
+      video.pause();
+      return; // mantém só o poster estático, sem reprodução automática
+    }
+
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            video.play().catch(() => { /* autoplay bloqueado pelo navegador — sem problema */ });
+          } else {
+            video.pause();
+          }
+        });
+      }, { threshold: 0.25 });
+      observer.observe(video);
+    }
+  }
+
+  // ---- Inicialização: aguarda os módulos comuns carregarem ----
+  document.addEventListener('DOMContentLoaded', () => {
+    Bolao.layout.montarHeader();
+    montarMarquee();
+    verificarSessao();
+    controlarVideoIntro();
+  });
+
+
+  // ============================================================
+  // CONTROLE DO CHECKBOX DO REGULAMENTO NO FORMULÁRIO
+  // ============================================================
+  // Usamos "document.addEventListener" para garantir que vai funcionar
+  // mesmo que o formulário seja aberto depois num modal.
+  document.addEventListener('change', function(event) {
+    // Verifica se o elemento que sofreu a alteração é o nosso checkbox
+    if (event.target && event.target.id === 'aceiteRegulamento') {
+      const checkbox = event.target;
+      // Procura o botão de envio pelo ID
+      const submitBtn = document.getElementById('btnSubmitCadastro');
+      
+      if (submitBtn) {
+        // Habilita o botão se o checkbox estiver marcado, desabilita se não estiver
+        submitBtn.disabled = !checkbox.checked;
+      }
+    }
+  });
+</script>
+
+<script src="/js/common/core.js"></script>
+<script src="/js/common/config.js"></script>
+<script src="/js/common/auth.js"></script>
+<script src="/js/common/layout.js"></script>
+<script src="/js/common/clubs.js"></script>
+
+</body>
+</html>
