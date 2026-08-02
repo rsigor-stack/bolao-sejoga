@@ -1844,43 +1844,30 @@ function novoPalpite() {
 // ============================================================================
 // EVENTOS DOS CAMPOS PRINCIPAIS
 // ============================================================================
-
 function configurarEventos() {
 
-    get("btn-avancar").addEventListener(
+    // A função get() pode retornar null se você apagou o botão do HTML.
+    // Por isso, só adicionamos o addEventListener se o botão existir!
 
-        "click",
+    const btnAvancar = get("btn-avancar");
+    if (btnAvancar) {
+        btnAvancar.addEventListener("click", avancarEtapa);
+    }
 
-        avancarEtapa
+    const btnVoltar = get("btn-voltar");
+    if (btnVoltar) {
+        btnVoltar.addEventListener("click", voltarEtapa);
+    }
 
-    );
+    const btnEnviar = get("btn-enviar");
+    if (btnEnviar) {
+        btnEnviar.addEventListener("click", handleSubmit);
+    }
 
-
-    get("btn-voltar").addEventListener(
-
-        "click",
-
-        voltarEtapa
-
-    );
-
-
-    get("btn-enviar").addEventListener(
-
-        "click",
-
-        handleSubmit
-
-    );
-
-
-    get("btn-novo-palpite").addEventListener(
-
-        "click",
-
-        novoPalpite
-
-    );
+    const btnNovoPalpite = get("btn-novo-palpite");
+    if (btnNovoPalpite) {
+        btnNovoPalpite.addEventListener("click", novoPalpite);
+    }
 
 }
 
