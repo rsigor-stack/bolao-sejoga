@@ -1895,6 +1895,10 @@ async function liberarFormulario() {
     // Configura os botões enquanto carrega
     configurarEventos();
 
+    // PAUSA ESTRATÉGICA: Dá 50 milissegundos para o navegador 
+    // desenhar a animação na tela antes de iniciar o download.
+    await new Promise(r => setTimeout(r, 50));
+
     // 2. Busca os dados na nuvem (enquanto o usuário vê o loader)
     await carregarPalpitesSalvos();
     await buscarListaDeJogos();
