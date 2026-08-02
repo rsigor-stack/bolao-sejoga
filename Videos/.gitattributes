@@ -1,0 +1,9 @@
+# Garante que arquivos binários nunca sejam alterados pelo Git
+# (conversão de quebra de linha LF/CRLF corrompe binários silenciosamente)
+*.mp4 binary
+*.mov binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.ico binary
