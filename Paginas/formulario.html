@@ -394,6 +394,21 @@
             margin-left: 8px;
         }
 
+        /* ANIMAÇÃO DE CARREGAMENTO */
+        .loader {
+            border: 4px solid rgba(255,255,255,.1);
+            border-top: 4px solid var(--accent);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
         @media (max-width: 600px) {
 
             .placares {
@@ -441,6 +456,15 @@
          ============================================================ -->
 
     <main id="app" class="pagina" hidden>
+        <!-- TELA DE CARREGAMENTO -->
+        <div id="tela-carregando" class="tela-sucesso" hidden>
+            <div class="card-sucesso" style="text-align: center;">
+                <h2>Carregando seus palpites...</h2>
+                <p>Aguarde enquanto buscamos seus dados na nuvem.</p>
+                <div class="loader" style="margin: 20px auto;"></div>
+            </div>
+        </div>
+        
         <!-- ========================================================
              ETAPA 1 — OITAVAS
              ======================================================== -->
