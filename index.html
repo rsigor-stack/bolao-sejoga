@@ -492,89 +492,87 @@
   footer a { text-decoration: underline; text-underline-offset: 3px; }
   footer a:hover { color: var(--accent); }
 
- /* ===================== REGULAMENTO ================ */
- .secao-regulamento {
-    padding: 64px 0;
-}
-
-.container {
-    width: min(1120px, calc(100% - 48px));
-    margin: 0 auto;
-}
-
-.regulamento-card {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 32px;
-
-    background: rgba(20, 45, 90, 0.55);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 24px;
-    padding: 32px;
-
-    backdrop-filter: blur(10px);
-}
-
-.regulamento-info {
-    display: flex;
-    align-items: flex-start;
-    gap: 20px;
-}
-
-.regulamento-icon {
-    font-size: 2rem;
-    line-height: 1;
-}
-
-.regulamento-info h2 {
-    margin: 0 0 8px;
-    font-size: 2rem;
-    font-weight: 700;
-    color: #fff;
-}
-
-.regulamento-info p {
-    margin: 0;
-    color: rgba(255,255,255,0.78);
-    line-height: 1.6;
-    max-width: 680px;
-}
-
-.btn-regulamento {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    white-space: nowrap;
-
-    padding: 16px 28px;
-    border-radius: 999px;
-
-    background: linear-gradient(90deg, #18d7ff, #16d98f);
-    color: #06233f;
-    font-weight: 700;
-    text-decoration: none;
-
-    box-shadow: 0 10px 30px rgba(22,217,143,0.28);
-    transition: transform .2s ease, box-shadow .2s ease;
-}
-
-.btn-regulamento:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 16px 36px rgba(22,217,143,0.38);
-}
-
-@media (max-width: 768px) {
-    .regulamento-card {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .btn-regulamento {
-        width: 100%;
-    }
-}
-
+  /* ==========================================================
+  REGULAMENTO
+  ========================================================== */
+  
+  .regulamento-section {
+  padding: 72px 0;
+  }
+  
+  .section-header {
+  text-align: center;
+  margin-bottom: 32px;
+  }
+  
+  .section-label {
+  display: block;
+  color: #1fe6a8;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  }
+  
+  .section-title {
+  color: #ffffff;
+  font-size: 3rem;
+  font-weight: 800;
+  margin: 0 0 12px;
+  }
+  
+  .section-subtitle {
+  color: rgba(255,255,255,0.72);
+  font-size: 1.1rem;
+  margin: 0;
+  }
+  
+  .regulamento-card {
+  width: min(1120px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 40px;
+  border-radius: 24px;
+  background: rgba(31, 52, 96, 0.88);
+  border: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  }
+  
+  .btn-regulamento {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px 40px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #18d7ff, #18e08d);
+  color: #06233f;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform .2s ease, box-shadow .2s ease;
+  box-shadow: 0 12px 28px rgba(24,224,141,0.28);
+  }
+  
+  .btn-regulamento {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 36px rgba(24,224,141,0.38);
+  }
+  
+  @media (max-width: 768px) {
+  .section-title {
+  font-size: 2.2rem;
+  }
+  
+  .regulamento-card {
+      padding: 28px;
+  }
+  
+  .btn-regulamento {
+      width: 100%;
+  }
+  
+  }
  
 </style>
 </head>
@@ -694,24 +692,22 @@
     </div>
   </section>
   <!-- ================= REGULAMENTO ================= -->
-  <section class="secao-regulamento">
-    <div class="container">
-      <div class="regulamento-card">
-        <div class="regulamento-info">
-          <div class="regulamento-icon">📜</div>
-          <div>
-            <h2>Regulamento oficial</h2>
-            <p>
-              Confira todas as regras detalhadas, critérios de desempate e a
-              distribuição completa da premiação do bolão.
-            </p>
-          </div>
-        </div>
-  
-        <a href="regulamento.pdf" class="btn-regulamento">
-          ⬇ Baixar regulamento (PDF)
+  <section class="regulamento-section">
+    <div class="section-header">
+        <span class="section-label">
+            REGULAMENTO
+        </span>
+        <h2 class="section-title">
+            Regulamento Oficial Completo
+        </h2>
+        <p class="section-subtitle">
+            Consulte todas as regras, critérios de pontuação, desempates e premiação da edição 2026.
+        </p>
+    </div>
+    <div class="regulamento-card">
+        <a href="regulamento.pdf" class="btn-regulamento" download>
+            ↓ Baixar regulamento (PDF)
         </a>
-      </div>
     </div>
   </section>
   <!-- ===================== PROVA SOCIAL ===================== -->
