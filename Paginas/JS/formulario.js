@@ -110,7 +110,8 @@ const state = {
     erro: "",
     enviado: false,
     payloadDebug: null,
-    datasJogos: {} // ADICIONADO: Guardará as datas vindas da planilha
+    datasJogos: {}, // ADICIONADO: Guardará as datas vindas da planilha
+    modificado: false // ADICIONADO: Avisa se há dados não salvos
 };
 
 // Movido para cá para ser global e reutilizado
@@ -641,6 +642,7 @@ function atualizarPlacar(jogoId, campo, valor) {
     }
 
     state.scores[jogoId][campo] = valor;
+    state.modificado = true; // ADICIONADO: Marca que há alterações não salvas
 
     // Verifica se o classificado mudou e limpa a cascata
     const jogo = OITAVAS.find(j => j.id === jogoId);
@@ -663,6 +665,7 @@ function atualizarPlacar(jogoId, campo, valor) {
 function selecionarPenaltis(jogoId, vencedor) {
 
     state.scores[jogoId].penaltis = vencedor;
+    state.modificado = true; // ADICIONADO: Marca que há alterações não salvas
 
     // NOVA LÓGICA: Ao definir os pênaltis, o classificado mudou, logo limpamos a cascata
     limparCadeiaSeNecessario(jogoId, vencedor);
@@ -1133,6 +1136,7 @@ function renderQuartas() {
 
                     // Se mudou a seleção, limpa as fases dependentes
                     if (selecaoAnterior !== vencedor) {
+                        state.modificado = true; // ADICIONADO
                         const sId = (q.id === "q1" || q.id === "q2") ? "s1" : "s2";
                         state.semis[sId] = ""; // Limpa a Semi
                         state.final = "";     // Limpa a Final
@@ -1186,6 +1190,7 @@ function renderSemis() {
 
                     // Se mudou a seleção, limpa a Final
                     if (selecaoAnterior !== vencedor) {
+                        state.modificado = true; // ADICIONADO
                         state.final = "";
                     }
 
@@ -1233,6 +1238,7 @@ function renderFinal() {
             state.final,
             vencedor => {
                 state.final = vencedor;
+                state.modificado = true; // ADICIONADO
                 renderFinal();
             }
         );
@@ -1690,6 +1696,7 @@ async function handleSubmit() {
         // 4. Se deu tudo certo, mostra a tela de sucesso
         if (sucesso) {
             state.enviado = true;
+            state.modificado = false; // ADICIONADO: Desliga o alerta pois salvou
             mostrarTelaSucesso();
         } else {
             const detalhe =
@@ -1799,30 +1806,27 @@ function novoPalpite() {
 function configurarEventos() {
 
     // A função get() pode retornar null se você apagou o botão do HTML.
-    // Por isso, só adicionamos o addEventListener se o botão existir!
-
     const btnAvancar = get("btn-avancar");
-    if (btnAvancar) {
-        btnAvancar.addEventListener("click", avancarEtapa);
-    }
+    if (btnAvancar) btnAvancar.addEventListener("click", avancarEtapa);
 
     const btnVoltar = get("btn-voltar");
-    if (btnVoltar) {
-        btnVoltar.addEventListener("click", voltarEtapa);
-    }
+    if (btnVoltar) btnVoltar.addEventListener("click", voltarEtapa);
 
     const btnEnviar = get("btn-enviar");
-    if (btnEnviar) {
-        btnEnviar.addEventListener("click", handleSubmit);
-    }
+    if (btnEnviar) btnEnviar.addEventListener("click", handleSubmit);
 
     const btnNovoPalpite = get("btn-novo-palpite");
-    if (btnNovoPalpite) {
-        btnNovoPalpite.addEventListener("click", novoPalpite);
-    }
+    if (btnNovoPalpite) btnNovoPalpite.addEventListener("click", novoPalpite);
 
+    // ADICIONADO: Alerta ao tentar fechar/recarregar a página com dados não salvos
+    window.addEventListener('beforeunload', function (e) {
+        if (state.modificado) {
+            e.preventDefault(); // Padrão para navegadores modernos
+            e.returnValue = '';  // Necessário para o Chrome funcionar
+            return '';           // Padrão para navegadores antigos
+        }
+    });
 }
-
 
 // ============================================================================
 // TRAVA DE ACESSO — só libera o formulário para quem estiver logado
@@ -2028,6 +2032,7 @@ async function carregarPalpitesSalvos() {
                 state.etapa = 2;
                 get("etapa-2").hidden = false;
             }
+            state.modificado = false; // ADICIONADO: Dados carregados não são "alterações não salvas"
         }
     } catch (erro) {
         console.error("Erro ao carregar palpites salvos:", erro);
