@@ -1128,7 +1128,16 @@ function renderQuartas() {
                 [q.opcaoA, q.opcaoB],
                 state.quartas[q.id],
                 vencedor => {
+                    const selecaoAnterior = state.quartas[q.id];
                     state.quartas[q.id] = vencedor;
+
+                    // Se mudou a seleção, limpa as fases dependentes
+                    if (selecaoAnterior !== vencedor) {
+                        const sId = (q.id === "q1" || q.id === "q2") ? "s1" : "s2";
+                        state.semis[sId] = ""; // Limpa a Semi
+                        state.final = "";     // Limpa a Final
+                    }
+
                     renderFasesFinais();
                 }
             );
@@ -1172,7 +1181,14 @@ function renderSemis() {
                 [semi.opcaoA, semi.opcaoB],
                 state.semis[semi.id],
                 vencedor => {
+                    const selecaoAnterior = state.semis[semi.id];
                     state.semis[semi.id] = vencedor;
+
+                    // Se mudou a seleção, limpa a Final
+                    if (selecaoAnterior !== vencedor) {
+                        state.final = "";
+                    }
+
                     renderFasesFinais();
                 }
             );
@@ -1410,6 +1426,39 @@ function validar() {
     return "";
 
 }
+
+// ============================================================================
+// VALIDAÇÃO CRUZADA (Consistência do Mata-Mata)
+// ============================================================================
+function validarConsistenciaPalpites() {
+    
+    // 1. Valida Quartas (Devem ser os classificados das Oitavas)
+    const quartasComNomes = obterQuartasComNomes();
+    for (const q of quartasComNomes) {
+        const selecao = state.quartas[q.id];
+        if (selecao && selecao !== q.opcaoA && selecao !== q.opcaoB) {
+            return "Inconsistência nas Quartas: Um time eliminado nas Oitavas foi selecionado. Revise seus palpites.";
+        }
+    }
+
+    // 2. Valida Semifinais (Devem ser os classificados das Quartas)
+    const semisComNomes = obterSemisComNomes();
+    for (const s of semisComNomes) {
+        const selecao = state.semis[s.id];
+        if (selecao && selecao !== s.opcaoA && selecao !== s.opcaoB) {
+            return "Inconsistência nas Semifinais: Um time eliminado nas Quartas foi selecionado. Revise seus palpites.";
+        }
+    }
+
+    // 3. Valida Final (Devem ser os classificados das Semifinais)
+    const final = obterFinal();
+    if (state.final && state.final !== final.opcaoA && state.final !== final.opcaoB) {
+        return "Inconsistência na Final: O campeão selecionado não estava entre os finalistas. Revise seus palpites.";
+    }
+
+    return ""; // Passou em todos os testes
+}
+
 // ============================================================================
 // PEGAR NOME DO USUÁRIO LOGADO
 // ============================================================================
@@ -1585,11 +1634,18 @@ function montarPayload() {
 async function handleSubmit() {
 
     // 1. Verifica se tudo está preenchido
-    const mensagem = validar();
+    let mensagem = validar();
+    
+    // 2. NOVA VERIFICAÇÃO: Checa se os palpites são coerentes (cruzados)
+    if (!mensagem) {
+        mensagem = validarConsistenciaPalpites();
+    }
+
     if (mensagem) {
         mostrarErro(mensagem);
         return;
     }
+    
     limparErro();
 
     // 2. Monta os dados no formato da planilha
