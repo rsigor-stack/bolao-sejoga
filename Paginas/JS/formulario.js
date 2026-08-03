@@ -622,41 +622,39 @@ function limparErro() {
 
 }
 
-
 // ============================================================================
 // ATUALIZAÇÃO DE PLACAR
 // ============================================================================
 
 function atualizarPlacar(jogoId, campo, valor) {
-
-    // Aceita somente:
-    // ""
-    // ou até dois dígitos numéricos.
-    if (
-        valor !== "" &&
-        !/^\d{0,2}$/.test(valor)
-    ) {
+    // Aceita somente "" ou até dois dígitos numéricos (0 a 99)
+    if (valor !== "" && !/^\d{0,2}$/.test(valor)) {
+        mostrarErro("⚠️ Por favor, digite apenas números positivos (0 a 99) nos placares.");
+        
+        // Força a limpeza do caractere inválido da tela imediatamente
+        const input = document.querySelector(`[data-jogo-id="${jogoId}"][data-campo="${campo}"]`);
+        if (input) input.value = state.scores[jogoId][campo];
+        
+        // Limpa a mensagem de erro após 2,5 segundos
+        setTimeout(() => limparErro(), 2500);
         return;
     }
 
     state.scores[jogoId][campo] = valor;
 
-    // NOVA LÓGICA: Verifica se o classificado mudou e limpa a cascata
+    // Verifica se o classificado mudou e limpa a cascata
     const jogo = OITAVAS.find(j => j.id === jogoId);
     const novoClassificado = calcularClassificado(jogo, state.scores[jogoId]);
 
-    // Se o agregado não está mais empatado, limpa a escolha de pênaltis
     if (novoClassificado !== "EMPATE") {
         state.scores[jogoId].penaltis = "";
     }
 
-    // Limpa as fases seguintes se o time classificado mudou
     limparCadeiaSeNecessario(jogoId, novoClassificado);
 
     renderOitavas();
-    renderFasesFinais(); // Atualiza as fases seguintes na tela imediatamente
+    renderFasesFinais();
 }
-
 
 // ============================================================================
 // SELEÇÃO NOS PÊNALTIS
@@ -1105,63 +1103,40 @@ function renderOitavas() {
 function renderQuartas() {
 
     const container = get("lista-quartas");
-
-
     container.innerHTML = "";
 
-
-    const quartasComNomes =
-
-        obterQuartasComNomes();
-
+    const quartasComNomes = obterQuartasComNomes();
+    const prazoEncerrado = verificarPrazoMataMata();
 
     quartasComNomes.forEach(q => {
 
         const card = document.createElement("div");
-
         card.className = "confronto-escolha";
 
-
         const descricao = document.createElement("div");
-
         descricao.className = "descricao-escolha";
-
-        descricao.textContent =
-
-            `${q.opcaoA} x ${q.opcaoB}`;
-
-
-        const botoes = criarBotoesEscolha(
-
-            [q.opcaoA, q.opcaoB],
-
-            state.quartas[q.id],
-
-            vencedor => {
-
-                state.quartas[q.id] = vencedor;
-
-
-                // Caso a escolha de uma quarta
-                // altere a composição de uma semifinal,
-                // renderiza novamente todas as fases seguintes.
-
-                renderFasesFinais();
-
-            }
-
-        );
-
-
+        descricao.textContent = `${q.opcaoA} x ${q.opcaoB}`;
         card.appendChild(descricao);
 
-        card.appendChild(botoes);
-
+        if (prazoEncerrado) {
+            const bloqueado = document.createElement("div");
+            bloqueado.className = "texto-bloqueado";
+            bloqueado.textContent = "🔒 Prazo encerrado para alterar as Quartas de Final.";
+            card.appendChild(bloqueado);
+        } else {
+            const botoes = criarBotoesEscolha(
+                [q.opcaoA, q.opcaoB],
+                state.quartas[q.id],
+                vencedor => {
+                    state.quartas[q.id] = vencedor;
+                    renderFasesFinais();
+                }
+            );
+            card.appendChild(botoes);
+        }
 
         container.appendChild(card);
-
     });
-
 }
 
 
@@ -1172,80 +1147,45 @@ function renderQuartas() {
 function renderSemis() {
 
     const container = get("lista-semis");
-
-
     container.innerHTML = "";
 
-
-    const semisComNomes =
-
-        obterSemisComNomes();
-
+    const semisComNomes = obterSemisComNomes();
+    const prazoEncerrado = verificarPrazoMataMata();
 
     semisComNomes.forEach(semi => {
 
         const card = document.createElement("div");
-
         card.className = "confronto-escolha";
 
-
         const descricao = document.createElement("div");
-
         descricao.className = "descricao-escolha";
-
-        descricao.textContent =
-
-            `${semi.opcaoA} x ${semi.opcaoB}`;
-
-
+        descricao.textContent = `${semi.opcaoA} x ${semi.opcaoB}`;
         card.appendChild(descricao);
 
-
-        if (semi.pronto) {
-
-            const botoes = criarBotoesEscolha(
-
-                [semi.opcaoA, semi.opcaoB],
-
-                state.semis[semi.id],
-
-                vencedor => {
-
-                    state.semis[semi.id] = vencedor;
-
-
-                    renderFasesFinais();
-
-                }
-
-            );
-
-
-            card.appendChild(botoes);
-
-        }
-
-        else {
-
+        if (prazoEncerrado) {
             const bloqueado = document.createElement("div");
-
             bloqueado.className = "texto-bloqueado";
-
-
-            bloqueado.textContent =
-
-                "Escolha os dois classificados das quartas correspondentes acima primeiro.";
-
-
+            bloqueado.textContent = "🔒 Prazo encerrado para alterar as Semifinais.";
             card.appendChild(bloqueado);
-
+        } else if (semi.pronto) {
+            const botoes = criarBotoesEscolha(
+                [semi.opcaoA, semi.opcaoB],
+                state.semis[semi.id],
+                vencedor => {
+                    state.semis[semi.id] = vencedor;
+                    renderFasesFinais();
+                }
+            );
+            card.appendChild(botoes);
+        } else {
+            const bloqueado = document.createElement("div");
+            bloqueado.className = "texto-bloqueado";
+            bloqueado.textContent = "Escolha os dois classificados das quartas correspondentes acima primeiro.";
+            card.appendChild(bloqueado);
         }
-
 
         container.appendChild(card);
-
     });
-
 }
 
 
@@ -1256,90 +1196,56 @@ function renderSemis() {
 function renderFinal() {
 
     const container = get("card-final");
-
-
     container.innerHTML = "";
 
-
     const final = obterFinal();
-
+    const prazoEncerrado = verificarPrazoMataMata();
 
     const descricao = document.createElement("div");
-
     descricao.className = "descricao-escolha";
-
-
-    descricao.textContent =
-
-        `${final.opcaoA} x ${final.opcaoB}`;
-
-
+    descricao.textContent = `${final.opcaoA} x ${final.opcaoB}`;
     container.appendChild(descricao);
 
-
-    if (final.pronta) {
-
-        const botoes = criarBotoesEscolha(
-
-            [final.opcaoA, final.opcaoB],
-
-            state.final,
-
-            vencedor => {
-
-                state.final = vencedor;
-
-
-                renderFinal();
-
-            }
-
-        );
-
-
-        container.appendChild(botoes);
-
-    }
-
-    else {
-
+    if (prazoEncerrado) {
         const bloqueado = document.createElement("div");
-
         bloqueado.className = "texto-bloqueado";
-
-
-        bloqueado.textContent =
-
-            "Escolha os dois classificados das semifinais acima primeiro.";
-
-
+        bloqueado.textContent = "🔒 Prazo encerrado para alterar a Final.";
         container.appendChild(bloqueado);
-
+    } else if (final.pronta) {
+        const botoes = criarBotoesEscolha(
+            [final.opcaoA, final.opcaoB],
+            state.final,
+            vencedor => {
+                state.final = vencedor;
+                renderFinal();
+            }
+        );
+        container.appendChild(botoes);
+    } else {
+        const bloqueado = document.createElement("div");
+        bloqueado.className = "texto-bloqueado";
+        bloqueado.textContent = "Escolha os dois classificados das semifinais acima primeiro.";
+        container.appendChild(bloqueado);
     }
-
 
     const campeaoElement = get("campeao-selecionado");
 
-
     if (state.final) {
-
-        campeaoElement.textContent =
-
-            `Seu campeão: ${state.final}`;
-
-
+        // NOVA FORMATAÇÃO COM DESTAQUE TOTAL
+        campeaoElement.innerHTML = `
+            <div style="margin-top: 24px; padding: 24px; background: linear-gradient(135deg, rgba(255,215,0,.15), rgba(255,215,0,.05)); border: 2px solid var(--gold); border-radius: 16px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,.3);">
+                <div style="font-size: 14px; color: rgba(255,255,255,.7); margin-bottom: 8px; font-weight: 600; letter-spacing: 1px;">🏆 SEU CAMPEÃO 🏆</div>
+                <div style="font-size: 28px; font-weight: 800; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,.5); display: flex; align-items: center; justify-content: center; gap: 12px;">
+                    ${escudoTimeHTML(state.final)}
+                    <span>${escapeHTML(state.final)}</span>
+                </div>
+            </div>
+        `;
         campeaoElement.hidden = false;
-
-    }
-
-    else {
-
+    } else {
         campeaoElement.hidden = true;
-
     }
-
 }
-
 
 // ============================================================================
 // RENDERIZAÇÃO DAS FASES FINAIS
@@ -2128,6 +2034,20 @@ function verificarBloqueio(idJogo) {
 
     // Bloqueia se o dia de hoje for igual ou maior que o dia do jogo
     return hoje >= dataJogo;
+}
+
+// ============================================================================
+// VERIFICAR PRAZO DO MATA-MATA (Até 18 de Agosto)
+// ============================================================================
+function verificarPrazoMataMata() {
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0); // Zera as horas para comparar apenas dias
+    
+    // Define o prazo: 18 de Agosto do ano atual (Mês 7 = Agosto no JavaScript)
+    const prazoFinal = new Date(hoje.getFullYear(), 7, 18);
+    
+    // Retorna true se o dia de hoje for DEPOIS do dia 18
+    return hoje > prazoFinal;
 }
 
 // ============================================================================
