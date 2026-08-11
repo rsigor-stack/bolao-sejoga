@@ -684,7 +684,8 @@
 
       <div class="hero__board-wrap">
         <div class="scoreboard" id="countdownBoard">
-          <p class="scoreboard__label"><span class="scoreboard__dot"></span> Prazo do 1º lote de palpites</p>
+         <!-- <p class="scoreboard__label"><span class="scoreboard__dot"></span> Prazo do 1º lote de palpites</p> -->
+          <p class="scoreboard__label"><span class="scoreboard__dot"></span> Prazo final dos palpites</p>
           <div class="scoreboard__digits">
             <div class="scoreboard__unit">
               <div class="scoreboard__value" id="cd-dias">00</div>
@@ -703,7 +704,8 @@
               <div class="scoreboard__unit-label">Seg</div>
             </div>
           </div>
-          <p class="scoreboard__foot" id="cd-foot">até 23:59:59 de 10/08/2026</p>
+          <!-- <p class="scoreboard__foot" id="cd-foot">até 23:59:59 de 10/08/2026</p> -->
+          <p class="scoreboard__foot" id="cd-foot">até 13h00 de 11/08/2026 (Prazo Estendido!)</p>
         </div>
       </div>
     </div>
@@ -881,8 +883,13 @@
 
 <!-- ===================== CTA FINAL ===================== -->
 <section class="cta-final container">
+  <!-- 
   <h2>Faltam poucos dias. <span>Não fica de fora.</span></h2>
   <p>Depois do fechamento do 1º lote, não tem mais como entrar na disputa.</p>
+ -->
+
+  <h2>Última chance! <span>Não fica de fora.</span></h2>
+  <p>Hoje (11/08) às 13h o prazo se encerra. Garanta seus palpites agora!</p>
 
   <div class="scoreboard">
     <p class="scoreboard__label"><span class="scoreboard__dot"></span> Prazo do 1º lote de palpites</p>
@@ -922,7 +929,9 @@
   // CONFIG
   // ============================================================
   // Prazo final do 1º lote de palpites: 23:59:59 de 10/ago/2026 (horário de Brasília)
-  const PRAZO_LOTE_1 = new Date('2026-08-10T23:59:59-03:00');
+  //const PRAZO_LOTE_1 = new Date('2026-08-10T23:59:59-03:00');
+  // Prazo final estendido: 13h00 de 11/ago/2026 (horário de Brasília)
+  const PRAZO_LOTE_1 = new Date('2026-08-11T13:00:00-03:00');
 
   // Ordem de exibição no marquee: Pote 1 (líderes) + Pote 2 (vice-líderes)
   // das oitavas de final da Libertadores 2026 — trigramas batem com clubs.js
