@@ -1842,7 +1842,7 @@ function mostrarBloqueioLogin() {
 
 
 // ============================================================================
-// LIBERAR FORMULÁRIO (Com tela de carregamento)
+// LIBERAR FORMULÁRIO (Com tela de carregamento e Aviso de Prazo)
 // ============================================================================
 
 async function liberarFormulario() {
@@ -1861,11 +1861,10 @@ async function liberarFormulario() {
     // Configura os botões enquanto carrega
     configurarEventos();
 
-    // PAUSA ESTRATÉGICA: Dá 50 milissegundos para o navegador 
-    // desenhar a animação na tela antes de iniciar o download.
+    // PAUSA ESTRATÉGICA
     await new Promise(r => setTimeout(r, 50));
 
-    // 2. Busca os dados na nuvem (enquanto o usuário vê o loader)
+    // 2. Busca os dados na nuvem
     await carregarPalpitesSalvos();
     await buscarListaDeJogos();
 
@@ -1873,15 +1872,25 @@ async function liberarFormulario() {
     if (telaCarregando) telaCarregando.hidden = true;
     if (app) app.hidden = false;
     
-    // Garante que a etapa 1 fique visível inicialmente
     if (etapa1) etapa1.hidden = false;
     if (etapa2) etapa2.hidden = true;
 
-    // Renderiza a tela já preenchida (ou vazia, se não havia nada salvo)
+    // Renderiza a tela
     renderOitavas();
     renderFasesFinais();
 
-    // Se ao carregar a etapa 2 já estiver liberada (do código acima), rola a tela
+    // ADICIONADO: Insere o aviso de prazo estendido no topo da Etapa 1
+    if (etapa1 && !etapa1.querySelector('.aviso-prazo')) {
+        const aviso = document.createElement("div");
+        aviso.className = "aviso-prazo";
+        aviso.style.cssText = "background: rgba(255, 215, 0, 0.15); border: 1px solid var(--gold); color: var(--gold); padding: 12px 16px; border-radius: 10px; margin-bottom: 24px; text-align: center; font-weight: 700; font-size: 15px;";
+        aviso.innerHTML = "⏰ <strong>PRAZO ESTENDIDO!</strong> Vocês têm até hoje (11/08/2026) às <strong>13h</strong> para enviar ou alterar os palpites das fases finais. Aproveitem!";
+        
+        // Insere antes da lista de jogos
+        etapa1.insertBefore(aviso, etapa1.firstChild.nextSibling); 
+    }
+
+    // Se ao carregar a etapa 2 já estiver liberada, rola a tela
     if (state.etapa === 2) {
          if (etapa2) etapa2.hidden = false;
          get("etapa-2").scrollIntoView({ behavior: "smooth", block: "start" });
