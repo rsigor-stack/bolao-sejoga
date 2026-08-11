@@ -2098,12 +2098,21 @@ function verificarBloqueio(idJogo) {
     }
 
     // Cria a data do jogo meia-noite (início do dia do jogo)
-    const dataJogo = new Date(ano, mes, dia, 0, 0, 0);
-    const hoje = new Date();
-    hoje.setHours(0, 0, 0, 0); // Zera as horas de hoje para comparar só os dias
+    //const dataJogo = new Date(ano, mes, dia, 0, 0, 0);
+    //const hoje = new Date();
+    //hoje.setHours(0, 0, 0, 0); // Zera as horas de hoje para comparar só os dias
 
     // Bloqueia se o dia de hoje for igual ou maior que o dia do jogo
+    //return hoje >= dataJogo;
+
+    // Cria a data do jogo definindo o horário limite para as 13h00
+    const dataJogo = new Date(ano, mes, dia, 13, 0, 0);
+    const hoje = new Date();
+
+    // Bloqueia se o momento atual (com hora real) for igual ou maior 
+    // que as 13h do dia do jogo
     return hoje >= dataJogo;
+    
 }
 
 // ============================================================================
