@@ -11,7 +11,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="CSS/ranking.css">
 </head>
-<body id="topo">
 <! Monta o cabeçalho da página>
 <div id="header-placeholder"></div>
 <script src="../js/common/core.js"></script>
@@ -21,291 +20,78 @@
 <script>Bolao.layout.montarHeader();</script>
 <! Fim do cabeçalho----------->  
 
-<!-- BARRA DE PONTOS EM DISPUTA -->
-<div class="disputa-wrap">
-  <div class="disputa-card">
-    <div class="disputa-numeros">
-      <div>
-        <div class="disputa-label">✅ Pontos já disputados</div>
-        <div class="disputa-valor ja-disputado" id="disputa-ja">—</div>
-      </div>
-      <div style="text-align:right;">
-        <div class="disputa-label">⏳ Pontos ainda em disputa</div>
-        <div class="disputa-valor em-disputa" id="disputa-resta">—</div>
-      </div>
-    </div>
-    <div class="disputa-track">
-      <div class="disputa-fill" id="disputa-fill"></div>
-    </div>
-    <div class="disputa-pct" id="disputa-pct">Carregando dados da disputa…</div>
-  </div>
-</div>
-
 <body>
 
-<!-- SELETOR DE COLUNAS -->
-<div class="col-selector-wrap">
-  <button class="col-selector-toggle" id="colToggleBtn" onclick="toggleColPanel()">
-    ⚙️ Personalizar colunas <i class="arrow">▼</i>
-  </button>
-  <div class="col-selector-panel" id="colPanel">
-    <div class="col-selector-title">Selecione as colunas que deseja visualizar</div>
-    <div class="col-selector-grid" id="colChips"></div>
-    <div class="col-selector-actions">
-      <button class="col-action-btn" onclick="toggleAllCols(true)">✅ Mostrar todas</button>
-      <button class="col-action-btn" onclick="toggleAllCols(false)">🚫 Ocultar opcionais</button>
-      <button class="col-action-btn" onclick="resetCols()">↩️ Padrão</button>
-    </div>
-  </div>
-</div>
-
 <div class="container">
-
     <div class="header">
-        <p>
-            🏆 Ranking Geral
-        </p>
-
+        🏆 Ranking Geral
     </div>
 
     <div class="table-wrapper">
-
-        <table id="data">
+        <table id="data" class="display" style="width:100%">
             <thead>
                 <tr>
                     <th>Posição</th>
                     <th>Participante</th>
                     <th>Pontos</th>
-                    <th>Placar Exato <br>
-						(12 pt.)</th>
-                    <th>Venc + Pl Venc. <br>
-						(6 pt.)</th>
-                    <th>Venc + Pl Perd. <br>
-						(5 pt.)</th>
-                    <th>Venc <br>
-						(3 pt.)</th>
-                    <th>Empate <br>
-						(5 pt.)</th>
-                    <th>Alg Pl. <br>
-						(2 pt.)</th>
-		    <th>Zerou Tudo</th>
-		    <th>A posição é "justa"?</th>
-		    <th>"Deveria" estar</th>
-		    <th>Ranking "Moral"</th>
-		    <th>2as de Final <br> (3 pt.)</th>
-		    <th>Oitavas <br> (5 pt.)</th>
-		    <th>Quartas <br> (10 pt.)</th>
-		    <th>Semi <br> (15 pt.)</th>
-		    <th>Final <br> (20 pt.)</th>
-		    <th>Campeão <br> (30 pt.)</th>
-		    <th>Artilheiro <br> (30 pt.)</th>
+                    <th>Placar Exato <br>(12 pt.)</th>
+                    <th>Venc + Pl Venc. <br>(6 pt.)</th>
+                    <th>Venc + Pl Perd. <br>(5 pt.)</th>
+                    <th>Venc <br>(3 pt.)</th>
+                    <th>Empate <br>(5 pt.)</th>
+                    <th>Alg Pl. <br>(2 pt.)</th>
+                    <th>Zerou Tudo</th>
                 </tr>
             </thead>
+            <tbody>
+                <tr>
+                    <td colspan="10" style="text-align: center; padding: 20px;">
+                        Carregando dados da planilha...
+                    </td>
+                </tr>
+            </tbody>
         </table>
-	</div>
+    </div>
 </div>
 
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/2.3.8/js/dataTables.js"></script>
+
 <script>
 // ═══════════════════════════════════════════════════════════════
-//  CONFIGURAÇÃO DAS COLUNAS — nome, índice e visibilidade padrão
+//  CONFIGURAÇÃO DA API E DA ABA DA PLANILHA
 // ═══════════════════════════════════════════════════════════════
-const COLUNAS_CONFIG = [
-  { idx: 0,  label: '📍 Posição',            visivel: true,  fixa: true },
-  { idx: 1,  label: '👤 Participante',        visivel: true,  fixa: true },
-  { idx: 2,  label: '⭐ Pontos',              visivel: true,  fixa: true },
-  { idx: 3,  label: '🎯 Placar Exato',        visivel: false,  fixa: false },
-  { idx: 4,  label: '✅ Venc + Pl Venc.',     visivel: false,  fixa: false },
-  { idx: 5,  label: '🟡 Venc + Pl Perd.',     visivel: false,  fixa: false },
-  { idx: 6,  label: '🏁 Vencedor',            visivel: false,  fixa: false },
-  { idx: 7,  label: '🤝 Empate',              visivel: false,  fixa: false },
-  { idx: 8,  label: '🔢 Algum Placar',        visivel: false,  fixa: false },
-  { idx: 9,  label: '❌ Zerou Tudo',          visivel: false, fixa: false },
-  { idx: 10, label: '⚖️ Posição Justa?',      visivel: false, fixa: false },
-  { idx: 11, label: '⚖️ Deveria Estar',       visivel: false, fixa: false },
-  { idx: 12, label: '🧭 Ranking Moral',       visivel: false, fixa: false },
-  { idx: 13, label: '🔵 2as de Final',        visivel: true, fixa: false },
-  { idx: 14, label: '🔵 Oitavas',             visivel: true, fixa: false },
-  { idx: 15, label: '🟠 Quartas',             visivel: true, fixa: false },
-  { idx: 16, label: '🟡 Semi',                visivel: true, fixa: false },
-  { idx: 17, label: '🔴 Final',               visivel: true, fixa: false },
-  { idx: 18, label: '🏆 Campeão',             visivel: true, fixa: false },
-  { idx: 19, label: '⚽ Artilheiro',          visivel: true, fixa: false },
-];
+const ID_PLANILHA = '1Y7PIt5mzexEgMxSFC-HxoXChRfVwMSsNylFlqzxlT5U'; // ID pegado do seu código original
+const ABA_RANKING = 'ClassNovo'; // <--- ALTERE AQUI para o nome exato da aba (ex: 'Ranking', 'Classificacao', etc.)
 
-let dtTable = null;
+const URL_API = `https://script.google.com/macros/s/AKfycbxiiDpGwGYiEauxy_1e8fH5ysQGi3IJijVZluOZQI_Ftndbyz6htgngfWQFkfeLwL3XWg/exec?planilha=${ID_PLANILHA}&aba=${ABA_RANKING}`;
 
-// ── PAINEL TOGGLE ──
-function toggleColPanel() {
-  const btn   = document.getElementById('colToggleBtn');
-  const panel = document.getElementById('colPanel');
-  btn.classList.toggle('open');
-  panel.classList.toggle('open');
-}
-
-// ── RENDERIZAR CHIPS ──
-function renderChips() {
-  const container = document.getElementById('colChips');
-  container.innerHTML = '';
-  COLUNAS_CONFIG.forEach(col => {
-    if (col.fixa) return; // colunas fixas não aparecem no seletor
-    const chip = document.createElement('label');
-    chip.className = 'col-chip' + (col.visivel ? ' active' : '');
-    chip.innerHTML = `
-      <input type="checkbox" ${col.visivel ? 'checked' : ''} data-col="${col.idx}">
-      <span class="chip-dot"></span>
-      ${col.label}
-    `;
-    chip.querySelector('input').addEventListener('change', function() {
-      col.visivel = this.checked;
-      chip.classList.toggle('active', this.checked);
-      aplicarVisibilidade();
-    });
-    container.appendChild(chip);
-  });
-}
-
-// ── APLICAR VISIBILIDADE NA DATATABLES ──
-function aplicarVisibilidade() {
-  if (!dtTable) return;
-  COLUNAS_CONFIG.forEach(col => {
-    dtTable.column(col.idx).visible(col.visivel);
-  });
-}
-
-// ── MOSTRAR / OCULTAR TODAS ──
-function toggleAllCols(mostrar) {
-  COLUNAS_CONFIG.forEach(col => {
-    if (!col.fixa) col.visivel = mostrar;
-  });
-  renderChips();
-  aplicarVisibilidade();
-}
-
-// ── RESETAR PARA PADRÃO ──
-const VISIBILIDADE_PADRAO = COLUNAS_CONFIG.map(c => c.visivel);
-function resetCols() {
-  COLUNAS_CONFIG.forEach((col, i) => { col.visivel = VISIBILIDADE_PADRAO[i]; });
-  renderChips();
-  aplicarVisibilidade();
-}
-
-// ═══════════════════════════════════════════════════════════════
-//  CONQUISTAS — busca a aba "Conquistas" do mesmo projeto Apps Script
-// ═══════════════════════════════════════════════════════════════
-
-const ID_PLANILHA_CONQUISTAS = '1fdqehi8cSjY4wHg9izoZgsMeamPEh9wbaRo3siRDRBc';
-const ABA_CONQUISTAS = 'Conquistas';
-
-const URL_CONQUISTAS =
-`https://script.google.com/macros/s/AKfycbxiiDpGwGYiEauxy_1e8fH5ysQGi3IJijVZluOZQI_Ftndbyz6htgngfWQFkfeLwL3XWg/exec?planilha=${ID_PLANILHA_CONQUISTAS}&aba=${ABA_CONQUISTAS}`;
-
-function normalizarNivel(valor){
-  if(!valor) return null;
-  valor = String(valor).toLowerCase();
-  if(valor.includes('ouro')) return 'ouro';
-  if(valor.includes('prata')) return 'prata';
-  if(valor.includes('bronze')) return 'bronze';
-  return null;
-}
-
-function htmlConquistas(row) {
-  if (!row) return '';
-
-  const ranking = normalizarNivel(row.cqTopRanking);
-  const cravadas = normalizarNivel(row.cqCravadas);
-  const pensamento = normalizarNivel(row.cqPensamentoUnico);
-  const foguete = normalizarNivel(row.cqFoguete || row.CqFoguete || row['Foguete']);
-  const trofeu = normalizarNivel(row.cqTrofeu || row.CqTrofeu || row['Trofeu']);
-
-
-  const itens = [
-    {nivel:ranking,emoji:'🏅',titulo:`Ranking ${row.cqTopRanking || ''} - ${row.obsTopRanking || ''}`},
-    {nivel:cravadas,emoji:'🎯',titulo:`Cravadas ${row.cqCravadas || ''} - ${row.nCravadas || 0} cravadas`},
-    {nivel:pensamento,emoji:'🧠',titulo:`Pensamento Único ${(row.cqPensamentoUnico||'')} - ${(row.obsPensamentoUnico||row.ObsPensamentoUnico||'')}`},
-    {nivel:foguete,emoji:'🚀',titulo:`Foguete ${(row.cqFoguete||'')} - ${(row.obsFoguete||row.ObsFoguete||'')}`},
-    {nivel:trofeu,emoji:'🏆',titulo:`Trofeu ${(row.cqTrofeu||'')} - ${(row.obsTrofeu||row.ObsTrofeu||'')}`}
-  ].filter(i => i.nivel);
-
-  const pontosValor = row.cqPontos || row['cqPontos'] || row['CQPontos'] || '';
-  const pontos = pontosValor ? `<span class="conquista-icon" style="color:#ffd700;font-weight:700" title="Pontuação total de conquistas">⭐ ${pontosValor}</span>` : '';
-
-  return `<span class="conquistas-wrap">${pontos}${itens.map(i =>
-    `<span class="conquista-icon nivel-${i.nivel}" title="${i.titulo}">${i.emoji}</span>`
-  ).join('')}</span>`;
-}
-
-
-// ═══════════════════════════════════════════════════════════════
-//  PONTOS EM DISPUTA — busca aba "Destaques" e anima a barra
-// ═══════════════════════════════════════════════════════════════
-const URL_DESTAQUES = 'https://script.google.com/macros/s/AKfycbxiiDpGwGYiEauxy_1e8fH5ysQGi3IJijVZluOZQI_Ftndbyz6htgngfWQFkfeLwL3XWg/exec?aba=Destaques';
-
-async function carregarPontosDisputa() {
-  const elJa     = document.getElementById('disputa-ja');
-  const elResta  = document.getElementById('disputa-resta');
-  const elFill   = document.getElementById('disputa-fill');
-  const elPct    = document.getElementById('disputa-pct');
-
-  try {
-    const res  = await fetch(URL_DESTAQUES);
-    const json = await res.json();
-    const linhas = json.data || [];
-    const linha = linhas[0] || {};
-
-    const jaDisputado = Number(linha.PontuacaoMaxPossivelDesdeIni) || 0;
-    const emDisputa    = Number(linha.PontosAindaEmDisputa) || 0;
-    const total = jaDisputado + emDisputa;
-    const pct   = total > 0 ? (jaDisputado / total) * 100 : 0;
-
-    elJa.textContent    = jaDisputado.toLocaleString('pt-BR');
-    elResta.textContent = emDisputa.toLocaleString('pt-BR');
-    elFill.style.setProperty('--pct-disputado', pct.toFixed(1) + '%');
-    elPct.textContent = `${pct.toFixed(1)}% da pontuação máxima possível já foi disputada`;
-
-  } catch (e) {
-    console.error('Erro ao carregar pontos em disputa:', e);
-    elPct.textContent = 'Não foi possível carregar os dados da disputa.';
-  }
-}
-
-carregarPontosDisputa();
-
-// ═══════════════════════════════════════════════════════════════
-//  BOOTSTRAP — busca conquistas, depois inicializa a DataTable
-// ═══════════════════════════════════════════════════════════════
 async function iniciarTabela() {
-  // Mapa nome do participante → linha de conquistas
-  let mapaConquistas = new Map();
+  let dadosPlanilha = [];
 
   try {
-    const res  = await fetch(URL_CONQUISTAS);
-    const json = await res.json();
-    const linhas = json.data || [];
-    linhas.forEach(row => {
-      const nome = String(row.Aposta || row.Nome || row.Participante || '').trim();
-      if (nome) mapaConquistas.set(nome, row);
-    });
-  } catch (e) {
-    console.error('Erro ao carregar conquistas:', e);
-    // Segue sem conquistas em caso de falha — não trava o ranking
+    const resposta = await fetch(URL_API);
+    const json = await resposta.json();
+    // Tenta extrair os dados de 'data' ou usa o próprio json caso não haja o subnível 'data'
+    dadosPlanilha = json.data || json || [];
+  } catch (erro) {
+    console.error("Erro ao buscar dados:", erro);
+    document.querySelector('#data tbody').innerHTML = `<tr><td colspan="10" style="text-align:center; color:red; padding:20px;">Erro ao carregar os dados. Verifique o nome da aba e o console (F12).</td></tr>`;
+    return;
   }
 
-  dtTable = new DataTable('#data', {
-    ajax: 'https://script.google.com/macros/s/AKfycbxiiDpGwGYiEauxy_1e8fH5ysQGi3IJijVZluOZQI_Ftndbyz6htgngfWQFkfeLwL3XWg/exec',
+  // Se não vierem dados, mostra mensagem amigável
+  if (dadosPlanilha.length === 0) {
+      document.querySelector('#data tbody').innerHTML = `<tr><td colspan="10" style="text-align:center; color:orange; padding:20px;">Nenhum dado encontrado na aba "${ABA_RANKING}".</td></tr>`;
+      return;
+  }
+
+  new DataTable('#data', {
+    data: dadosPlanilha,
+    
     columns: [
       { data: 'Pos' },
-      {
-        data: 'Aposta',
-        render: function(data, type, row) {
-          if (type !== 'display') return data;
-          const conquistasRow = mapaConquistas.get(String(data || '').trim());
-          const icones = htmlConquistas(conquistasRow);
-          return `${data}${icones}`;
-        }
-      },
+      { data: 'Aposta' },
       { data: 'Ptos' },
       { data: 'Pl_Exato' },
       { data: 'Venc_PlVenc' },
@@ -313,64 +99,34 @@ async function iniciarTabela() {
       { data: 'Venc' },
       { data: 'Empate' },
       { data: 'Alg_Pl' },
-      { data: 'ZerouTudo' },
-      { data: 'Pos_Justa' },
-      { data: 'AvalMoral' },
-      { data: 'PosMoral' },
-      { data: 'Segundas' },
-      { data: 'Oitavas' },
-      { data: 'Quartas' },
-      { data: 'Semi' },
-      { data: 'Final' },
-      { data: 'Campeao' },
-      { data: 'Artilheiro' }
+      { data: 'ZerouTudo' }
     ],
+    
     columnDefs: [
-      {
-        targets: '_all',
-        className: 'dt-center'
-      },
-      {
-        targets: 2,
-        className: 'dt-left'
-      },
-      // Ocultar colunas com visivel: false no padrão
-      {
-        targets: COLUNAS_CONFIG.filter(c => !c.visivel).map(c => c.idx),
-        visible: false
-      }
+      { targets: '_all', className: 'dt-center' },
+      { targets: [1], className: 'dt-left' }
     ],
+    
     order: [[0, 'asc']],
     pageLength: 50,
+    
     language: {
       url: 'https://cdn.datatables.net/plug-ins/2.3.8/i18n/pt-BR.json'
     },
-    initComplete: function() {
-      renderChips();
-    },
-
+    
     createdRow: function(row, data) {
       const posicao = Number(data.Pos);
-      row.classList.remove('top1','top2','top3','top4','top5');
+      row.classList.remove('top1','top2','top3');
       switch(posicao){
         case 1: row.classList.add('top1'); break;
         case 2: row.classList.add('top2'); break;
         case 3: row.classList.add('top3'); break;
-        case 4: row.classList.add('top4'); break;
-        case 5: row.classList.add('top5'); break;
       }
     }
   });
 }
 
 iniciarTabela();
-</script>
-<script>
-async function carregarPagina(url){
-    const resposta = await fetch(url);
-    const html = await resposta.text();
-    document.getElementById('conteudo').innerHTML = html;
-}
 </script>
 
 </body>
