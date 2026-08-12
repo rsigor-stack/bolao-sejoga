@@ -186,10 +186,9 @@ function renderTop10(rows) {
 
   const items = top.map(row => {
     const nome = row.Aposta || '—';
-    const link = `Paginas/palpites_3.html?participante=${encodeURIComponent(nome)}`;
     return `
     <li class="ranking-item">
-      <a href="${link}" class="ranking-item-link" title="Ver palpites de ${nome}">
+      <div class="ranking-item-link">
         <div class="rank-pos ${posClasse(row.Pos)}">${row.Pos}</div>
         <div class="rank-info">
           <div class="rank-name">${nome}</div>
@@ -197,7 +196,7 @@ function renderTop10(rows) {
         </div>
         <div class="rank-pts">${row.Ptos ?? '0'} <span>pts</span></div>
         ${delta(row)}
-      </a>
+      </div>
     </li>`;
   }).join('');
 
@@ -327,10 +326,10 @@ function renderProximos(rows) {
             ? `<div class="jogo-horario">🕐 ${hora} (Brasília)</div>`
             : '');
 
-    const linkConfronto = `Paginas/confronto.html?jogo=${idx}`;
+    const linkPalpites = `https://bolao-sejoga.vercel.app/Paginas/palpites_1.html?jogo=${idx}`;
 
     return `
-      <a href="${linkConfronto}" class="jogo-card-link">
+      <a href="${linkPalpites}" class="jogo-card-link">
         <div class="jogo-card${temPlacar ? ' jogo-encerrado' : ''}">
           <div class="jogo-meta">
             <span>${etiqueta}</span>
