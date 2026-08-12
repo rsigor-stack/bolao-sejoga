@@ -55,7 +55,7 @@
         "IDV": { nome: "Independiente del Valle",  pais: "Equador",   arquivo: "Independiente del Valle.png" },
         "INR": { nome: "Independiente Rivadavia",  pais: "Argentina", arquivo: "Independiente Rivadavia.png" },
         "LDU": { nome: "LDU Quito",                pais: "Equador",   arquivo: "LDU.png", aliases: ["LDU"] },
-        "UCA": { nome: "Universidad Católica",     pais: "Chile",     arquivo: "Universidad Católica.png" },
+        "UCA": { nome: "Universidad Católica",     pais: "Chile",     arquivo: "Universidad Católica.webp" },
 
         "CRU": { nome: "Cruzeiro",                 pais: "Brasil",    arquivo: "Cruzeiro.png" },
         "EST": { nome: "Estudiantes de La Plata",  pais: "Argentina", arquivo: "Estudiantes de La Plata.png", aliases: ["Estudiantes"] },
