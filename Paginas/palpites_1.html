@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bolão Se Joga Copa Libertadores — Confronto de Palpites</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --accent:   #00d4ff;
+      --accent-2: #08f7a1;
+      --gold:     #ffd700;
+      --silver:   #c0c0c0;
+      --bronze:   #cd7f32;
+      --text:     #ffffff;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left,  rgba(0,212,255,.18), transparent 25%),
+        radial-gradient(circle at bottom right, rgba(8,247,161,.12), transparent 25%),
+        linear-gradient(135deg, #03101f 0%, #072654 55%, #04142d 100%);
+      overflow-x: hidden;
+    }
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none; z-index: 0;
+    }
+
+    /* ── HEADER ── */
+    header { position: relative; z-index: 2; padding: 32px 24px 16px; }
+    .topbar {
+      display: flex; justify-content: space-between;
+      align-items: center; gap: 16px; flex-wrap: wrap;
+      max-width: 1400px; margin: auto;
+    }
+    .logo { display: flex; align-items: center; gap: 14px; }
+    .logo-icon {
+      width: 58px; height: 58px; border-radius: 18px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem; box-shadow: 0 10px 25px rgba(0,212,255,.35);
+    }
+    .logo h1 { font-size: 2rem; font-weight: 800; letter-spacing: 1px; }
+    .logo p  { opacity: .75; font-size: .95rem; margin-top: 4px; }
+
+    nav {
+      position: relative; z-index: 2;
+      max-width: 1400px; margin: 24px auto 0;
+      display: flex; gap: 12px; flex-wrap: wrap;
+    }
+    nav a {
+      text-decoration: none; color: white;
+      padding: 12px 18px; border-radius: 999px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.08);
+      transition: .25s ease; font-weight: 600; font-size: .95rem;
+      backdrop-filter: blur(10px);
+    }
+    nav a:hover, nav a.active {
+      transform: translateY(-2px);
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #04142d;
+    }
+
+    /* ── PAGE WRAPPER ── */
+    .page-wrapper {
+      position: relative; z-index: 2;
+      max-width: 1400px; margin: 36px auto 48px; padding: 0 24px;
+    }
+    .page-title { margin-bottom: 28px; }
+    .page-title h2 { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; }
+    .page-title p  { opacity: .75; font-size: .95rem; margin-top: 6px; }
+
+    /* ── LOADING / ERROR ── */
+    .loading-state, .error-state {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 12px; padding: 64px 24px;
+      opacity: .7; font-size: .95rem; text-align: center;
+    }
+    .spinner {
+      width: 36px; height: 36px;
+      border: 3px solid rgba(255,255,255,.15);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .error-state { color: #ff8a8a; }
+
+    /* ── SECTION CARD ── */
+    .section-card {
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 28px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 20px 50px rgba(0,0,0,.30);
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+    .section-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 24px 28px 20px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .section-header .icon { font-size: 1.4rem; }
+    .section-header h3 { font-size: 1.1rem; font-weight: 700; }
+    .section-header .badge {
+      margin-left: auto; font-size: .75rem; font-weight: 700;
+      padding: 4px 10px; border-radius: 999px;
+      background: rgba(0,212,255,.15);
+      border: 1px solid rgba(0,212,255,.3);
+      color: var(--accent); letter-spacing: .5px; text-transform: uppercase;
+    }
+
+    /* ── SELETOR DE JOGO ── */
+    .selector-inner { padding: 24px 28px; }
+
+    .jogos-lista { display: flex; flex-direction: column; gap: 10px; }
+
+    .jogo-btn {
+      display: flex; align-items: center;
+      gap: 14px; width: 100%;
+      padding: 14px 18px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 16px;
+      cursor: pointer; transition: .2s ease;
+      color: white; font-family: 'Montserrat', sans-serif;
+      text-align: left;
+    }
+    .jogo-btn:hover {
+      background: rgba(255,255,255,.10);
+      border-color: rgba(0,212,255,.3);
+      transform: translateX(4px);
+    }
+    .jogo-btn.ativo {
+      background: rgba(0,212,255,.10);
+      border-color: rgba(0,212,255,.4);
+      box-shadow: 0 4px 16px rgba(0,212,255,.15);
+    }
+
+    .jogo-btn-times {
+      display: flex; align-items: center; gap: 10px; flex: 1; flex-wrap: wrap;
+    }
+    .jogo-btn-time {
+      display: flex; align-items: center; gap: 8px;
+    }
+    .jogo-btn-escudo {
+      width: 24px; height: 24px; object-fit: contain; flex-shrink: 0;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,.35));
+    }
+    .jogo-btn-nome {
+      font-weight: 700; font-size: .92rem;
+    }
+    .jogo-btn-sep {
+      font-size: .85rem; font-weight: 800; opacity: .4;
+    }
+    .jogo-btn-meta {
+      font-size: .75rem; opacity: .55;
+      white-space: nowrap; text-align: right;
+      flex-shrink: 0;
+    }
+    .jogo-btn-placar {
+      font-size: 1rem; font-weight: 800;
+      color: var(--gold); letter-spacing: 2px;
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .jogo-tag {
+      display: inline-block; font-size: .65rem; font-weight: 700;
+      padding: 2px 8px; border-radius: 999px;
+      text-transform: uppercase; letter-spacing: .5px; flex-shrink: 0;
+      background: rgba(0,212,255,.12);
+      border: 1px solid rgba(0,212,255,.2);
+      color: var(--accent);
+    }
+
+    /* ── PLACAR DO JOGO SELECIONADO ── */
+    .jogo-destaque-card {
+      display: none; padding: 28px;
+    }
+    .jogo-destaque-card.visivel { display: block; }
+
+    .jogo-destaque-inner {
+      display: flex; align-items: center;
+      justify-content: space-between; gap: 16px;
+    }
+    .jogo-dest-time {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 8px; flex: 1;
+    }
+    .jogo-dest-escudo {
+      width: 56px; height: 56px; object-fit: contain;
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,.4));
+    }
+    .jogo-dest-nome {
+      font-size: 1.2rem; font-weight: 700; text-align: center;
+    }
+    .jogo-dest-placar {
+      font-size: 2.4rem; font-weight: 800;
+      color: var(--gold); letter-spacing: 6px; flex-shrink: 0;
+      text-align: center;
+    }
+    .jogo-dest-placar.pendente {
+      font-size: 1.4rem; opacity: .4; letter-spacing: 2px;
+    }
+    .jogo-dest-meta {
+      text-align: center; margin-top: 14px;
+      font-size: .8rem; opacity: .6;
+    }
+
+    /* ── TABELA DE CONFRONTO ── */
+    .tabela-card { display: none; }
+    .tabela-card.visivel { display: block; }
+
+    .tabela-scroll { overflow-x: auto; }
+    .tabela-scroll::-webkit-scrollbar { height: 4px; }
+    .tabela-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,.15); border-radius: 99px; }
+
+    table {
+      width: 100%; border-collapse: collapse; font-size: .88rem;
+    }
+    thead tr {
+      background: rgba(255,255,255,.05);
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+    thead th {
+      padding: 12px 14px; text-align: center;
+      font-size: .68rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .8px; opacity: .7;
+      white-space: nowrap;
+    }
+    thead th.col-part { text-align: left; min-width: 140px; }
+
+    tbody tr {
+      border-bottom: 1px solid rgba(255,255,255,.05);
+      transition: background .15s;
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(255,255,255,.04); }
+    tbody tr.destaque-row { background: rgba(255,215,0,.06); }
+
+    td { padding: 12px 14px; text-align: center; vertical-align: middle; }
+    td.col-part { text-align: left; }
+
+    /* Nome do participante */
+    .part-info { display: flex; align-items: center; gap: 10px; }
+    .part-pos {
+      width: 26px; height: 26px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: .75rem; flex-shrink: 0;
+    }
+    .pos-1 { background: rgba(255,215,0,.2);   color: var(--gold);   border: 1px solid rgba(255,215,0,.4); }
+    .pos-2 { background: rgba(192,192,192,.2); color: var(--silver); border: 1px solid rgba(192,192,192,.4); }
+    .pos-3 { background: rgba(205,127,50,.2);  color: var(--bronze); border: 1px solid rgba(205,127,50,.4); }
+    .pos-n { background: rgba(255,255,255,.07); color: rgba(255,255,255,.6); border: 1px solid rgba(255,255,255,.12); }
+
+    .part-nome { font-weight: 600; font-size: .88rem; }
+
+    /* Palpite */
+    .palpite-val { font-weight: 700; font-size: .95rem; letter-spacing: 1px; }
+    .palpite-pendente { opacity: .3; font-size: .8rem; }
+
+    /* Pontuação */
+    .pts-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 34px; height: 34px; border-radius: 50%;
+      font-weight: 800; font-size: .85rem;
+    }
+    .pts-0    { background: rgba(255,255,255,.06); color: rgba(255,255,255,.3); }
+    .pts-low  { background: rgba(0,212,255,.12);  color: var(--accent); border: 1px solid rgba(0,212,255,.25); }
+    .pts-mid  { background: rgba(8,247,161,.12);  color: var(--accent-2); border: 1px solid rgba(8,247,161,.25); }
+    .pts-high { background: rgba(255,215,0,.18);  color: var(--gold); border: 1px solid rgba(255,215,0,.3); }
+    .pts-vazio { opacity: .25; font-size: .72rem; }
+
+    /* Ícone de acerto exato */
+    .exato-icon { font-size: .9rem; margin-left: 4px; }
+
+    /* ── BOTÃO TOPO ── */
+    .botao-topo {
+      position: fixed; bottom: 30px; right: 28px; z-index: 99;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #04142d; font-weight: 700; font-size: .85rem;
+      padding: 12px 18px; border-radius: 999px; text-decoration: none;
+      box-shadow: 0 8px 24px rgba(0,212,255,.35); transition: .25s ease;
+    }
+    .botao-topo:hover { transform: translateY(-3px); }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative; z-index: 2;
+      padding: 32px 24px 48px;
+      text-align: center; opacity: .65; font-size: .92rem;
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 700px) {
+      .logo h1 { font-size: 1.4rem; }
+      .jogo-btn-nome { font-size: .82rem; }
+      .jogo-dest-placar { font-size: 1.8rem; }
+      .jogo-dest-nome { font-size: 1rem; }
+      thead th, td { padding: 10px 8px; }
+      thead th.col-part, td.col-part { min-width: 110px; }
+    }
+  </style>
+</head>
+<body id="topo">
+
+<header>
+  <div class="topbar">
+    <div class="logo">
+      <div class="logo-icon">🏆</div>
+      <div>
+        <h1>Bolão Se Joga na Libertadores</h1>
+        <p>CONMEBOL Libertadores da América</p>
+        <p>Bolão entre amigos que acham que entendem de futebol e que adoram dar palpite</p>
+      </div>
+    </div>
+  </div>
+  <nav>
+    <a href="#" onclick="window.location.href='https://sejoganacopa.vercel.app/'; return false;">  🏠 Home </a>
+    <a href="#" onclick="window.location.href='https://sejoganacopa.vercel.app/Paginas/premiacao.html'; return false;">🏆 Premiação</a>
+    <a href="#" onclick="window.location.href='https://sejoganacopa.vercel.app/Paginas/ranking.html'; return false;"> 📊 Ranking Geral </a>
+    <a href="#" onclick="window.location.href='https://sejoganacopa.vercel.app/Paginas/palpites.html'; return false;"> 🎯 Palpites </a>
+    <a href="#" onclick="window.location.href='https://sejoganacopa.vercel.app/Paginas/confronto.html'; return false;"> ⚔️ Secador</a>
+    <a href="#" onclick="window.location.href='https://sejoganacopa.vercel.app/Paginas/estatisticas.html'; return false;">📈 Estatísticas</a>
+    <a href="https://drive.google.com/uc?export=download&id=18KAjbenZAbscrTi79QvTMVxT1coHtBYc" target="_blank">⬇️ Regulamento</a>
+    <a href="https://drive.google.com/uc?export=download&id=1DCx8z7_M_7dbO9OuPWeOwjx76ElDD4Am" target="_blank">⬇️ ZIP Palpites</a>
+  </nav>
+</header>
+
+<div class="page-wrapper">
+
+  <div class="page-title">
+    <h2>⚔️ Confronto de Palpites</h2>
+    <p>Selecione um jogo para comparar os palpites de todos os participantes</p>
+  </div>
+
+  <div id="loading-state">
+    <div class="loading-state"><div class="spinner"></div><span>Carregando dados…</span></div>
+  </div>
+
+  <div id="conteudo" style="display:none;">
+
+    <!-- SELETOR DE JOGO -->
+    <div class="section-card">
+      <div class="section-header">
+        <span class="icon">📅</span>
+        <h3>Selecione o Jogo</h3>
+        <span class="badge" id="badge-jogos">—</span>
+      </div>
+      <div class="selector-inner">
+        <div class="jogos-lista" id="jogos-lista"></div>
+      </div>
+    </div>
+
+    <!-- PLACAR DO JOGO SELECIONADO -->
+    <div class="section-card" id="card-jogo-dest" style="display:none;">
+      <div class="section-header">
+        <span class="icon">🏟️</span>
+        <h3 id="dest-titulo">Jogo Selecionado</h3>
+        <span class="badge" id="dest-badge">—</span>
+      </div>
+      <div class="jogo-destaque-card visivel" id="jogo-destaque"></div>
+    </div>
+
+    <!-- TABELA DE CONFRONTO -->
+    <div class="section-card tabela-card" id="tabela-card">
+      <div class="section-header">
+        <span class="icon">📋</span>
+        <h3>Palpites dos Participantes</h3>
+        <span class="badge" id="badge-tabela">—</span>
+      </div>
+      <div class="tabela-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th class="col-part">Participante</th>
+              <th>Palpite</th>
+              <th>Pontos</th>
+            </tr>
+          </thead>
+          <tbody id="tabela-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /conteudo -->
+
+</div>
+
+<a href="#topo" class="botao-topo">↑ Topo</a>
+
+<footer>
+  © 2024 • Bolão Se Joga Copa Libertadores • Atualizado automaticamente via Google Sheets
+</footer>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  CONFIGURAÇÃO 
+// ═══════════════════════════════════════════════════════════════
+const URL_BASE       = 'https://script.google.com/macros/s/AKfycbxiiDpGwGYiEauxy_1e8fH5ysQGi3IJijVZluOZQI_Ftndbyz6htgngfWQFkfeLwL3XWg/exec';
+const URL_PALPITES   = `${URL_BASE}?aba=Palpites_In`;
+const URL_JOGOS      = `${URL_BASE}?aba=ProxJogos`;
+const URL_RANKING    = `${URL_BASE}?aba=ClassNovo`;
+
+// ═══════════════════════════════════════════════════════════════
+//  ESCUDOS DOS CLUBES
+//  (espelha Bolao.clubs.data.CLUBES do clubs.js; mantido local
+//  pois esta página não carrega core.js/config.js/clubs.js)
+// ═══════════════════════════════════════════════════════════════
+const PASTA_ESCUDOS = "/imagens/Escudos-Times/";
+
+const CLUBES = {
+  "CER": { nome: "Cerro Porteño",            arquivo: "Cerro Porteño.png" },
+  "COQ": { nome: "Coquimbo Unido",           arquivo: "Coquimbo Unido.png" },
+  "COR": { nome: "Corinthians",              arquivo: "Corinthians.png" },
+  "FLA": { nome: "Flamengo",                 arquivo: "Flamengo.png" },
+  "IDV": { nome: "Independiente del Valle",  arquivo: "Independiente del Valle.png" },
+  "INR": { nome: "Independiente Rivadavia",  arquivo: "Independiente Rivadavia.png" },
+  "LDU": { nome: "LDU Quito",                arquivo: "LDU.png", aliases: ["LDU"] },
+  "UCA": { nome: "Universidad Católica",     arquivo: "Universidad Católica.png" },
+  "CRU": { nome: "Cruzeiro",                 arquivo: "Cruzeiro.png" },
+  "EST": { nome: "Estudiantes de La Plata",  arquivo: "Estudiantes de La Plata.png", aliases: ["Estudiantes"] },
+  "FLU": { nome: "Fluminense",               arquivo: "Fluminense.png" },
+  "MIR": { nome: "Mirassol",                 arquivo: "Mirassol.png" },
+  "PAL": { nome: "Palmeiras",                arquivo: "Palmeiras.png" },
+  "PLA": { nome: "Platense",                 arquivo: "Platense.png" },
+  "ROS": { nome: "Rosario Central",          arquivo: "Rosario Central.png" },
+  "TOL": { nome: "Deportes Tolima",          arquivo: "Tolima.png", aliases: ["Tolima"] }
+};
+
+// Índice nome/alias (lowercase) -> trigrama, igual ao clubs.js
+const NOME_TRIGRAMA = {};
+Object.keys(CLUBES).forEach(tri => {
+  const info = CLUBES[tri];
+  NOME_TRIGRAMA[info.nome.toLowerCase()] = tri;
+  (info.aliases || []).forEach(alias => {
+    NOME_TRIGRAMA[alias.toLowerCase()] = tri;
+  });
+});
+
+// Retorna a URL do escudo a partir de um trigrama OU nome do time
+function getEscudoUrl(valor) {
+  if (!valor) return "";
+  const v = String(valor).trim();
+
+  let tri = null;
+  if (CLUBES[v.toUpperCase()]) {
+    tri = v.toUpperCase();
+  } else if (NOME_TRIGRAMA[v.toLowerCase()]) {
+    tri = NOME_TRIGRAMA[v.toLowerCase()];
+  }
+
+  if (!tri) return "";
+  return PASTA_ESCUDOS + encodeURIComponent(CLUBES[tri].arquivo);
+}
+
+// Monta a tag <img> do escudo, com fallback silencioso se não encontrar o time
+function escudoImgHtml(nomeTime, classe) {
+  const url = getEscudoUrl(nomeTime);
+  if (!url) return "";
+  return `<img class="${classe}" src="${url}" alt="${escapeHtml(nomeTime)}" loading="lazy" onerror="this.remove()">`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════════════════════════
+
+// Previne injeção de HTML vinda da planilha
+function escapeHtml(str) {
+  if(str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function ptsClasse(pts) {
+  if (pts === null || pts === '') return 'pts-vazio';
+  const n = Number(pts);
+  if (n === 0) return 'pts-0';
+  if (n <= 3)  return 'pts-low';
+  if (n <= 6)  return 'pts-mid';
+  return 'pts-high';
+}
+
+function posClasse(i) {
+  return i === 0 ? 'pos-1' : i === 1 ? 'pos-2' : i === 2 ? 'pos-3' : 'pos-n';
+}
+
+function posclsAlias(posExibida, temResultado, i) {
+  if (temResultado) return posClasse(i);
+  const n = Number(posExibida);
+  if (n === 1) return 'pos-1';
+  if (n === 2) return 'pos-2';
+  if (n === 3) return 'pos-3';
+  return 'pos-n';
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  FETCH JSON
+// ═══════════════════════════════════════════════════════════════
+async function fetchJSON(url) {
+  const res = await fetch(url, { cache: 'no-cache' });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const json = await res.json();
+  if (!json.data || !Array.isArray(json.data)) throw new Error('Formato inesperado.');
+  return json.data;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  PARSER NOVO FORMATO DE DADOS
+// ═══════════════════════════════════════════════════════════════
+function parsearDados(rawJogos, rawPalp) {
+  const jogosMap = new Map();
+  const val = v => (v === '' || v === null || v === undefined || v === '-') ? null : v;
+  
+  // 1. Mapeia os jogos da aba ListaDeJogos
+  rawJogos.forEach(r => {
+    const id = String(r.idJogo || r.IDJogo || r.ID || '').trim();
+    if (!id) return;
+    
+    jogosMap.set(id, {
+      idJogo: id,
+      time1: String(r.time1 || r.Time1 || '').trim(),
+      time2: String(r.time2 || r.Time2 || '').trim(),
+      gols1: val(r.gols1),
+      gols2: val(r.gols2),
+      data: String(r.data || r.Data || '').trim(),
+      horario: String(r.horario || r.Hora || '').trim(),
+      grupo: String(r.grupo || r.Grupo || r.Fase || '').trim(),
+      rodada: String(r.rodada || r.Rodada || '').trim(),
+      palpites: [] // Inicializa array de palpites vazio para este jogo
+    });
+  });
+  
+  // 2. Associa os palpites da aba Palpites_In aos jogos mapeados
+  rawPalp.forEach(r => {
+    const id = String(r.JogoID || r.idJogo || '').trim();
+    const jogo = jogosMap.get(id);
+    if (!jogo) return; // Se o jogo não estiver na lista, ignora o palpite
+    
+    // 5.3 - Ignora palpites que não sejam do tipo 'Placar'
+    const tipo = String(r.TipoPalpite || '').trim();
+    if (tipo !== 'Placar') return;
+    
+    const nome = String(r.Participante || '').trim();
+    if (!nome) return;
+    
+    const fase = String(r.Fase || '').trim();
+    // Se o jogo não tiver fase/grupo definido na ListaDeJogos, usa o da aba Palpites_In
+    if (!jogo.grupo && fase) jogo.grupo = fase;
+    
+    jogo.palpites.push({
+      nome: nome,
+      gols1: val(r.GolsMandante),
+      gols2: val(r.GolsVisitante),
+      pontos: val(r.Pontos) // 5.2 - Capturando a coluna Pontos
+    });
+  });
+  
+  // Converte o Map de volta para um array
+  return Array.from(jogosMap.values());
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  RENDERIZA LISTA DE JOGOS
+// ═══════════════════════════════════════════════════════════════
+function renderJogos(jogos, jogoSelecionadoIdx, rankingMap) {
+  const lista = document.getElementById('jogos-lista');
+  document.getElementById('badge-jogos').textContent = `${jogos.length} jogos`;
+
+  lista.innerHTML = jogos.map((jogo, idx) => {
+    const temPlacar = jogo.gols1 !== null && jogo.gols2 !== null;
+    const ativo     = idx === jogoSelecionadoIdx ? ' ativo' : '';
+
+    const placarHtml = temPlacar
+      ? `<span class="jogo-btn-placar">${jogo.gols1} × ${jogo.gols2}</span>`
+      : '';
+
+    return `
+      <button class="jogo-btn${ativo}" data-idx="${idx}">
+        <span class="jogo-tag">${escapeHtml(jogo.grupo || jogo.rodada || '—')}</span>
+        <div class="jogo-btn-times">
+          <div class="jogo-btn-time">
+            ${escudoImgHtml(jogo.time1, 'jogo-btn-escudo')}
+            <span class="jogo-btn-nome">${escapeHtml(jogo.time1)}</span>
+          </div>
+          <span class="jogo-btn-sep">×</span>
+          <div class="jogo-btn-time">
+            ${escudoImgHtml(jogo.time2, 'jogo-btn-escudo')}
+            <span class="jogo-btn-nome">${escapeHtml(jogo.time2)}</span>
+          </div>
+        </div>
+        ${placarHtml}
+        <div class="jogo-btn-meta">${escapeHtml(jogo.data)}<br>${escapeHtml(jogo.horario)}</div>
+      </button>`;
+  }).join('');
+
+  lista.querySelectorAll('.jogo-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      lista.querySelectorAll('.jogo-btn').forEach(b => b.classList.remove('ativo'));
+      btn.classList.add('ativo');
+      const idx = parseInt(btn.dataset.idx);
+      renderConfronto(jogos[idx], rankingMap);
+      btn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  RENDERIZA PLACAR EM DESTAQUE + TABELA
+// ═══════════════════════════════════════════════════════════════
+function renderConfronto(jogo, rankingMap) {
+  const cardDest = document.getElementById('card-jogo-dest');
+  cardDest.style.display = 'block';
+
+  document.getElementById('dest-titulo').textContent =
+    `${jogo.time1}  ×  ${jogo.time2}`;
+
+  const temPlacar = jogo.gols1 !== null && jogo.gols2 !== null;
+  document.getElementById('dest-badge').textContent =
+    temPlacar ? 'Encerrado' : 'Aguardando';
+
+  document.getElementById('jogo-destaque').innerHTML = `
+    <div class="jogo-destaque-inner">
+      <div class="jogo-dest-time">
+        ${escudoImgHtml(jogo.time1, 'jogo-dest-escudo')}
+        <span class="jogo-dest-nome">${escapeHtml(jogo.time1)}</span>
+      </div>
+      <div>
+        <div class="jogo-dest-placar${temPlacar ? '' : ' pendente'}">
+          ${temPlacar ? `${jogo.gols1} × ${jogo.gols2}` : '? × ?'}
+        </div>
+        <div class="jogo-dest-meta">
+          ${escapeHtml(jogo.grupo || jogo.rodada || '')} · ${escapeHtml(jogo.data)} · ${escapeHtml(jogo.horario)}
+        </div>
+      </div>
+      <div class="jogo-dest-time">
+        ${escudoImgHtml(jogo.time2, 'jogo-dest-escudo')}
+        <span class="jogo-dest-nome">${escapeHtml(jogo.time2)}</span>
+      </div>
+    </div>`;
+
+  const tabCard = document.getElementById('tabela-card');
+  tabCard.classList.add('visivel');
+
+  if (!jogo.palpites || jogo.palpites.length === 0) {
+    document.getElementById('tabela-body').innerHTML =
+      `<tr><td colspan="3" style="opacity:.5;padding:32px;text-align:center;">
+        Nenhum palpite encontrado para este jogo.
+      </td></tr>`;
+    document.getElementById('badge-tabela').textContent = '0 palpites';
+    tabCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    return;
+  }
+
+  const POS_FALLBACK = 9999;
+  // Ordena por pontos (se jogo tiver acabado) ou pelo ranking (se jogo estiver pendente)
+  const palpitesOrdenados = [...jogo.palpites].sort((a, b) => {
+    if (temPlacar) {
+      const pa = a.pontos !== null ? Number(a.pontos) : -1;
+      const pb = b.pontos !== null ? Number(b.pontos) : -1;
+      return pb - pa;
+    } else {
+      const ra = rankingMap.get(a.nome) ?? POS_FALLBACK;
+      const rb = rankingMap.get(b.nome) ?? POS_FALLBACK;
+      return ra - rb;
+    }
+  });
+
+  const linhas = palpitesOrdenados.map((p, i) => {
+    const temPalpite = p.gols1 !== null && p.gols2 !== null;
+    const temPontos  = p.pontos !== null && p.pontos !== '';
+
+    // Lógica de acerto exato
+    const exato = temPlacar && temPalpite &&
+      String(p.gols1) === String(jogo.gols1) &&
+      String(p.gols2) === String(jogo.gols2);
+
+    const posExibida = temPlacar
+      ? i + 1
+      : (rankingMap.get(p.nome) ?? '—');
+
+    const palpiteHtml = temPalpite
+      ? `<span class="palpite-val">${p.gols1} × ${p.gols2}</span>${exato ? '<span class="exato-icon">🎯</span>' : ''}`
+      : `<span class="palpite-pendente">—</span>`;
+
+    const ptsBadgeHtml = temPontos
+      ? `<span class="pts-badge ${ptsClasse(p.pontos)}">${p.pontos}</span>`
+      : `<span class="pts-badge pts-vazio">·</span>`;
+
+    const destaqueRow = exato ? ' class="destaque-row"' : '';
+
+    return `
+      <tr${destaqueRow}>
+        <td class="col-part">
+          <div class="part-info">
+            <span class="part-pos ${posclsAlias(posExibida, temPlacar, i)}">${posExibida}</span>
+            <span class="part-nome">${escapeHtml(p.nome)}</span>
+          </div>
+        </td>
+        <td>${palpiteHtml}</td>
+        <td>${ptsBadgeHtml}</td>
+      </tr>`;
+  }).join('');
+
+  document.getElementById('tabela-body').innerHTML = linhas;
+  document.getElementById('badge-tabela').textContent =
+    `${palpitesOrdenados.length} participantes · ${temPlacar ? 'ordem por pontuação' : 'ordem pelo ranking'}`;
+
+  tabCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  BOOTSTRAP
+// ═══════════════════════════════════════════════════════════════
+async function init() {
+  try {
+    const [rawJogos, rawPalp, rawRanking] = await Promise.all([
+      fetchJSON(URL_JOGOS),
+      fetchJSON(URL_PALPITES),
+      fetchJSON(URL_RANKING),
+    ]);
+
+    // Usa o novo parser que cruza ListaDeJogos com Palpites_In
+    const jogos = parsearDados(rawJogos, rawPalp);
+
+    // Monta mapa nome → posição a partir do ranking (ClassNovo)
+    const rankingMap = new Map();
+    rawRanking.forEach(r => {
+      const nome = String(r.Aposta || r.Nome || r.Participante || '').trim();
+      const pos  = parseInt(r.Pos || r.Posicao || r.Rank);
+      if (nome && !isNaN(pos)) rankingMap.set(nome, pos);
+    });
+
+    if (!jogos.length) throw new Error('Nenhum jogo encontrado em ListaDeJogos.');
+
+    document.getElementById('loading-state').style.display = 'none';
+    document.getElementById('conteudo').style.display = 'block';
+
+    const params    = new URLSearchParams(window.location.search);
+    const jogoParam = params.get('jogo');
+    const jogoIdx   = jogoParam !== null ? parseInt(jogoParam) : -1;
+    const idxValido = jogoIdx >= 0 && jogoIdx < jogos.length ? jogoIdx : -1;
+
+    renderJogos(jogos, idxValido, rankingMap);
+
+    if (idxValido >= 0) {
+      renderConfronto(jogos[idxValido], rankingMap);
+      setTimeout(() => {
+        const btn = document.querySelector(`.jogo-btn[data-idx="${idxValido}"]`);
+        if (btn) btn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 150);
+    }
+
+  } catch (e) {
+    document.getElementById('loading-state').innerHTML =
+      `<div class="error-state">❌ Erro ao carregar dados.<br><small>${e.message}</small></div>`;
+  }
+}
+
+init();
+</script>
+</body>
+</html>
