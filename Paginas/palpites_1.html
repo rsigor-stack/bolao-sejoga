@@ -317,31 +317,20 @@
       thead th.col-part, td.col-part { min-width: 110px; }
     }
   </style>
+
+
 </head>
 <body id="topo">
 
-<header>
-  <div class="topbar">
-    <div class="logo">
-      <div class="logo-icon">🏆</div>
-      <div>
-        <h1>Bolão Se Joga na Libertadores</h1>
-        <p>CONMEBOL Libertadores da América</p>
-        <p>Bolão entre amigos que acham que entendem de futebol e que adoram dar palpite</p>
-      </div>
-    </div>
-  </div>
-  <nav>
-    <a href="#" onclick="window.location.href='https://sejoganacopa.vercel.app/'; return false;">  🏠 Home </a>
-    <a href="#" onclick="window.location.href='https://sejoganacopa.vercel.app/Paginas/premiacao.html'; return false;">🏆 Premiação</a>
-    <a href="#" onclick="window.location.href='https://sejoganacopa.vercel.app/Paginas/ranking.html'; return false;"> 📊 Ranking Geral </a>
-    <a href="#" onclick="window.location.href='https://sejoganacopa.vercel.app/Paginas/palpites.html'; return false;"> 🎯 Palpites </a>
-    <a href="#" onclick="window.location.href='https://sejoganacopa.vercel.app/Paginas/confronto.html'; return false;"> ⚔️ Secador</a>
-    <a href="#" onclick="window.location.href='https://sejoganacopa.vercel.app/Paginas/estatisticas.html'; return false;">📈 Estatísticas</a>
-    <a href="https://drive.google.com/uc?export=download&id=18KAjbenZAbscrTi79QvTMVxT1coHtBYc" target="_blank">⬇️ Regulamento</a>
-    <a href="https://drive.google.com/uc?export=download&id=1DCx8z7_M_7dbO9OuPWeOwjx76ElDD4Am" target="_blank">⬇️ ZIP Palpites</a>
-  </nav>
-</header>
+  <! Monta o cabeçalho da página>
+<div id="header-placeholder"></div>
+<script src="../js/common/core.js"></script>
+<script src="../js/common/config.js"></script>
+<script src="../js/common/clubs.js"></script>
+<script src="../js/common/auth.js"></script>
+<script src="../js/common/layout.js"></script>
+<script>Bolao.layout.montarHeader();</script>
+<! Fim do cabeçalho----------->  
 
 <div class="page-wrapper">
 
