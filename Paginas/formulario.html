@@ -283,6 +283,76 @@
             color: #ff9b9b;
         }
 
+        /* ── CRONÔMETRO DE PRAZO PARA EDIÇÃO DOS PALPITES ── */
+
+        .cronometro-container {
+            margin-bottom: 24px;
+        }
+
+        .cronometro-caixa {
+            background: rgba(255, 215, 0, .08);
+            border: 1px solid rgba(255, 215, 0, .35);
+            border-radius: 16px;
+            backdrop-filter: blur(16px);
+            padding: 16px 18px;
+            text-align: center;
+        }
+
+        .cronometro-titulo {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--gold);
+            letter-spacing: .3px;
+            margin-bottom: 12px;
+        }
+
+        .cronometro-blocos {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .cronometro-bloco {
+            background: rgba(255,255,255,.08);
+            border: 1px solid rgba(255,255,255,.10);
+            border-radius: 10px;
+            padding: 8px 14px;
+            min-width: 56px;
+        }
+
+        .cronometro-numero {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text);
+            font-variant-numeric: tabular-nums;
+            line-height: 1.1;
+        }
+
+        .cronometro-label {
+            font-size: 10px;
+            color: rgba(255,255,255,.55);
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            margin-top: 2px;
+        }
+
+        .mensagem-prazo-encerrado {
+            background: rgba(255, 107, 107, .12);
+            border: 1px solid rgba(255, 107, 107, .4);
+            border-radius: 16px;
+            backdrop-filter: blur(16px);
+            padding: 20px 18px;
+            text-align: center;
+        }
+
+        .mensagem-prazo-encerrado-texto {
+            font-size: 18px;
+            font-weight: 800;
+            color: #ff9b9b;
+            letter-spacing: .3px;
+        }
+
         .botao-principal {
             margin-top: 28px;
             width: 100%;
@@ -468,7 +538,13 @@
 
     <main id="app" class="pagina" hidden>
 
-        
+        <!-- ========================================================
+             CRONÔMETRO DE PRAZO PARA EDIÇÃO DOS PALPITES
+             ======================================================== -->
+
+        <div id="cronometro-prazo" class="cronometro-container"></div>
+
+
         <!-- ========================================================
              ETAPA 1 — OITAVAS
              ======================================================== -->
