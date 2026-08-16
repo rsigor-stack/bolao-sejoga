@@ -1880,7 +1880,8 @@ async function liberarFormulario() {
     renderFasesFinais();
 
     // ADICIONADO: Insere o aviso de prazo estendido no topo da Etapa 1
-    if (etapa1 && !etapa1.querySelector('.aviso-prazo')) {
+    /*
+        if (etapa1 && !etapa1.querySelector('.aviso-prazo')) {
         const aviso = document.createElement("div");
         aviso.className = "aviso-prazo";
         aviso.style.cssText = "background: rgba(255, 215, 0, 0.15); border: 1px solid var(--gold); color: var(--gold); padding: 12px 16px; border-radius: 10px; margin-bottom: 24px; text-align: center; font-weight: 700; font-size: 15px;";
@@ -1889,7 +1890,7 @@ async function liberarFormulario() {
         // Insere antes da lista de jogos
         etapa1.insertBefore(aviso, etapa1.firstChild.nextSibling); 
     }
-
+    */
     // Se ao carregar a etapa 2 já estiver liberada, rola a tela
     if (state.etapa === 2) {
          if (etapa2) etapa2.hidden = false;
