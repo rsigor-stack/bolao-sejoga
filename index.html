@@ -168,11 +168,11 @@ function renderTop10(rows) {
 
   const sub = row => {
     const exato = row.Pl_Exato   || 0;
-    const cravadas = (row.NumCravadasRodada + exato) || 0;
-    const res   = (row.Venc_PlVenc || 0)
-                + (row.Venc_PlPerd || 0)
-                + (row.Venc        || 0)
-                + (row.Empate      || 0);
+    const cravadas = (row.NumCravadasRodada)|| 0;
+    const res   = (row.Venc_Placar_Vencedor || 0)
+                + (row.Venc_Placar_Perdedor || 0)
+                + (row.So_Vencedor          || 0)
+                + (row.Empate               || 0);
     const parts = [];
     if (exato) parts.push(`${exato} placar${exato > 1 ? 'es' : ''} exato${exato > 1 ? 's' : ''}`);
     if (res)   parts.push(`${res} resultado${res > 1 ? 's' : ''} certo${res > 1 ? 's' : ''}`);
