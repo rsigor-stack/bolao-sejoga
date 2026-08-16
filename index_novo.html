@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bolão Se Joga Copa Libertadores da América 2026 — Acompanhamento</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="index_bolaorolando.css">
+
+</head>
+<body id="topo">
+
+<! Monta o cabeçalho da página>
+<div id="header-placeholder"></div>
+<script src="../js/common/core.js"></script>
+<script src="../js/common/config.js"></script>
+<script src="../js/common/clubs.js"></script>
+<script src="../js/common/auth.js"></script>
+<script src="../js/common/layout.js"></script>
+<script>Bolao.layout.montarHeader();</script>
+<! Fim do cabeçalho----------->  
+  
+<div class="page-wrapper">
+  <div class="page-title">
+    <h3>⚽ Top 10 + Destaques e Agenda da Rodada</h3>
+  </div>
+
+  <div class="main-grid">
+
+    <!-- TOP 10 -->
+    <div class="col-top10 section-card">
+      <div class="section-header">
+        <span class="icon">🏅</span>
+        <h3>Classificação Top 10</h3>
+        <span class="badge" id="badge-top10">Carregando…</span>
+      </div>
+      <div id="top10-content">
+        <div class="loading-state"><div class="spinner"></div><span>Buscando classificação…</span></div>
+      </div>
+    </div>
+
+    <!-- DESTAQUES -->
+    <div class="col-destaques section-card">
+      <div class="section-header">
+        <span class="icon">🌟</span>
+        <h3>Destaques da Rodada</h3>
+        <p>*Considerando jogos de ontem e hoje</p>
+        <span class="badge" id="badge-destaques">Carregando…</span>
+      </div>
+      <div id="destaques-content">
+        <div class="loading-state"><div class="spinner"></div><span>Buscando destaques…</span></div>
+      </div>
+    </div>
+
+    <!-- PRÓXIMOS JOGOS -->
+    <div class="col-proximos section-card">
+      <div class="section-header">
+        <span class="icon">📅</span>
+        <h3>Jogos da Rodada</h3>
+        <span class="badge" id="badge-proximos">Carregando…</span>
+      </div>
+      <div id="proximos-content">
+        <div class="loading-state"><div class="spinner"></div><span>Buscando jogos…</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<a href="#topo" class="botao-topo">↑ Voltar ao topo</a>
+
+<footer>
+  © 2026 • Bolão Se Joga Copa Libertadores da América 2026 •
+</footer>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  CONFIGURAÇÃO — cole aqui as URLs completas de cada JSON
+//  (Apps Script ou qualquer endpoint que retorne {"data":[...]})
+// ═══════════════════════════════════════════════════════════════
+const URLS = {
+  top10:     'https://script.google.com/macros/s/AKfycbxiiDpGwGYiEauxy_1e8fH5ysQGi3IJijVZluOZQI_Ftndbyz6htgngfWQFkfeLwL3XWg/exec?aba=Top10',
+  destaques: 'https://script.google.com/macros/s/AKfycbxiiDpGwGYiEauxy_1e8fH5ysQGi3IJijVZluOZQI_Ftndbyz6htgngfWQFkfeLwL3XWg/exec?aba=Destaques',
+  proximos:  'https://script.google.com/macros/s/AKfycbxiiDpGwGYiEauxy_1e8fH5ysQGi3IJijVZluOZQI_Ftndbyz6htgngfWQFkfeLwL3XWg/exec?aba=ProxJogos',
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  DICIONÁRIO — escudos dos clubes da Libertadores 2026
+//  Chave: nome do time (conforme aparece na planilha ProxJogos)
+// ═══════════════════════════════════════════════════════════════
+const ESCUDOS = {
+  'Cerro Porteño':           'Cerro Porteño.png',
+  'Coquimbo Unido':          'Coquimbo Unido.png',
+  'Corinthians':             'Corinthians.png',
+  'Flamengo':                'Flamengo.png',
+  'Independiente del Valle': 'Independiente del Valle.png',
+  'Independiente Rivadavia': 'Independiente Rivadavia.png',
+  'LDU':                     'LDU.png',
+  'LDU Quito':               'LDU.png',
+  'Universidad Católica':    'Universidad Católica.png',
+  'Cruzeiro':                'Cruzeiro.png',
+  'Estudiantes de La Plata': 'Estudiantes de La Plata.png',
+  'Fluminense':              'Fluminense.png',
+  'Mirassol':                'Mirassol.png',
+  'Palmeiras':               'Palmeiras.png',
+  'Platense':                'Platense.png',
+  'Rosario Central':         'Rosario Central.png',
+  'Tolima':                  'Tolima.png',
+  'Deportes Tolima':         'Tolima.png',
+};
+
+  
+const ESCUDO_STYLE = 'width:36px;height:36px;border-radius:6px;object-fit:contain;';
+
+function escudoTime(time) {
+  if (!time) return `<span class="jogo-bandeira-vazia">🛡️</span>`;
+
+  let arquivo = ESCUDOS[time];
+  if (!arquivo) {
+    // Fallback case-insensitive, mesmo padrão usado antes para bandeiras
+    const lower = time.toLowerCase();
+    for (const [k, v] of Object.entries(ESCUDOS)) {
+      if (k.toLowerCase() === lower) { arquivo = v; break; }
+    }
+  }
+
+  if (!arquivo) {
+    console.warn(`Escudo não encontrado para "${time}" — confira o nome na planilha ou no dicionário ESCUDOS.`);
+    return `<span class="jogo-bandeira-vazia" title="${time}">🛡️</span>`;
+  }
+
+  return `<img src="/imagens/Escudos-Times/${encodeURIComponent(arquivo)}" style="${ESCUDO_STYLE}" alt="${time}">`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  FETCH JSON — espera {"data": [...]}
+// ═══════════════════════════════════════════════════════════════
+async function fetchJSON(url) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const json = await res.json();
+  if (!json.data || !Array.isArray(json.data)) throw new Error('Formato inesperado: campo "data" não encontrado.');
+  return json.data;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  RENDERIZADOR — TOP 10
+//  Campos usados: Pos, Aposta, Ptos, Pl_Exato,
+//                 Venc_PlVenc, Venc_PlPerd, Venc, Empate,
+//                 Alg_Pl, ZerouTudo, PosAnterior, NumCravadasRodada
+// ═══════════════════════════════════════════════════════════════
+function renderTop10(rows) {
+  if (!rows.length) return '<div class="error-state">⚠️ Nenhum dado encontrado.</div>';
+
+  const posClasse = p => p === 1 ? 'gold' : p === 2 ? 'silver' : p === 3 ? 'bronze' : 'normal';
+
+  const delta = row => {
+    const pos = row.Pos        || 0;
+    const ant = row.PosAnterior || 0;
+    if (!ant || ant === pos) return '<div class="rank-delta same">–</div>';
+    if (ant > pos)           return `<div class="rank-delta up">▲${ant - pos}</div>`;
+    return                          `<div class="rank-delta down">▼${pos - ant}</div>`;
+  };
+
+  const sub = row => {
+    const exato = row.PlacarExato || 0;
+    const res   = (row.PlacarExato           || 0)
+                + (row.Venc_Placar_Vencedor  || 0)
+                + (row.Venc_Placar_Perdedor  || 0)
+                + (row.So_Vencedor           || 0)
+                + (row.Empate                || 0);
+    const fraseRes    = `${res} resultado${res === 1 ? '' : 's'} certo${res === 1 ? '' : 's'}`;
+    const fraseCravou = `${exato} placar${exato === 1 ? '' : 'es'} cravado${exato === 1 ? '' : 's'}`;
+    return `${fraseRes} · ${fraseCravou}`;
+  };
+
+  const top = rows.slice(0, 10);
+  document.getElementById('badge-top10').textContent = `Top ${top.length}`;
+
+  const items = top.map(row => {
+    const nome = row.Aposta || '—';
+    return `
+    <li class="ranking-item">
+      <div class="ranking-item-link">
+        <div class="rank-pos ${posClasse(row.Pos)}">${row.Pos}</div>
+        <div class="rank-info">
+          <div class="rank-name">${nome}</div>
+          <div class="rank-sub">${sub(row)}</div>
+        </div>
+        <div class="rank-pts">${row.Ptos ?? '0'} <span>pts</span></div>
+        ${delta(row)}
+      </div>
+    </li>`;
+  }).join('');
+
+  return `<ul class="ranking-list">${items}</ul>`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  RENDERIZADOR — DESTAQUES
+//  Campos usados: MaiorPontuacao, Participante_MaiorPontuacao,
+//                 MaisAcertos, Participante_MaisAcertos,
+//                 MaiorSubida, Participante_MaiorSubida,
+//                 MaiorQueda, Participante_MaiorQueda,
+//                 NumJogosRodada, NumAcertosExatos, NumJogosFinalizados
+// ═══════════════════════════════════════════════════════════════
+function renderDestaques(rows) {
+  if (!rows.length) return '<div class="error-state">⚠️ Nenhum dado encontrado.</div>';
+  const d = rows[0];
+
+  const rodada = d.Rodada ?? null;
+  document.getElementById('badge-destaques').textContent =
+    rodada !== null ? `Rodada ${rodada}` : 'Rodada atual';
+
+  const n = v => (v !== undefined && v !== null && v !== '') ? v : '—';
+  const plural = (v, s, p) => parseInt(v) === 1 ? s : p;
+
+  return `
+    <div class="destaques-grid">
+
+      <div class="destaque-card">
+        <span class="destaque-emoji">🥇</span>
+        <div class="destaque-label">Maior Pontuação na Rodada</div>
+        <div class="destaque-titulo">${n(d.Participante_MaiorPontuacao)}</div>
+        <div class="destaque-valor">${n(d.MaiorPontuacao)}</div>
+        <div class="destaque-sub">pontos nesta rodada</div>
+      </div>
+
+      <div class="destaque-card">
+        <span class="destaque-emoji">🎯</span>
+        <div class="destaque-label">Mais Acertos Exatos</div>
+        <div class="destaque-titulo">${n(d.Participante_MaisAcertos)}</div>
+        <div class="destaque-valor">${n(d.MaisAcertos)}</div>
+        <div class="destaque-sub">${plural(d.MaisAcertos, 'placar exato', 'placares exatos')} nesta rodada</div>
+      </div>
+
+      <div class="destaque-card">
+        <span class="destaque-emoji">📈</span>
+        <div class="destaque-label">Maior Subida no Ranking</div>
+        <div class="destaque-titulo">${n(d.Participante_MaiorSubida)}</div>
+        <div class="destaque-valor" style="color:var(--accent-2);">+${n(d.MaiorSubida)}</div>
+        <div class="destaque-sub">${plural(d.MaiorSubida, 'posição ganha', 'posições ganhas')} nesta rodada</div>
+      </div>
+
+      <div class="destaque-card">
+        <span class="destaque-emoji">📉</span>
+        <div class="destaque-label">Maior Queda no Ranking</div>
+        <div class="destaque-titulo">${n(d.Participante_MaiorQueda)}</div>
+        <div class="destaque-valor" style="color:#ff6b6b;">−${n(d.MaiorQueda)}</div>
+        <div class="destaque-sub">${plural(d.MaiorQueda, 'posição perdida', 'posições perdidas')} nesta rodada</div>
+      </div>
+
+      <div class="destaque-card full-width">
+        <div class="destaque-label">📋 Resumo Geral da Rodada</div>
+        <div class="resumo-grid">
+          <div class="resumo-item">
+            <div class="resumo-valor">${n(d.NumJogosRodada)}</div>
+            <div class="resumo-label">Jogos</div>
+          </div>
+          <div class="resumo-item">
+            <div class="resumo-valor">${n(d.NumJogosFinalizados)}</div>
+            <div class="resumo-label">Jogos finalizados</div>
+          </div>
+          <div class="resumo-item">
+            <div class="resumo-valor" style="color:var(--accent-2);">${n(d.NumAcertosExatos)}</div>
+            <div class="resumo-label">Acertos exatos</div>
+          </div>
+        </div>
+      </div>
+
+    </div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  RENDERIZADOR — PRÓXIMOS JOGOS
+//  Campos usados: data, horário, rodada, grupo, time1, time2
+// ═══════════════════════════════════════════════════════════════
+function tagRodada(rodada) {
+  const r = (rodada || '').toLowerCase();
+  if (r.includes('final') && !r.includes('semi') && !r.includes('oitava') && !r.includes('quarta'))
+    return `<span class="jogo-tag tag-final">Final</span>`;
+  if (r.includes('semi'))   return `<span class="jogo-tag tag-semi">Semifinal</span>`;
+  if (r.includes('quarta')) return `<span class="jogo-tag tag-quartas">Quartas</span>`;
+  if (r.includes('oitava')) return `<span class="jogo-tag tag-oitavas">Oitavas</span>`;
+  return `<span class="jogo-tag tag-grupo">${rodada || 'Fase de Grupos'}</span>`;
+}
+
+function renderProximos(rows) {
+  if (!rows.length) return '<div class="error-state">⚠️ Nenhum jogo encontrado.</div>';
+
+  document.getElementById('badge-proximos').textContent =
+    `${rows.length} jogo${rows.length !== 1 ? 's' : ''}`;
+
+  const cards = rows.map((row, idx) => {
+    const t1     = row.time1   || '';
+    const t2     = row.time2   || '';
+    const grupo  = row.grupo   || '';
+    const rodada = row.rodada  || '';
+    const data   = row.data    || '';
+    // aceita tanto "horário" (com acento) quanto "horario"
+    const hora   = row['horário'] || row.horario || '';
+
+    // Placar: considera realizado se gols1 e gols2 estiverem preenchidos
+    const g1 = row.gols1;
+    const g2 = row.gols2;
+    const ncrav = row.numCravadas;
+    const temPlacar = g1 !== undefined && g1 !== null && g1 !== '' &&
+                      g2 !== undefined && g2 !== null && g2 !== '';
+
+    const etiqueta = grupo ? `<span class="jogo-tag tag-grupo">${grupo}</span>` : tagRodada(rodada);
+
+    const placarHtml = temPlacar
+      ? `<div class="jogo-placar">${g1} <span class="placar-sep">×</span> ${g2}</div>`
+      : `<span class="jogo-vs">×</span>`;
+
+    const rodapeHtml = temPlacar
+        ? `<div class="jogo-horario">✅ Encerrado <br>${ncrav} acerto${ncrav !== 1 ? 's' : ''}</div>`
+        : (hora
+            ? `<div class="jogo-horario">🕐 ${hora} (Brasília)</div>`
+            : '');
+
+    const linkPalpites = `https://bolao-sejoga.vercel.app/Paginas/palpites_1.html?jogo=${idx}`;
+
+    return `
+      <a href="${linkPalpites}" class="jogo-card-link">
+        <div class="jogo-card${temPlacar ? ' jogo-encerrado' : ''}">
+          <div class="jogo-meta">
+            <span>${etiqueta}</span>
+            <span class="jogo-data">${data}${rodada ? ' · ' + rodada : ''}</span>
+          </div>
+          <div class="jogo-times">
+            <div class="jogo-time">
+              <span class="jogo-bandeira">${escudoTime(t1)}</span>
+              <span class="jogo-nome">${t1}</span>
+            </div>
+            ${placarHtml}
+            <div class="jogo-time">
+              <span class="jogo-bandeira">${escudoTime(t2)}</span>
+              <span class="jogo-nome">${t2}</span>
+            </div>
+          </div>
+          ${rodapeHtml}
+          <div class="jogo-link-hint">⚔️ Ver palpites</div>
+        </div>
+      </a>`;
+  }).join('');
+
+  return `<div class="jogos-grid">${cards}</div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  BOOTSTRAP — busca os 3 endpoints em paralelo
+// ═══════════════════════════════════════════════════════════════
+async function init() {
+  const [top10Res, destaquesRes, proximosRes] = await Promise.allSettled([
+    fetchJSON(URLS.top10),
+    fetchJSON(URLS.destaques),
+    fetchJSON(URLS.proximos),
+  ]);
+
+  const renderSafe = (res, renderFn, contentId, badgeId, label) => {
+    if (res.status === 'fulfilled') {
+      document.getElementById(contentId).innerHTML = renderFn(res.value);
+    } else {
+      console.error(`Erro ao carregar ${label}:`, res.reason);
+      document.getElementById(contentId).innerHTML =
+        `<div class="error-state">❌ Não foi possível carregar ${label}.<br><small>${res.reason?.message || res.reason}</small></div>`;
+      document.getElementById(badgeId).textContent = 'Erro';
+    }
+  };
+
+  renderSafe(top10Res,     renderTop10,     'top10-content',     'badge-top10',     'a classificação');
+  renderSafe(destaquesRes, renderDestaques, 'destaques-content', 'badge-destaques', 'os destaques');
+  renderSafe(proximosRes,  renderProximos,  'proximos-content',  'badge-proximos',  'os próximos jogos');
+}
+
+init();
+</script>
+</body>
+</html>
