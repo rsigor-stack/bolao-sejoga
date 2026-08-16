@@ -166,13 +166,18 @@ function renderTop10(rows) {
     return                          `<div class="rank-delta down">▼${pos - ant}</div>`;
   };
 
+  const num = v => {
+    const n = Number(v);
+    return Number.isFinite(n) ? n : 0;
+  };
+
   const sub = row => {
-    const exato = row.PlacarExato || 0;
-    const res   = (row.PlacarExato           || 0)
-                + (row.Venc_Placar_Vencedor  || 0)
-                + (row.Venc_Placar_Perdedor  || 0)
-                + (row.So_Vencedor           || 0)
-                + (row.Empate                || 0);
+    const exato = num(row.PlacarExato);
+    const res   = num(row.PlacarExato)
+                + num(row.Venc_Placar_Vencedor)
+                + num(row.Venc_Placar_Perdedor)
+                + num(row.So_Vencedor)
+                + num(row.Empate);
     const fraseRes    = `${res} resultado${res === 1 ? '' : 's'} certo${res === 1 ? '' : 's'}`;
     const fraseCravou = `${exato} placar${exato === 1 ? '' : 'es'} cravado${exato === 1 ? '' : 's'}`;
     return `${fraseRes} · ${fraseCravou}`;
