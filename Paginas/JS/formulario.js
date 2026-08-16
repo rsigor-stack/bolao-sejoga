@@ -1896,7 +1896,7 @@ async function liberarFormulario() {
         const aviso = document.createElement("div");
         aviso.className = "aviso-prazo";
         aviso.style.cssText = "background: rgba(255, 215, 0, 0.15); border: 1px solid var(--gold); color: var(--gold); padding: 12px 16px; border-radius: 10px; margin-bottom: 24px; text-align: center; font-weight: 700; font-size: 15px;";
-        aviso.innerHTML = "⏰ <strong>ATEBNÇÃO AO PRAZO LIMITE!</strong> Temos até somente até 3a feira (17/08/2026) até às 23:59h <strong>13h</strong> para modificar os palpites das fases finais. Depois disso só restará torcer!";
+        aviso.innerHTML = "⏰ <strong>ATENÇÃO AO PRAZO LIMITE!</strong> Temos até somente até 3a feira (17/08/2026) até às <strong>23:59h</strong> para modificar os palpites das fases finais. Depois disso só restará torcer!";
         
         // Insere antes da lista de jogos
         etapa1.insertBefore(aviso, etapa1.firstChild.nextSibling); 
@@ -2134,8 +2134,8 @@ function verificarPrazoMataMata() {
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0); // Zera as horas para comparar apenas dias
     
-    // Define o prazo: 18 de Agosto do ano atual (Mês 7 = Agosto no JavaScript)
-    const prazoFinal = new Date(hoje.getFullYear(), 7, 18);
+    // Define o prazo: 17 de Agosto do ano atual (Mês 7 = Agosto no JavaScript)
+    const prazoFinal = new Date(hoje.getFullYear(), 7, 17);
     
     // Retorna true se o dia de hoje for DEPOIS do dia 18
     return hoje > prazoFinal;
