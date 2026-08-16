@@ -1891,6 +1891,17 @@ async function liberarFormulario() {
         etapa1.insertBefore(aviso, etapa1.firstChild.nextSibling); 
     }
     */
+    // ADICIONADO: Prazo Limite para Etapas além das Oitavas
+    if (etapa1 && !etapa1.querySelector('.aviso-prazo')) {
+        const aviso = document.createElement("div");
+        aviso.className = "aviso-prazo";
+        aviso.style.cssText = "background: rgba(255, 215, 0, 0.15); border: 1px solid var(--gold); color: var(--gold); padding: 12px 16px; border-radius: 10px; margin-bottom: 24px; text-align: center; font-weight: 700; font-size: 15px;";
+        aviso.innerHTML = "⏰ <strong>ATEBNÇÃO AO PRAZO LIMITE!</strong> Temos até somente até 3a feira (17/08/2026) até às 23:59h <strong>13h</strong> para modificar os palpites das fases finais. Depois disso só restará torcer!";
+        
+        // Insere antes da lista de jogos
+        etapa1.insertBefore(aviso, etapa1.firstChild.nextSibling); 
+    }
+       
     // Se ao carregar a etapa 2 já estiver liberada, rola a tela
     if (state.etapa === 2) {
          if (etapa2) etapa2.hidden = false;
