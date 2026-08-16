@@ -114,6 +114,14 @@ const state = {
     modificado: false // ADICIONADO: Avisa se há dados não salvos
 };
 
+// ============================================================================
+// PRAZO LIMITE PARA EDIÇÃO DOS PALPITES
+// ============================================================================
+
+// Prazo final: 17 de agosto de 2026 às 23:59h (horário local do navegador).
+// Mês em JavaScript começa em 0, então 7 = agosto.
+const PRAZO_LIMITE_EDICAO = new Date(2026, 7, 17, 23, 59, 0);
+
 // Movido para cá para ser global e reutilizado
 const mapaIds = {
     "j1": ["J01", "J02"], "j2": ["J03", "J04"],
@@ -721,7 +729,9 @@ function criarBotoesEscolha(
 
     selected,
 
-    onSelect
+    onSelect,
+
+    disabled = false // ADICIONADO: trava os botões após o prazo
 
 ) {
 
@@ -750,14 +760,20 @@ function criarBotoesEscolha(
 
         button.textContent = option;
 
+        button.disabled = disabled;
 
-        button.addEventListener(
 
-            "click",
+        if (!disabled) {
 
-            () => onSelect(option)
+            button.addEventListener(
 
-        );
+                "click",
+
+                () => onSelect(option)
+
+            );
+
+        }
 
 
         container.appendChild(button);
@@ -962,8 +978,10 @@ function renderOitavas() {
             : "";
 
         // ADICIONADO: Verifica se os jogos estão bloqueados
-        const idaBloqueada = verificarBloqueio(idIda);
-        const voltaBloqueada = verificarBloqueio(idVolta);
+        // (bloqueio individual por horário do jogo OU prazo geral de edição já encerrado)
+        const prazoGeralEncerrado = prazoEstaEncerrado();
+        const idaBloqueada = verificarBloqueio(idIda) || prazoGeralEncerrado;
+        const voltaBloqueada = verificarBloqueio(idVolta) || prazoGeralEncerrado;
         
         const ida = criarScoreRow({
             label: "Ida",
@@ -1054,7 +1072,9 @@ function renderOitavas() {
 
                         vencedor
 
-                    )
+                    ),
+
+                prazoEstaEncerrado() // ADICIONADO: trava a escolha após o prazo
 
             );
 
@@ -1280,6 +1300,18 @@ function renderFasesFinais() {
     renderSemis();
 
     renderFinal();
+
+    // ADICIONADO: Trava o botão de envio quando o prazo já encerrou
+    const btnEnviar = get("btn-enviar");
+    if (btnEnviar) {
+        if (prazoEstaEncerrado()) {
+            btnEnviar.disabled = true;
+            btnEnviar.textContent = "Prazo encerrado";
+        } else if (btnEnviar.textContent === "Prazo encerrado") {
+            btnEnviar.disabled = false;
+            btnEnviar.textContent = "Enviar palpite";
+        }
+    }
 
 }
 
@@ -1639,6 +1671,13 @@ function montarPayload() {
 
 async function handleSubmit() {
 
+    // 0. Verifica se o prazo de edição já encerrou (proteção extra,
+    // além dos campos já travados na tela)
+    if (prazoEstaEncerrado()) {
+        mostrarErro("O prazo para enviar ou alterar os palpites terminou em 17/08/2026 às 23:59h. Agora é só torcer!");
+        return;
+    }
+
     // 1. Verifica se tudo está preenchido
     let mensagem = validar();
     
@@ -1879,29 +1918,10 @@ async function liberarFormulario() {
     renderOitavas();
     renderFasesFinais();
 
-    // ADICIONADO: Insere o aviso de prazo estendido no topo da Etapa 1
-    /*
-        if (etapa1 && !etapa1.querySelector('.aviso-prazo')) {
-        const aviso = document.createElement("div");
-        aviso.className = "aviso-prazo";
-        aviso.style.cssText = "background: rgba(255, 215, 0, 0.15); border: 1px solid var(--gold); color: var(--gold); padding: 12px 16px; border-radius: 10px; margin-bottom: 24px; text-align: center; font-weight: 700; font-size: 15px;";
-        aviso.innerHTML = "⏰ <strong>PRAZO ESTENDIDO!</strong> Vocês têm até hoje (11/08/2026) às <strong>13h</strong> para enviar ou alterar os palpites das fases finais. Aproveitem!";
-        
-        // Insere antes da lista de jogos
-        etapa1.insertBefore(aviso, etapa1.firstChild.nextSibling); 
-    }
-    */
-    // ADICIONADO: Prazo Limite para Etapas além das Oitavas
-    if (etapa1 && !etapa1.querySelector('.aviso-prazo')) {
-        const aviso = document.createElement("div");
-        aviso.className = "aviso-prazo";
-        aviso.style.cssText = "background: rgba(255, 215, 0, 0.15); border: 1px solid var(--gold); color: var(--gold); padding: 12px 16px; border-radius: 10px; margin-bottom: 24px; text-align: center; font-weight: 700; font-size: 15px;";
-        aviso.innerHTML = "⏰ <strong>ATENÇÃO AO PRAZO LIMITE!</strong> Temos até somente até 3a feira (17/08/2026) até às <strong>23:59h</strong> para modificar os palpites das fases finais. Depois disso só restará torcer!";
-        
-        // Insere antes da lista de jogos
-        etapa1.insertBefore(aviso, etapa1.firstChild.nextSibling); 
-    }
-       
+    // ADICIONADO: Inicia o cronômetro regressivo do prazo de edição
+    // (substitui o antigo aviso estático de texto fixo)
+    iniciarCronometroPrazo();
+
     // Se ao carregar a etapa 2 já estiver liberada, rola a tela
     if (state.etapa === 2) {
          if (etapa2) etapa2.hidden = false;
@@ -2128,17 +2148,114 @@ function verificarBloqueio(idJogo) {
 }
 
 // ============================================================================
-// VERIFICAR PRAZO DO MATA-MATA (Até 18 de Agosto)
+// VERIFICAR PRAZO PARA EDIÇÃO DOS PALPITES (até 17/08/2026 às 23:59h)
 // ============================================================================
+
+// Retorna true assim que o instante atual passar do prazo limite.
+function prazoEstaEncerrado() {
+    return new Date() > PRAZO_LIMITE_EDICAO;
+}
+
+// Mantido com esse nome para não quebrar as chamadas já existentes
+// em renderOitavas/renderQuartas/renderSemis/renderFinal/handleSubmit.
 function verificarPrazoMataMata() {
-    const hoje = new Date();
-    hoje.setHours(0, 0, 0, 0); // Zera as horas para comparar apenas dias
-    
-    // Define o prazo: 17 de Agosto do ano atual (Mês 7 = Agosto no JavaScript)
-    const prazoFinal = new Date(hoje.getFullYear(), 7, 17);
-    
-    // Retorna true se o dia de hoje for DEPOIS do dia 18
-    return hoje > prazoFinal;
+    return prazoEstaEncerrado();
+}
+
+// ============================================================================
+// CRONÔMETRO REGRESSIVO DO PRAZO DE EDIÇÃO
+// ============================================================================
+
+let intervaloCronometro = null;
+let prazoJaEstavaEncerradoAntes = false;
+
+function formatarNumeroCronometro(valor) {
+    return String(Math.max(0, valor)).padStart(2, "0");
+}
+
+function renderizarCronometro() {
+
+    const container = get("cronometro-prazo");
+    if (!container) return;
+
+    if (prazoEstaEncerrado()) {
+
+        if (intervaloCronometro) {
+            clearInterval(intervaloCronometro);
+            intervaloCronometro = null;
+        }
+
+        container.innerHTML = `
+            <div class="mensagem-prazo-encerrado">
+                <div class="mensagem-prazo-encerrado-texto">
+                    🔒 Palpites bloqueados, agora é torcer!
+                </div>
+            </div>
+        `;
+
+        return;
+
+    }
+
+    const diffMs = PRAZO_LIMITE_EDICAO - new Date();
+
+    const dias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    const horas = Math.floor((diffMs / (1000 * 60 * 60)) % 24);
+    const minutos = Math.floor((diffMs / (1000 * 60)) % 60);
+    const segundos = Math.floor((diffMs / 1000) % 60);
+
+    container.innerHTML = `
+        <div class="cronometro-caixa">
+            <div class="cronometro-titulo">
+                ⏰ Prazo para editar os palpites: 17/08/2026 às 23:59h
+            </div>
+            <div class="cronometro-blocos">
+                <div class="cronometro-bloco">
+                    <div class="cronometro-numero">${formatarNumeroCronometro(dias)}</div>
+                    <div class="cronometro-label">dias</div>
+                </div>
+                <div class="cronometro-bloco">
+                    <div class="cronometro-numero">${formatarNumeroCronometro(horas)}</div>
+                    <div class="cronometro-label">horas</div>
+                </div>
+                <div class="cronometro-bloco">
+                    <div class="cronometro-numero">${formatarNumeroCronometro(minutos)}</div>
+                    <div class="cronometro-label">min</div>
+                </div>
+                <div class="cronometro-bloco">
+                    <div class="cronometro-numero">${formatarNumeroCronometro(segundos)}</div>
+                    <div class="cronometro-label">seg</div>
+                </div>
+            </div>
+        </div>
+    `;
+
+}
+
+function iniciarCronometroPrazo() {
+
+    prazoJaEstavaEncerradoAntes = prazoEstaEncerrado();
+    renderizarCronometro();
+
+    if (intervaloCronometro) {
+        clearInterval(intervaloCronometro);
+    }
+
+    intervaloCronometro = setInterval(() => {
+
+        renderizarCronometro();
+
+        // Se o prazo virou "encerrado" durante a sessão do usuário,
+        // re-renderiza os formulários para travar os campos na hora,
+        // sem precisar recarregar a página.
+        if (prazoEstaEncerrado() && !prazoJaEstavaEncerradoAntes) {
+            prazoJaEstavaEncerradoAntes = true;
+            renderOitavas();
+            renderFasesFinais();
+        }
+
+    }, 1000);
+
 }
 
 // ============================================================================
