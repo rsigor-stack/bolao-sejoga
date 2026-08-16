@@ -168,7 +168,7 @@ function renderTop10(rows) {
 
   const sub = row => {
     const exato = row.Pl_Exato   || 0;
-    const cravadas = (row.NumCravadasRodada + extao) || 0;
+    const cravadas = (row.NumCravadasRodada + exato) || 0;
     const res   = (row.Venc_PlVenc || 0)
                 + (row.Venc_PlPerd || 0)
                 + (row.Venc        || 0)
