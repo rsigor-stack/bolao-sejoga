@@ -223,6 +223,63 @@
       font-size: .8rem; opacity: .6;
     }
 
+    /* ── RESUMO EXECUTIVO DOS PALPITES ── */
+    .resumo-card {
+      margin: 0 28px 28px;
+      padding: 20px 22px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 20px;
+    }
+    .resumo-card-titulo {
+      display: flex; align-items: center; gap: 8px;
+      font-size: .82rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .6px;
+      opacity: .75; margin-bottom: 18px;
+    }
+    .resumo-vazio {
+      opacity: .5; font-size: .85rem; text-align: center; padding: 12px;
+    }
+
+    .resumo-distribuicao {
+      display: flex; flex-direction: column; gap: 12px;
+      margin-bottom: 22px;
+    }
+    .resumo-barra-linha {
+      display: flex; align-items: center; gap: 12px; font-size: .84rem;
+    }
+    .resumo-barra-label {
+      width: 140px; flex-shrink: 0; font-weight: 600;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .resumo-barra-trilha {
+      flex: 1; height: 10px; border-radius: 99px;
+      background: rgba(255,255,255,.06); overflow: hidden;
+    }
+    .resumo-barra-fill { height: 100%; border-radius: 99px; transition: width .4s ease; }
+    .resumo-barra-fill.a       { background: linear-gradient(90deg, var(--accent), var(--accent-2)); }
+    .resumo-barra-fill.empate { background: linear-gradient(90deg, var(--gold), #ffb700); }
+    .resumo-barra-fill.b       { background: linear-gradient(90deg, #ff6b6b, #ff9b6b); }
+    .resumo-barra-valor {
+      width: 112px; flex-shrink: 0; text-align: right;
+      opacity: .85; font-variant-numeric: tabular-nums;
+    }
+
+    .resumo-destaques {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px;
+    }
+    .resumo-destaque-item {
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 14px; padding: 14px 16px;
+    }
+    .resumo-destaque-label {
+      font-size: .68rem; text-transform: uppercase; letter-spacing: .5px;
+      opacity: .55; margin-bottom: 6px;
+    }
+    .resumo-destaque-valor { font-size: 1.1rem; font-weight: 800; }
+    .resumo-destaque-sub   { font-size: .78rem; opacity: .6; margin-top: 2px; }
+
     /* ── TABELA DE CONFRONTO ── */
     .tabela-card { display: none; }
     .tabela-card.visivel { display: block; }
@@ -315,6 +372,10 @@
       .jogo-dest-nome { font-size: 1rem; }
       thead th, td { padding: 10px 8px; }
       thead th.col-part, td.col-part { min-width: 110px; }
+      .resumo-card { margin: 0 16px 20px; padding: 16px; }
+      .resumo-destaques { grid-template-columns: 1fr; }
+      .resumo-barra-label { width: 96px; font-size: .78rem; }
+      .resumo-barra-valor { width: 88px; font-size: .78rem; }
     }
   </style>
 </head>
@@ -363,6 +424,7 @@
         <span class="badge" id="dest-badge">—</span>
       </div>
       <div class="jogo-destaque-card visivel" id="jogo-destaque"></div>
+      <div class="resumo-card" id="resumo-executivo"></div>
     </div>
 
     <!-- TABELA DE CONFRONTO -->
@@ -393,7 +455,7 @@
 <a href="#topo" class="botao-topo">↑ Topo</a>
 
 <footer>
-  © 2024 • Bolão Se Joga Copa Libertadores • Atualizado automaticamente via Google Sheets
+  © 2026 • Bolão Se Joga Copa Libertadores • Atualizado automaticamente via Google Sheets
 </footer>
 
 <script>
@@ -613,6 +675,133 @@ function renderJogos(jogos, jogoSelecionadoIdx, rankingMap) {
 }
 
 // ═══════════════════════════════════════════════════════════════
+//  RESUMO EXECUTIVO DOS PALPITES DO JOGO SELECIONADO
+// ═══════════════════════════════════════════════════════════════
+function renderResumoPalpites(jogo) {
+  const container = document.getElementById('resumo-executivo');
+  if (!container) return;
+
+  const validos = (jogo.palpites || []).filter(
+    p => p.gols1 !== null && p.gols2 !== null
+  );
+  const total = validos.length;
+
+  if (total === 0) {
+    container.innerHTML =
+      `<div class="resumo-vazio">Ainda não há palpites suficientes para gerar o resumo.</div>`;
+    return;
+  }
+
+  let vitA = 0, empate = 0, vitB = 0;
+  const placarCount = new Map();
+
+  validos.forEach(p => {
+    const g1 = Number(p.gols1);
+    const g2 = Number(p.gols2);
+
+    if (g1 > g2) vitA++;
+    else if (g1 === g2) empate++;
+    else vitB++;
+
+    const chave = `${g1}x${g2}`;
+    placarCount.set(chave, (placarCount.get(chave) || 0) + 1);
+  });
+
+  const pct = n => total > 0 ? Math.round((n / total) * 1000) / 10 : 0;
+
+  // Resultado mais palpitado (vitória de A, empate ou vitória de B)
+  const resultados = [
+    { label: `Vitória do ${jogo.time1}`, n: vitA },
+    { label: 'Empate',                   n: empate },
+    { label: `Vitória do ${jogo.time2}`, n: vitB }
+  ].sort((a, b) => b.n - a.n);
+  const resultadoTop = resultados[0];
+  const pctResultadoTop = pct(resultadoTop.n);
+
+  // Placar exato mais palpitado
+  let placarTop = { chave: null, n: 0 };
+  placarCount.forEach((n, chave) => {
+    if (n > placarTop.n) placarTop = { chave, n };
+  });
+  const placarTopFormatado = placarTop.chave
+    ? placarTop.chave.replace('x', ' × ')
+    : '—';
+
+  // Nível de consenso: quão concentrados os palpites estão no resultado
+  // mais votado (vitória de A / empate / vitória de B)
+  let consenso;
+  if (pctResultadoTop >= 60) {
+    consenso = { label: '🔥 Consenso forte', sub: 'a galera está bem alinhada' };
+  } else if (pctResultadoTop >= 40) {
+    consenso = { label: '👍 Maioria definida', sub: 'tendência clara, mas não unânime' };
+  } else {
+    consenso = { label: '🤔 Opiniões divididas', sub: 'galera bem rachada nesse jogo' };
+  }
+
+  // Quantos cravaram o placar exato (só faz sentido se o jogo já terminou)
+  const temPlacarReal = jogo.gols1 !== null && jogo.gols2 !== null;
+  let cravaramHtml = '';
+  if (temPlacarReal) {
+    const cravaram = validos.filter(
+      p => String(p.gols1) === String(jogo.gols1) && String(p.gols2) === String(jogo.gols2)
+    ).length;
+    cravaramHtml = `
+      <div class="resumo-destaque-item">
+        <div class="resumo-destaque-label">Cravaram o placar exato</div>
+        <div class="resumo-destaque-valor">🎯 ${cravaram}</div>
+        <div class="resumo-destaque-sub">${pct(cravaram)}% dos palpites (${jogo.gols1} × ${jogo.gols2})</div>
+      </div>`;
+  }
+
+  container.innerHTML = `
+    <div class="resumo-card-titulo">📊 Resumo executivo dos palpites (${total})</div>
+
+    <div class="resumo-distribuicao">
+      <div class="resumo-barra-linha">
+        <span class="resumo-barra-label">🏆 ${escapeHtml(jogo.time1)}</span>
+        <div class="resumo-barra-trilha">
+          <div class="resumo-barra-fill a" style="width:${pct(vitA)}%"></div>
+        </div>
+        <span class="resumo-barra-valor">${pct(vitA)}% (${vitA})</span>
+      </div>
+      <div class="resumo-barra-linha">
+        <span class="resumo-barra-label">🤝 Empate</span>
+        <div class="resumo-barra-trilha">
+          <div class="resumo-barra-fill empate" style="width:${pct(empate)}%"></div>
+        </div>
+        <span class="resumo-barra-valor">${pct(empate)}% (${empate})</span>
+      </div>
+      <div class="resumo-barra-linha">
+        <span class="resumo-barra-label">🏆 ${escapeHtml(jogo.time2)}</span>
+        <div class="resumo-barra-trilha">
+          <div class="resumo-barra-fill b" style="width:${pct(vitB)}%"></div>
+        </div>
+        <span class="resumo-barra-valor">${pct(vitB)}% (${vitB})</span>
+      </div>
+    </div>
+
+    <div class="resumo-destaques">
+      <div class="resumo-destaque-item">
+        <div class="resumo-destaque-label">Resultado mais palpitado</div>
+        <div class="resumo-destaque-valor">${escapeHtml(resultadoTop.label)}</div>
+        <div class="resumo-destaque-sub">${resultadoTop.n} palpite${resultadoTop.n === 1 ? '' : 's'}</div>
+      </div>
+      <div class="resumo-destaque-item">
+        <div class="resumo-destaque-label">Placar mais palpitado</div>
+        <div class="resumo-destaque-valor">${escapeHtml(placarTopFormatado)}</div>
+        <div class="resumo-destaque-sub">${placarTop.n} palpite${placarTop.n === 1 ? '' : 's'}</div>
+      </div>
+      <div class="resumo-destaque-item">
+        <div class="resumo-destaque-label">Nível de consenso</div>
+        <div class="resumo-destaque-valor">${consenso.label}</div>
+        <div class="resumo-destaque-sub">${consenso.sub}</div>
+      </div>
+      ${cravaramHtml}
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════════════════════════
 //  RENDERIZA PLACAR EM DESTAQUE + TABELA
 // ═══════════════════════════════════════════════════════════════
 function renderConfronto(jogo, rankingMap) {
@@ -645,6 +834,8 @@ function renderConfronto(jogo, rankingMap) {
         <span class="jogo-dest-nome">${escapeHtml(jogo.time2)}</span>
       </div>
     </div>`;
+
+  renderResumoPalpites(jogo);
 
   const tabCard = document.getElementById('tabela-card');
   tabCard.classList.add('visivel');
