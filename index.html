@@ -168,7 +168,7 @@ function renderTop10(rows) {
 
   const sub = row => {
     const exato = row.Pl_Exato   || 0;
-    const cravadas = row.NumCravadasRodada || 0;
+    const cravadas = (row.NumCravadasRodada + extao) || 0;
     const res   = (row.Venc_PlVenc || 0)
                 + (row.Venc_PlPerd || 0)
                 + (row.Venc        || 0)
@@ -178,7 +178,7 @@ function renderTop10(rows) {
     if (res)   parts.push(`${res} resultado${res > 1 ? 's' : ''} certo${res > 1 ? 's' : ''}`);
     return parts.length
     ? parts.join(' · ')
-    : cravadas + ' placar' + (cravadas === 1 ? '' : 'es') + ' exato' + (cravadas === 1 ? '' : 's') + ' nesta rodada';
+    : cravadas + ' placar' + (cravadas === 1 ? '' : 'es') + ' exato' + (cravadas === 1 ? '' : 's') + ' desde o início';
   };
 
   const top = rows.slice(0, 10);
