@@ -304,6 +304,73 @@
       .total-valor { font-size: 1.7rem; }
       .aviso-card { padding: 15px 16px; }
     }
+
+    /* ── TELA DE LOGIN NECESSÁRIO / CARREGANDO ── */
+    .tela-sucesso {
+      position: relative; z-index: 2;
+      max-width: 640px; margin: 0 auto; padding: 2rem 1rem;
+    }
+    .card-sucesso {
+      background: rgba(8,247,161,.10);
+      border: 1px solid rgba(8,247,161,.35);
+      border-radius: 16px;
+      backdrop-filter: blur(16px);
+      padding: 1.5rem;
+    }
+    .card-sucesso h2 { margin: 0 0 8px; font-size: 20px; }
+    .card-sucesso p  { margin: 0; color: rgba(255,255,255,.85); }
+    .card-bloqueio {
+      background: rgba(255,215,0,.08);
+      border: 1px solid rgba(255,215,0,.3);
+      text-align: center;
+    }
+    .botao-principal {
+      margin-top: 16px; width: auto;
+      padding: 12px 28px; border-radius: 999px; border: none;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #04142d; font-family: 'Montserrat', sans-serif;
+      font-size: 15px; font-weight: 700; cursor: pointer;
+      box-shadow: 0 10px 25px rgba(0,212,255,.25);
+    }
+    .botao-principal:hover { transform: translateY(-1px); opacity: .95; }
+    .loader {
+      border: 4px solid rgba(255,255,255,.1);
+      border-top: 4px solid var(--accent);
+      border-radius: 50%; width: 40px; height: 40px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    /* ── CARROSSEL DE IMAGENS NOS CARDS DE PRÊMIO ── */
+    .premio-carrossel {
+      position: relative;
+      width: 100%; height: 118px;
+      border-radius: 16px; overflow: hidden;
+      margin: 16px 0 6px;
+      border: 1px solid rgba(255,255,255,.10);
+    }
+    .carrossel-slide {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 6px; opacity: 0;
+      transition: opacity .9s ease;
+    }
+    .carrossel-slide.ativo { opacity: 1; }
+    .carrossel-emoji { font-size: 2.5rem; filter: drop-shadow(0 4px 10px rgba(0,0,0,.3)); }
+    .carrossel-legenda {
+      font-size: .68rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .5px; color: rgba(255,255,255,.9);
+      text-shadow: 0 1px 4px rgba(0,0,0,.4);
+    }
+
+    /* ── USUÁRIO LOGADO NO FORM DE SONHOS ── */
+    .form-usuario-atual {
+      width: 100%; padding: 12px 14px; border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      font-weight: 700; font-size: .92rem;
+      color: var(--accent-2);
+    }
   </style>
 </head>
 <body id="topo">
@@ -317,7 +384,31 @@
 <script>Bolao.layout.montarHeader();</script>
 <! Fim do cabeçalho----------->  
 
-  
+<!-- ============================================================
+     TELA DE ACESSO NEGADO (usuário não logado)
+     ============================================================ -->
+<main id="tela-login-necessario" class="tela-sucesso" hidden>
+  <div class="card-sucesso card-bloqueio">
+    <h2>🔒 Faça login para continuar</h2>
+    <p>Você precisa estar logado para ver a premiação e contar seus planos para o prêmio.</p>
+    <button id="btn-fazer-login" class="botao-principal" type="button">Entrar</button>
+  </div>
+</main>
+
+<!-- TELA DE CARREGAMENTO -->
+<div id="tela-carregando" class="tela-sucesso" hidden>
+  <div class="card-sucesso" style="text-align: center;">
+    <h2>Carregando premiação...</h2>
+    <p>Aguarde um instante.</p>
+    <div class="loader" style="margin: 20px auto;"></div>
+  </div>
+</div>
+
+<!-- ============================================================
+     CONTEÚDO PRINCIPAL (só aparece se estiver logado)
+     ============================================================ -->
+<main id="app" hidden>
+
 <div class="page-wrapper">
 
   <div class="page-title">
@@ -335,6 +426,26 @@
     <div class="premio-card p2">
       <div class="premio-medalha">🥈</div>
       <div class="premio-lugar">2º Lugar</div>
+
+      <div class="premio-carrossel" data-intervalo="5000">
+        <div class="carrossel-slide ativo" style="background: linear-gradient(160deg, rgba(192,192,192,.35), rgba(192,192,192,.08));">
+          <div class="carrossel-emoji">🎧</div>
+          <div class="carrossel-legenda">Fone de ouvido</div>
+        </div>
+        <div class="carrossel-slide" style="background: linear-gradient(160deg, rgba(192,192,192,.35), rgba(192,192,192,.08));">
+          <div class="carrossel-emoji">👟</div>
+          <div class="carrossel-legenda">Tênis</div>
+        </div>
+        <div class="carrossel-slide" style="background: linear-gradient(160deg, rgba(192,192,192,.35), rgba(192,192,192,.08));">
+          <div class="carrossel-emoji">⌚</div>
+          <div class="carrossel-legenda">Relógio</div>
+        </div>
+        <div class="carrossel-slide" style="background: linear-gradient(160deg, rgba(192,192,192,.35), rgba(192,192,192,.08));">
+          <div class="carrossel-emoji">🎮</div>
+          <div class="carrossel-legenda">Videogame</div>
+        </div>
+      </div>
+
       <div class="premio-valor">R$ 108,00</div>
       <div class="premio-pct">30% do total</div>
     </div>
@@ -342,6 +453,30 @@
     <div class="premio-card p1">
       <div class="premio-medalha">🥇</div>
       <div class="premio-lugar">1º Lugar</div>
+
+      <div class="premio-carrossel" data-intervalo="5000">
+        <div class="carrossel-slide ativo" style="background: linear-gradient(160deg, rgba(255,215,0,.4), rgba(255,215,0,.08));">
+          <div class="carrossel-emoji">💰</div>
+          <div class="carrossel-legenda">Dinheiro</div>
+        </div>
+        <div class="carrossel-slide" style="background: linear-gradient(160deg, rgba(255,215,0,.4), rgba(255,215,0,.08));">
+          <div class="carrossel-emoji">👑</div>
+          <div class="carrossel-legenda">Coroa</div>
+        </div>
+        <div class="carrossel-slide" style="background: linear-gradient(160deg, rgba(255,215,0,.4), rgba(255,215,0,.08));">
+          <div class="carrossel-emoji">💎</div>
+          <div class="carrossel-legenda">Diamante</div>
+        </div>
+        <div class="carrossel-slide" style="background: linear-gradient(160deg, rgba(255,215,0,.4), rgba(255,215,0,.08));">
+          <div class="carrossel-emoji">🏎️</div>
+          <div class="carrossel-legenda">Carro de luxo</div>
+        </div>
+        <div class="carrossel-slide" style="background: linear-gradient(160deg, rgba(255,215,0,.4), rgba(255,215,0,.08));">
+          <div class="carrossel-emoji">🏝️</div>
+          <div class="carrossel-legenda">Ilha particular</div>
+        </div>
+      </div>
+
       <div class="premio-valor">R$ 216,00</div>
       <div class="premio-pct">60% do total</div>
     </div>
@@ -349,6 +484,22 @@
     <div class="premio-card p3">
       <div class="premio-medalha">🥉</div>
       <div class="premio-lugar">3º Lugar</div>
+
+      <div class="premio-carrossel" data-intervalo="5000">
+        <div class="carrossel-slide ativo" style="background: linear-gradient(160deg, rgba(205,127,50,.35), rgba(205,127,50,.08));">
+          <div class="carrossel-emoji">🍿</div>
+          <div class="carrossel-legenda">Pipoca</div>
+        </div>
+        <div class="carrossel-slide" style="background: linear-gradient(160deg, rgba(205,127,50,.35), rgba(205,127,50,.08));">
+          <div class="carrossel-emoji">🥤</div>
+          <div class="carrossel-legenda">Refrigerante</div>
+        </div>
+        <div class="carrossel-slide" style="background: linear-gradient(160deg, rgba(205,127,50,.35), rgba(205,127,50,.08));">
+          <div class="carrossel-emoji">🍟</div>
+          <div class="carrossel-legenda">Batata frita</div>
+        </div>
+      </div>
+
       <div class="premio-valor">R$ 36,00</div>
       <div class="premio-pct">10% do total</div>
     </div>
@@ -387,10 +538,8 @@
     <div class="sonhos-form-card">
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label">👤 Seu nome</label>
-          <select class="form-select" id="sonho-nome">
-            <option value="">Selecione seu nome…</option>
-          </select>
+          <label class="form-label">👤 Você está respondendo como</label>
+          <div class="form-usuario-atual" id="sonho-nome-atual">—</div>
         </div>
       </div>
       <div class="form-row">
@@ -418,6 +567,8 @@
 
 </div>
 
+</main>
+
 <a href="#topo" class="botao-topo">↑ Topo</a>
 
 <footer>© 2026 • Bolão Se Joga Copa do Mundo</footer>
@@ -427,41 +578,37 @@
 //  CONFIGURAÇÃO
 // ═══════════════════════════════════════════════════════════════
 const URL_BASE = 'https://script.google.com/macros/s/AKfycbxiiDpGwGYiEauxy_1e8fH5ysQGi3IJijVZluOZQI_Ftndbyz6htgngfWQFkfeLwL3XWg/exec';
-const URL_RANKING_NOMES = 'https://script.google.com/macros/s/AKfycbxiiDpGwGYiEauxy_1e8fH5ysQGi3IJijVZluOZQI_Ftndbyz6htgngfWQFkfeLwL3XWg/exec';
 const URL_SONHOS_GET  = `${URL_BASE}?aba=Sonhos`;
 
-const selectNome   = document.getElementById('sonho-nome');
-const textArea     = document.getElementById('sonho-texto');
-const charCount    = document.getElementById('char-count');
-const btnSalvar    = document.getElementById('btn-salvar');
-const formStatus   = document.getElementById('form-status');
-const muralGrid    = document.getElementById('mural-grid');
-const muralBadge   = document.getElementById('mural-badge');
+const textArea       = document.getElementById('sonho-texto');
+const charCount      = document.getElementById('char-count');
+const btnSalvar      = document.getElementById('btn-salvar');
+const formStatus     = document.getElementById('form-status');
+const muralGrid      = document.getElementById('mural-grid');
+const muralBadge     = document.getElementById('mural-badge');
+const nomeAtualEl    = document.getElementById('sonho-nome-atual');
 
 // ═══════════════════════════════════════════════════════════════
-//  CARREGA LISTA DE PARTICIPANTES (mesma fonte do Ranking)
+//  PEGAR NOME DO USUÁRIO LOGADO (mesmo padrão do formulário)
 // ═══════════════════════════════════════════════════════════════
-async function carregarParticipantes() {
+function obterNomeParticipante() {
   try {
-    const res  = await fetch(URL_RANKING_NOMES);
-    const json = await res.json();
-    const linhas = json.data || json || [];
-    const nomes = linhas
-      .map(r => String(r.Aposta || '').trim())
-      .filter(Boolean)
-      .sort((a, b) => a.localeCompare(b, 'pt-BR'));
+    if (window.Bolao && Bolao.auth && Bolao.auth.getUsuario) {
+      const usuario = Bolao.auth.getUsuario();
 
-    nomes.forEach(nome => {
-      const opt = document.createElement('option');
-      opt.value = nome;
-      opt.textContent = nome;
-      selectNome.appendChild(opt);
-    });
+      // getUsuario() retorna o objeto de sessão inteiro
+      // ({ nome, token, criadoEm }), não só o nome.
+      if (usuario && typeof usuario === 'object' && usuario.nome) {
+        return usuario.nome;
+      }
+      if (typeof usuario === 'string' && usuario) {
+        return usuario;
+      }
+    }
   } catch (e) {
-    console.error('Erro ao carregar participantes:', e);
-    formStatus.textContent = 'Não foi possível carregar a lista de participantes.';
-    formStatus.className = 'form-status erro';
+    console.warn('Não foi possível obter o usuário logado.');
   }
+  return null;
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -521,14 +668,14 @@ function escapeHtml(str) {
 }
 
 // ═══════════════════════════════════════════════════════════════
-//  SALVA A RESPOSTA
+//  SALVA A RESPOSTA (sempre associada ao usuário logado)
 // ═══════════════════════════════════════════════════════════════
 btnSalvar.addEventListener('click', async () => {
-  const nome  = selectNome.value;
+  const nome  = obterNomeParticipante();
   const texto = textArea.value.trim();
 
   if (!nome) {
-    formStatus.textContent = 'Selecione seu nome antes de salvar.';
+    formStatus.textContent = 'Não foi possível identificar seu usuário logado. Recarregue a página.';
     formStatus.className = 'form-status erro';
     return;
   }
@@ -566,10 +713,92 @@ btnSalvar.addEventListener('click', async () => {
 });
 
 // ═══════════════════════════════════════════════════════════════
+//  CARROSSÉIS DE IMAGENS DOS CARDS DE PRÊMIO
+//  (troca de imagem a cada 5 segundos, definido em data-intervalo)
+// ═══════════════════════════════════════════════════════════════
+function iniciarCarrosseis() {
+  document.querySelectorAll('.premio-carrossel').forEach(carrossel => {
+    const slides = Array.from(carrossel.querySelectorAll('.carrossel-slide'));
+    if (slides.length <= 1) return;
+
+    const intervaloMs = Number(carrossel.dataset.intervalo) || 5000;
+    let atual = 0;
+
+    setInterval(() => {
+      slides[atual].classList.remove('ativo');
+      atual = (atual + 1) % slides.length;
+      slides[atual].classList.add('ativo');
+    }, intervaloMs);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TRAVA DE ACESSO — só libera a página para quem estiver logado
+// ═══════════════════════════════════════════════════════════════
+function mostrarBloqueioLogin() {
+  document.getElementById('app').hidden = true;
+  document.getElementById('tela-carregando').hidden = true;
+  document.getElementById('tela-login-necessario').hidden = false;
+}
+
+async function liberarPagina() {
+  document.getElementById('tela-login-necessario').hidden = true;
+
+  const telaCarregando = document.getElementById('tela-carregando');
+  const app = document.getElementById('app');
+
+  telaCarregando.hidden = false;
+  app.hidden = true;
+
+  // Mostra o nome de quem está logado no formulário de sonhos
+  const nome = obterNomeParticipante();
+  nomeAtualEl.textContent = nome || 'Participante';
+
+  await carregarMural();
+
+  telaCarregando.hidden = true;
+  app.hidden = false;
+
+  iniciarCarrosseis();
+}
+
+function iniciarComVerificacaoDeLogin() {
+
+  if (!window.Bolao || !Bolao.auth) {
+    console.warn('auth.js não carregado — não é possível verificar o login. Liberando acesso.');
+    liberarPagina();
+    return;
+  }
+
+  if (!Bolao.auth.estaLogado()) {
+
+    mostrarBloqueioLogin();
+
+    document.getElementById('btn-fazer-login').addEventListener('click', () => {
+
+      Bolao.layout.abrirModalLogin();
+
+      // Verifica periodicamente se o login foi concluído no modal,
+      // e libera a página assim que detectar a sessão ativa.
+      const checarLogin = setInterval(() => {
+        if (Bolao.auth.estaLogado()) {
+          clearInterval(checarLogin);
+          liberarPagina();
+        }
+      }, 500);
+
+    });
+
+    return;
+  }
+
+  liberarPagina();
+}
+
+// ═══════════════════════════════════════════════════════════════
 //  BOOTSTRAP
 // ═══════════════════════════════════════════════════════════════
-carregarParticipantes();
-carregarMural();
+iniciarComVerificacaoDeLogin();
 </script>
 
 </body>
